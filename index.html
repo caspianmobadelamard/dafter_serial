@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>دفتر سریال کاسپین</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1db954">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="دفتر سریال">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --bg:#0a0e0c;--bg-card:#111712;--bg-card-2:#161e18;
+    --green:#1db954;--green-dark:#0f5c2e;--green-glow:rgba(29,185,84,0.18);
+    --text:#e8efe9;--text-dim:#8fa398;--border:#213027;
+    --danger:#e05c5c;--radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Vazirmatn','Tahoma',sans-serif;
+    background:radial-gradient(circle at 50% 0%, #0d1410 0%, #060907 70%);
+    color:var(--text);min-height:100vh;padding-bottom:90px;}
+  header{padding:22px 18px 14px;text-align:center;position:sticky;top:0;
+    background:linear-gradient(180deg, #0a0e0c 80%, transparent);z-index:5;}
+  header h1{font-size:19px;margin:0 0 4px;color:var(--green);}
+  header p{margin:0;font-size:12.5px;color:var(--text-dim);}
+  .header-settings{position:absolute;top:16px;left:14px;width:38px;height:38px;
+    border-radius:10px;border:1px solid var(--border);
+    background:var(--bg-card);color:var(--text-dim);font-size:17px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .header-settings.configured{border-color:var(--green);color:var(--green);}
+  .header-search{position:absolute;top:16px;right:14px;width:38px;height:38px;
+    border-radius:10px;border:1px solid var(--border);
+    background:var(--bg-card);color:var(--text-dim);font-size:17px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .container{padding:0 14px;max-width:520px;margin:0 auto;}
+  .year-row{display:flex;gap:6px;margin:14px 0 6px;justify-content:center;flex-wrap:wrap;}
+  .year-btn{padding:8px 16px;border-radius:10px;border:1px solid var(--border);
+    background:var(--bg-card);color:var(--text-dim);font-size:12.5px;
+    font-family:inherit;cursor:pointer;transition:all .15s;}
+  .year-btn.active{background:var(--green-dark);border-color:var(--green);color:#fff;
+    box-shadow:0 0 14px var(--green-glow);}
+  .cat-row{display:flex;gap:8px;margin:10px 0 18px;}
+  .cat-btn{flex:1;padding:12px 6px;border-radius:12px;border:1px solid var(--border);
+    background:var(--bg-card);color:var(--text-dim);font-size:12.5px;
+    font-family:inherit;text-align:center;cursor:pointer;transition:all .15s;}
+  .cat-btn.active{background:var(--green-dark);border-color:var(--green);color:#fff;
+    box-shadow:0 0 14px var(--green-glow);}
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px;margin-bottom:14px;}
+  .reminder{background:rgba(255,193,7,0.15);border:1px solid #ffc107;color:#ffc107;
+    padding:10px 14px;border-radius:10px;font-size:12.5px;margin-bottom:12px;
+    display:none;align-items:center;gap:8px;}
+  .reminder.show{display:flex;}
+  .reminder .icon{font-size:16px;}
+  .search-row{display:flex;gap:8px;align-items:stretch;margin-bottom:12px;}
+  .search-input-wrap{position:relative;flex:1;}
+  .search-input-wrap input{padding-left:34px;padding-right:12px;}
+  .search-input-wrap .clear-btn{position:absolute;left:8px;top:50%;transform:translateY(-50%);
+    width:24px;height:24px;border-radius:50%;border:none;background:var(--bg-card);
+    color:var(--text-dim);cursor:pointer;font-size:13px;display:none;
+    align-items:center;justify-content:center;}
+  .search-input-wrap .clear-btn.show{display:flex;}
+  .filter-toggle{border:1px solid var(--border);background:var(--bg-card-2);
+    color:var(--text-dim);border-radius:10px;padding:0 12px;
+    font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;}
+  .filter-toggle.active{color:var(--green);border-color:var(--green-dark);}
+  .adv-filters{margin-top:10px;padding:12px;background:var(--bg-card-2);
+    border:1px solid var(--border);border-radius:10px;display:none;}
+  .adv-filters.show{display:block;}
+  .adv-filters label{margin-top:8px;}
+  .adv-filters label:first-child{margin-top:0;}
+  label{display:block;font-size:12.5px;color:var(--text-dim);margin:12px 0 6px;}
+  label.req::after{content:" *";color:var(--green);}
+  input[type=text], input[type=date], input[type=number], select, textarea{
+    width:100%;background:var(--bg-card-2);border:1px solid var(--border);
+    border-radius:10px;padding:11px 12px;color:var(--text);
+    font-size:14.5px;font-family:inherit;outline:none;}
+  input:focus, select:focus, textarea:focus{border-color:var(--green);}
+  .date-row{display:flex;gap:8px;align-items:stretch;}
+  .date-row input{flex:1;}
+  .today-btn{white-space:nowrap;background:var(--bg-card-2);
+    border:1px solid var(--green-dark);color:var(--green);
+    border-radius:10px;padding:0 12px;font-size:12px;cursor:pointer;}
+  .submit-btn{width:100%;margin-top:18px;padding:14px;border-radius:12px;border:none;
+    background:linear-gradient(135deg, var(--green), var(--green-dark));
+    color:#04140a;font-weight:bold;font-size:15px;font-family:inherit;cursor:pointer;}
+  .submit-btn:disabled{opacity:.5;}
+  .secondary-btn{width:100%;margin-top:10px;padding:12px;border-radius:12px;
+    border:1px solid var(--green-dark);background:var(--bg-card-2);
+    color:var(--green);font-weight:bold;font-size:13.5px;font-family:inherit;cursor:pointer;}
+  .msg{text-align:center;padding:10px;border-radius:10px;margin-top:12px;font-size:13px;display:none;}
+  .msg.ok{display:block;background:rgba(29,185,84,0.12);color:var(--green);border:1px solid var(--green-dark);}
+  .msg.err{display:block;background:rgba(224,92,92,0.12);color:var(--danger);border:1px solid var(--danger);}
+  nav.tabs{position:fixed;bottom:0;left:0;right:0;display:flex;
+    background:#0c110d;border-top:1px solid var(--border);
+    padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:10;}
+  nav.tabs button{flex:1;background:none;border:none;color:var(--text-dim);
+    font-family:inherit;font-size:12px;padding:10px 4px;border-radius:10px;cursor:pointer;}
+  nav.tabs button.active{color:var(--green);background:var(--green-glow);}
+  .pending-item{background:var(--bg-card-2);border:1px solid var(--border);
+    border-radius:12px;padding:12px 14px;margin-bottom:10px;position:relative;}
+  .pending-item.complete{border-color:var(--green-dark);}
+  .pending-item .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .pending-item .top .info{flex:1;cursor:pointer;}
+  .pending-item .serial{font-weight:bold;color:var(--green);font-size:14.5px;}
+  .pending-item .product{color:var(--text-dim);font-size:12.5px;margin-top:2px;}
+  .pending-item .specs{font-size:12px;color:var(--text-dim);margin-top:6px;line-height:1.7;}
+  .pending-item .specs .v{color:var(--text);}
+  .pending-item .missing-tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+  .pending-item .card-actions{display:flex;gap:4px;flex-direction:column;}
+  .pending-item .card-actions button{background:none;border:none;color:var(--text-dim);
+    font-size:14px;cursor:pointer;padding:3px 5px;border-radius:6px;}
+  .pending-item .card-actions button:hover{background:var(--bg-card);color:var(--green);}
+  .status-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10.5px;
+    color:#fff;font-weight:bold;margin-right:6px;vertical-align:middle;}
+  .tag{font-size:11px;background:rgba(224,92,92,0.12);color:var(--danger);
+    border:1px solid var(--danger);border-radius:8px;padding:2px 8px;}
+  .tag.ok{background:rgba(29,185,84,0.12);color:var(--green);border-color:var(--green-dark);}
+  .tag.isqi{background:rgba(255,215,0,0.25);color:#c9a800;border-color:#c9a800;}
+  .tag.ajg{background:rgba(229,57,53,0.25);color:#ff7b7b;border-color:#c94b4b;}
+  .empty-state{text-align:center;color:var(--text-dim);padding:40px 10px;font-size:13px;}
+  .spinner{text-align:center;color:var(--text-dim);font-size:13px;padding:20px;}
+  .bulk-bar{position:fixed;bottom:calc(72px + env(safe-area-inset-bottom));left:14px;right:14px;
+    max-width:492px;margin:0 auto;background:var(--green-dark);border:1px solid var(--green);
+    border-radius:14px;padding:10px 14px;display:none;align-items:center;gap:10px;
+    z-index:20;box-shadow:0 4px 20px rgba(0,0,0,0.5);}
+  .bulk-bar.show{display:flex;}
+  .bulk-bar .count{font-size:12.5px;color:#fff;font-weight:bold;white-space:nowrap;}
+  .bulk-bar select{flex:1;background:var(--bg-card);border:1px solid var(--green);
+    color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;}
+  .bulk-bar button{background:var(--bg-card);border:1px solid var(--green);
+    color:var(--green);border-radius:8px;padding:8px 12px;font-size:12.5px;
+    font-family:inherit;cursor:pointer;}
+  .bulk-select{width:18px;height:18px;accent-color:var(--green);
+    cursor:pointer;flex-shrink:0;}
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);
+    display:none;align-items:flex-end;z-index:50;}
+  .modal-backdrop.show{display:flex;}
+  .modal{background:var(--bg-card);border:1px solid var(--border);
+    border-radius:18px 18px 0 0;width:100%;max-width:520px;margin:0 auto;
+    padding:18px;padding-bottom:calc(18px + env(safe-area-inset-bottom));
+    max-height:80vh;overflow-y:auto;}
+  .modal h3{margin:0 0 4px;color:var(--green);font-size:15px;}
+  .modal .sub{color:var(--text-dim);font-size:12px;margin-bottom:10px;}
+  .close-modal{background:none;border:none;color:var(--text-dim);
+    font-size:13px;margin-top:8px;width:100%;padding:10px;cursor:pointer;}
+  .modal-view-bar{display:flex;justify-content:space-between;align-items:center;
+    margin:6px 0 10px;padding:8px 10px;border-radius:10px;
+    background:var(--bg-card-2);border:1px solid var(--border);}
+  .modal-view-bar .label{font-size:12px;color:var(--text-dim);}
+  .modal-view-bar button{background:none;border:none;color:var(--green);
+    font-size:11.5px;font-family:inherit;cursor:pointer;}
+  .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .dash-card{background:var(--bg-card-2);border:1px solid var(--border);
+    border-radius:12px;padding:14px;}
+  .dash-card .num{font-size:24px;font-weight:bold;color:var(--green);}
+  .dash-card .lbl{font-size:11.5px;color:var(--text-dim);margin-top:4px;}
+  .dash-card.wide{grid-column:1 / -1;}
+  .stat-row{display:flex;justify-content:space-between;align-items:center;
+    padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+  .stat-row:last-child{border-bottom:none;}
+  .stat-row .key{display:flex;align-items:center;gap:8px;}
+  .stat-row .dot{width:10px;height:10px;border-radius:50%;}
+  .stat-row .val{font-weight:bold;color:var(--text);}
+  .config-warning{background:rgba(224,92,92,0.1);border:1px solid var(--danger);
+    color:var(--danger);padding:12px;border-radius:12px;
+    font-size:12.5px;line-height:1.8;margin-bottom:14px;cursor:pointer;}
+  .hint{font-size:11.5px;color:var(--text-dim);line-height:1.9;margin-top:10px;
+    background:var(--bg-card-2);border:1px solid var(--border);
+    border-radius:10px;padding:10px 12px;}
+  .hint code{background:#000;padding:1px 5px;border-radius:5px;font-size:10.5px;color:var(--green);}
+  .count-hint{font-size:11px;color:var(--text-dim);margin-top:4px;line-height:1.6;}
+  .gsearch-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);
+    display:none;z-index:60;padding:20px;align-items:flex-start;justify-content:center;}
+  .gsearch-overlay.show{display:flex;}
+  .gsearch-box{background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;width:100%;max-width:520px;padding:16px;margin-top:40px;
+    max-height:80vh;overflow-y:auto;}
+  .gsearch-box input{font-size:15px;margin-bottom:10px;}
+  .gsearch-results{max-height:60vh;overflow-y:auto;}
+  .gsearch-item{background:var(--bg-card-2);border:1px solid var(--border);
+    border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;}
+  .gsearch-item:hover{border-color:var(--green);}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="header-settings" id="settingsBtn" title="تنظیمات">⚙️</button>
+  <button class="header-search" id="globalSearchBtn" title="جستجو">🔍</button>
+  <h1>📘 دفتر سریال کاسپین</h1>
+  <p>ثبت سریع سفارش و تکمیل اطلاعات</p>
+</header>
+
+<div class="container" id="app">
+  <div id="configWarning" class="config-warning" style="display:none;">
+    ⚠️ هنوز لینک اتصال تنظیم نشده. روی این کادر یا آیکن ⚙️ بزن.
+  </div>
+  <div class="year-row" id="yearRow"></div>
+  <div class="cat-row" id="catRow"></div>
+  <div id="reminder" class="reminder">
+    <span class="icon">🔔</span>
+    <span id="reminderText"></span>
+  </div>
+
+  <div id="tabNew">
+    <div class="card">
+      <form id="newForm"></form>
+      <button class="submit-btn" id="newSubmitBtn">ثبت سفارش</button>
+      <button class="secondary-btn" id="copyPrevBtn" type="button">📋 کپی از سفارش قبلی</button>
+      <div class="msg" id="newMsg"></div>
+    </div>
+  </div>
+
+  <div id="tabPending" style="display:none;">
+    <div class="card">
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <input type="text" id="searchInput" placeholder="جستجوی سریال، محصول، مشتری..." dir="auto">
+          <button type="button" class="clear-btn" id="searchClear">✕</button>
+        </div>
+        <button type="button" class="filter-toggle active" id="onlyPendingBtn">فقط ناقص‌ها</button>
+        <button type="button" class="filter-toggle" id="advFilterBtn">⚙️</button>
+      </div>
+      <div class="adv-filters" id="advFilters">
+        <label>وضعیت</label>
+        <select id="filterStatus"><option value="">همه</option></select>
+        <label>شرکت بازرسی</label>
+        <select id="filterInspection">
+          <option value="">همه</option>
+          <option value="ISQI">ISQI</option>
+          <option value="AJG">AJG</option>
+        </select>
+        <label>مشتری</label>
+        <select id="filterCustomer"><option value="">همه</option></select>
+        <button type="button" class="filter-toggle" id="clearFiltersBtn" style="margin-top:10px; padding:8px 12px;">پاک کردن فیلترها</button>
+      </div>
+      <div id="pendingList"></div>
+    </div>
+  </div>
+
+  <div id="tabDashboard" style="display:none;">
+    <div class="card">
+      <div id="dashContent"></div>
+      <button class="secondary-btn" id="exportCsvBtn" style="margin-top:14px;">📥 خروجی CSV از لیست فعلی</button>
+      <button class="secondary-btn" id="refreshDashBtn">🔄 بروزرسانی</button>
+    </div>
+  </div>
+</div>
+
+<nav class="tabs">
+  <button id="navNew" class="active">➕ ثبت سفارش</button>
+  <button id="navPending">📋 مدیریت</button>
+  <button id="navDashboard">📊 داشبورد</button>
+</nav>
+
+<div class="bulk-bar" id="bulkBar">
+  <span class="count" id="bulkCount">0</span>
+  <select id="bulkStatus"><option value="">وضعیت...</option></select>
+  <button id="bulkApply">اعمال</button>
+  <button id="bulkClear">✕</button>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <div class="sub" id="modalSub"></div>
+    <div id="modalViewBar"></div>
+    <div id="modalFields"></div>
+    <button class="submit-btn" id="modalSaveBtn">ذخیره</button>
+    <div class="msg" id="modalMsg"></div>
+    <button class="close-modal" id="modalCloseBtn">بستن</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="copyBackdrop">
+  <div class="modal">
+    <h3>📋 کپی از سفارش قبلی</h3>
+    <div class="sub">یه سفارش رو انتخاب کن تا اطلاعاتش پر بشه</div>
+    <div id="copyList"></div>
+    <button class="close-modal" id="copyCloseBtn">بستن</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="settingsBackdrop">
+  <div class="modal">
+    <h3>⚙️ تنظیمات اتصال</h3>
+    <div class="sub">آدرس Web App اسکریپت گوگل</div>
+    <label class="req">لینک Web App</label>
+    <input type="text" id="settingsUrl" placeholder="https://script.google.com/macros/s/.../exec" dir="ltr" style="text-align:left;">
+    <div class="hint">لینک باید با <code>https://script.google.com/</code> شروع و به <code>/exec</code> ختم شود.</div>
+    <button class="submit-btn" id="settingsSaveBtn">ذخیره و تست اتصال</button>
+    <div class="msg" id="settingsMsg"></div>
+    <button class="close-modal" id="settingsCloseBtn">بستن</button>
+  </div>
+</div>
+
+<div class="gsearch-overlay" id="gsearchOverlay">
+  <div class="gsearch-box">
+    <input type="text" id="gsearchInput" placeholder="جستجو در همه تب‌های این سال..." dir="auto">
+    <div class="gsearch-results" id="gsearchResults"></div>
+    <button class="close-modal" id="gsearchClose">بستن</button>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL_DEFAULT = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+const STORAGE_KEY = "caspian_script_url";
+
+const PRODUCT_OPTIONS = {
+  steam: ['دیگ بخار ایستاده', 'دیگ بخار افقی', 'دیگ بخار فایرباکس'],
+  hotwater: [
+    'دیگ آبگرم شعله برگشتی آذران 2 پاس', 'دیگ آبداغ شعله برگشتی آذران 2 پاس',
+    'دیگ آبگرم فایرباکس درای بک', 'دیگ آبگرم فایرباکس سمی وت بک',
+    'دیگ آبداغ فایرباکس سمی وت بک', 'دیگ آبگرم وت بک', 'دیگ آبداغ وت بک',
+    'دیگ 3 پاس استوانه'
+  ],
+  tanks: [
+    'دیگ نرمال آبگرم مصرفی', 'دیگ نرمال شوفاژی', 'سختی گیر نیمه اتوماتیک',
+    'سختی گیر تمام اتوماتیک', 'فیلتر شنی', 'منبع کوئلی', 'منبع اسپیرال',
+    'منبع انبساط باز', 'منبع انبساط بسته', 'منبع کندانس', 'دی اریتور',
+    'مبدل حرارتی', 'پکیج صنعتی ایر سپراتور', 'مخزن ذخیره مایعات',
+    'مبدل پالایشگاهی', 'دیگ روغن داغ', 'مولد بخار'
+  ]
+};
+
+// وضعیت دستگاه — سه حالت
+const STATUS_LIST = ['ساخته نشده', 'در حال ساخت', 'ساخته شده'];
+const STATUS_COLORS = {
+  'ساخته نشده': '#E53935',
+  'در حال ساخت':'#FFC107',
+  'ساخته شده':  '#28A745'
+};
+
+const CAT_LABELS = { steam:'بخار', hotwater:'آبگرم استاندارد', tanks:'مخازن و دیگ نرمال' };
+
+const CATEGORIES = {
+  steam: {
+    label: 'بخار',
+    fields: [
+      { key: 'serial', label: 'شماره سریال', required: true },
+      { key: 'product', label: 'نام محصول', required: true },
+      { key: 'notes', label: 'ملاحظات' },
+      { key: 'capacity', label: 'ظرفیت محصول' },
+      { key: 'pressure', label: 'فشار کاری' },
+      { key: 'group', label: 'گروه محصول' },
+      { key: 'customer', label: 'نام مشتری' },
+      { key: 'inspectionCo', label: 'نام شرکت بازرسی' },
+      { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
+      { key: 'hydroDate', label: 'تاریخ تست هیدرو', type: 'jdate' },
+      { key: 'inspectionCode', label: 'کد بازرسی' },
+      { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' },
+      { key: 'status', label: 'وضعیت', type: 'status' }
+    ]
+  },
+  hotwater: {
+    label: 'آبگرم استاندارد',
+    fields: [
+      { key: 'serial', label: 'شماره سریال', required: true },
+      { key: 'product', label: 'مدل محصول', required: true },
+      { key: 'notes', label: 'ملاحظات' },
+      { key: 'capacity', label: 'ظرفیت محصول' },
+      { key: 'desc', label: 'توضیحات' },
+      { key: 'standard', label: 'استاندارد مرجع' },
+      { key: 'customer', label: 'نام مشتری' },
+      { key: 'inspectionCo', label: 'نام شرکت بازرسی' },
+      { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
+      { key: 'hydroDate', label: 'تاریخ تست هیدرو', type: 'jdate' },
+      { key: 'inspectionCode', label: 'کد بازرسی' },
+      { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' },
+      { key: 'status', label: 'وضعیت', type: 'status' }
+    ]
+  },
+  tanks: {
+    label: 'مخازن و دیگ نرمال',
+    fields: [
+      { key: 'serial', label: 'شماره سریال', required: true },
+      { key: 'product', label: 'نام محصول', required: true },
+      { key: 'notes', label: 'ملاحظات' },
+      { key: 'capacity', label: 'ظرفیت محصول' },
+      { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
+      { key: 'orderDesc', label: 'توضیحات سفارش' },
+      { key: 'group', label: 'گروه محصول' },
+      { key: 'customer', label: 'نام مشتری' },
+      { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' },
+      { key: 'status', label: 'وضعیت', type: 'status' }
+    ]
+  }
+};
+
+let currentYear = '1405';
+let availableYears = ['1405'];
+let currentCat = 'steam';
+let currentTab = 'new';
+let allItems = [];
+let customersCache = [];
+let searchTerm = '';
+let onlyPending = true;
+let filterStatus = '';
+let filterInspection = '';
+let filterCustomer = '';
+let currentModalItem = null;
+let modalShowAll = false;
+let selectedRows = new Set();
+
+function getScriptUrl() { return localStorage.getItem(STORAGE_KEY) || SCRIPT_URL_DEFAULT; }
+function isUrlConfigured() {
+  const u = getScriptUrl();
+  return u && u.indexOf('PASTE_YOUR') !== 0 && u.indexOf('https://script.google.com/') === 0;
+}
+function updateConfigWarning() {
+  const w = document.getElementById('configWarning');
+  const gear = document.getElementById('settingsBtn');
+  if (isUrlConfigured()) { w.style.display='none'; gear.classList.add('configured'); }
+  else { w.style.display='block'; gear.classList.remove('configured'); }
+}
+
+function gregorianToJalali(gy, gm, gd) {
+  const g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
+  let jy = (gy <= 1600) ? 0 : 979;
+  gy -= (gy <= 1600) ? 621 : 1600;
+  const gy2 = (gm > 2) ? (gy + 1) : gy;
+  let days = (365*gy) + (Math.floor((gy2+3)/4)) - (Math.floor((gy2+99)/100)) + (Math.floor((gy2+399)/400)) - 80 + gd + g_d_m[gm-1];
+  jy += 33*Math.floor(days/12053); days %= 12053;
+  jy += 4*Math.floor(days/1461); days %= 1461;
+  if (days > 365) { jy += Math.floor((days-1)/365); days = (days-1)%365; }
+  let jm, jd;
+  if (days < 186) { jm = 1 + Math.floor(days/31); jd = 1 + (days%31); }
+  else { jm = 7 + Math.floor((days-186)/30); jd = 1 + ((days-186)%30); }
+  return [jy, jm, jd];
+}
+function todayJalaliStr() {
+  const now = new Date();
+  const [jy, jm, jd] = gregorianToJalali(now.getFullYear(), now.getMonth()+1, now.getDate());
+  const pad = n => String(n).padStart(2,'0');
+  return `${jy}.${pad(jm)}.${pad(jd)}`;
+}
+
+function buildYearRow() {
+  const row = document.getElementById('yearRow');
+  row.innerHTML = '';
+  availableYears.forEach(y => {
+    const btn = document.createElement('button');
+    btn.className = 'year-btn' + (y === currentYear ? ' active' : '');
+    btn.textContent = y;
+    btn.onclick = () => {
+      if (currentYear === y) return;
+      currentYear = y;
+      searchTerm = '';
+      selectedRows.clear();
+      updateBulkBar();
+      const inp = document.getElementById('searchInput');
+      if (inp) inp.value = '';
+      document.getElementById('searchClear').classList.remove('show');
+      render();
+    };
+    row.appendChild(btn);
+  });
+}
+
+function buildCatRow() {
+  const row = document.getElementById('catRow');
+  row.innerHTML = '';
+  Object.keys(CATEGORIES).forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (key === currentCat ? ' active' : '');
+    btn.textContent = CATEGORIES[key].label;
+    btn.onclick = () => {
+      currentCat = key;
+      selectedRows.clear();
+      updateBulkBar();
+      render();
+    };
+    row.appendChild(btn);
+  });
+}
+
+function fieldRowHTML(f, idPrefix) {
+  const id = idPrefix + '_' + f.key;
+  const isNew = idPrefix === 'new';
+
+  if (f.key === 'serial' && isNew) {
+    return `
+      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <div class="date-row">
+        <input type="text" id="${id}" placeholder="${f.placeholder || ''}">
+        <button type="button" class="today-btn" onclick="refreshSerial()" title="سریال بعدی">🔄</button>
+      </div>`;
+  }
+  if (f.key === 'product' && isNew) {
+    const options = (PRODUCT_OPTIONS[currentCat] || [])
+      .map(o => `<option value="${o.replace(/"/g, '&quot;')}"></option>`).join('');
+    return `
+      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <input type="text" id="${id}" list="datalist_${currentCat}_product"
+             placeholder="انتخاب یا تایپ دستی..." autocomplete="off">
+      <datalist id="datalist_${currentCat}_product">${options}</datalist>`;
+  }
+  if (f.key === 'customer' && isNew) {
+    const options = customersCache.map(c => `<option value="${c.replace(/"/g, '&quot;')}"></option>`).join('');
+    return `
+      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <input type="text" id="${id}" list="datalist_customers"
+             placeholder="انتخاب یا تایپ..." autocomplete="off">
+      <datalist id="datalist_customers">${options}</datalist>`;
+  }
+  if (f.key === 'status') {
+    const opts = STATUS_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
+    return `
+      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <select id="${id}">${opts}</select>`;
+  }
+  if (f.type === 'jdate') {
+    return `
+      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <div class="date-row">
+        <input type="text" id="${id}" placeholder="۱۴۰۵.۰۶.۲۰" dir="ltr" style="text-align:left;">
+        <button type="button" class="today-btn" onclick="document.getElementById('${id}').value = todayJalaliStr()">امروز</button>
+      </div>`;
+  }
+  return `
+    <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+    <input type="text" id="${id}" placeholder="${f.placeholder || ''}">`;
+}
+
+async function buildNewForm() {
+  const form = document.getElementById('newForm');
+  const cat = CATEGORIES[currentCat];
+  form.innerHTML = cat.fields.map(f => fieldRowHTML(f, 'new')).join('');
+
+  const productEl = document.getElementById('new_product');
+  if (productEl && !document.getElementById('new_count')) {
+    productEl.parentNode.insertAdjacentHTML('afterend', `
+      <label for="new_count">تعداد دستگاه</label>
+      <input type="number" id="new_count" min="1" value="1" step="1">
+      <div class="count-hint" id="countHint">
+        اگه بیشتر از ۱ باشه، ردیف جدا با سریال متوالی ثبت می‌شه.
+      </div>`);
+  }
+
+  await Promise.all([autofillSerial(false), loadCustomers()]);
+  updateCountHint();
+}
+
+function updateCountHint() {
+  const countEl = document.getElementById('new_count');
+  const hintEl = document.getElementById('countHint');
+  const serialEl = document.getElementById('new_serial');
+  if (!countEl || !hintEl) return;
+  const count = Math.max(1, parseInt(countEl.value, 10) || 1);
+  const serial = (serialEl && serialEl.value.trim()) || '';
+  if (count > 1 && serial) {
+    const m = serial.match(/^(.*?)(\d+)\s*$/);
+    if (m) {
+      const prefix = m[1];
+      const start = parseInt(m[2], 10);
+      const pad = m[2].length;
+      const last = prefix + String(start + count - 1).padStart(pad, '0');
+      hintEl.textContent = '✅ ' + serial + ' تا ' + last + ' (' + count + ' ردیف)';
+      hintEl.style.color = 'var(--green)';
+      return;
+    }
+  }
+  hintEl.textContent = 'اگه بیشتر از ۱ باشه، ردیف جدا با سریال متوالی ثبت می‌شه.';
+  hintEl.style.color = '';
+}
+
+function clearNewForm() {
+  const cat = CATEGORIES[currentCat];
+  cat.fields.forEach(f => {
+    if (f.key === 'serial') return;
+    const el = document.getElementById('new_' + f.key);
+    if (el) {
+      if (el.tagName === 'SELECT') el.selectedIndex = 0;
+      else el.value = '';
+    }
+  });
+  const countEl = document.getElementById('new_count');
+  if (countEl) countEl.value = '1';
+  autofillSerial(true);
+}
+
+async function autofillSerial(force) {
+  const serialEl = document.getElementById('new_serial');
+  if (!serialEl) return;
+  if (!force && serialEl.value && serialEl.value.trim()) return;
+  if (!isUrlConfigured()) return;
+  try {
+    const result = await callApi({ action: 'getNextSerial', category: currentCat });
+    if (result.ok && result.serial) {
+      serialEl.value = result.serial;
+      serialEl.placeholder = '';
+    } else if (result.ok && result.lastSerial) {
+      serialEl.value = '';
+      serialEl.placeholder = 'آخرین: ' + result.lastSerial;
+    }
+    updateCountHint();
+  } catch (e) {}
+}
+
+async function refreshSerial() {
+  const serialEl = document.getElementById('new_serial');
+  if (serialEl) serialEl.value = '';
+  await autofillSerial(true);
+}
+
+async function loadCustomers() {
+  if (!isUrlConfigured()) return;
+  try {
+    const result = await callApi({ action: 'getDistinctCustomers', category: currentCat });
+    if (result.ok) {
+      customersCache = result.customers || [];
+      const dl = document.getElementById('datalist_customers');
+      if (dl) dl.innerHTML = customersCache.map(c => `<option value="${c.replace(/"/g, '&quot;')}"></option>`).join('');
+      const fs = document.getElementById('filterCustomer');
+      if (fs) {
+        fs.innerHTML = '<option value="">همه</option>' + customersCache.map(c => `<option value="${c.replace(/"/g, '&quot;')}">${c}</option>`).join('');
+      }
+    }
+  } catch (e) {}
+}
+
+async function checkDuplicate(serial) {
+  if (!serial || !serial.trim()) return { exists: false };
+  try {
+    return await callApi({ action: 'checkDuplicateSerial', category: currentCat, serial: serial });
+  } catch (e) { return { exists: false }; }
+}
+
+function showMsg(elId, text, isErr) {
+  const el = document.getElementById(elId);
+  el.textContent = text;
+  el.className = 'msg ' + (isErr ? 'err' : 'ok');
+  setTimeout(() => { el.className = 'msg'; }, 6000);
+}
+
+async function callApi(payload) {
+  const url = getScriptUrl();
+  if (!isUrlConfigured()) { openSettings(); throw new Error('لینک اتصال تنظیم نشده'); }
+  const params = new URLSearchParams();
+  params.append('action', payload.action);
+  params.append('year', currentYear);
+  if (payload.category) params.append('category', payload.category);
+  if (payload.row)      params.append('row', payload.row);
+  if (payload.count)    params.append('count', payload.count);
+  if (payload.serial)   params.append('serial', payload.serial);
+  if (payload.status)   params.append('status', payload.status);
+  if (payload.rows)     params.append('rows', JSON.stringify(payload.rows));
+  if (payload.data)     params.append('data', JSON.stringify(payload.data));
+  const sep = url.indexOf('?') === -1 ? '?' : '&';
+  const finalUrl = url + sep + params.toString();
+  const res = await fetch(finalUrl, { method: 'GET', redirect: 'follow' });
+  const text = await res.text();
+  let data;
+  try { data = JSON.parse(text); }
+  catch (_) { throw new Error('پاسخ سرور JSON نبود: ' + text.slice(0, 150)); }
+  return data;
+}
+
+async function submitNewOrder() {
+  const cat = CATEGORIES[currentCat];
+  const data = {};
+  let missingRequired = null;
+  cat.fields.forEach(f => {
+    const el = document.getElementById('new_' + f.key);
+    const val = el ? el.value.trim() : '';
+    data[f.key] = val;
+    if (f.required && !val) missingRequired = f.label;
+  });
+  if (missingRequired) {
+    showMsg('newMsg', `لطفاً «${missingRequired}» را وارد کنید`, true);
+    return;
+  }
+
+  const dup = await checkDuplicate(data.serial);
+  if (dup.exists) {
+    showMsg('newMsg', `⚠️ سریال «${data.serial}» قبلاً در ردیف ${dup.rows.join(', ')} ثبت شده!`, true);
+    return;
+  }
+
+  const countEl = document.getElementById('new_count');
+  const count = countEl ? Math.max(1, parseInt(countEl.value, 10) || 1) : 1;
+
+  const btn = document.getElementById('newSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = count > 1 ? ('در حال ثبت ' + count + ' ردیف...') : 'در حال ثبت...';
+  try {
+    const result = await callApi({ action: 'addOrder', category: currentCat, data, count });
+    if (result.ok) {
+      if (result.count > 1) {
+        showMsg('newMsg', `✅ ${result.count} سفارش ثبت شد (${result.firstSerial} تا ${result.lastSerial})`, false);
+      } else {
+        showMsg('newMsg', '✅ سفارش ثبت شد', false);
+      }
+      clearNewForm();
+    } else {
+      showMsg('newMsg', 'خطا: ' + (result.error || 'نامشخص'), true);
+    }
+  } catch (e) {
+    showMsg('newMsg', 'خطا: ' + (e.message || 'اتصال برقرار نشد'), true);
+  }
+  btn.disabled = false;
+  btn.textContent = 'ثبت سفارش';
+}
+
+async function loadItems() {
+  const listEl = document.getElementById('pendingList');
+  if (!isUrlConfigured()) {
+    listEl.innerHTML = '<div class="empty-state">ابتدا لینک اتصال را تنظیم کنید</div>';
+    return;
+  }
+  listEl.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
+  try {
+    const result = await callApi({ action: 'listAll', category: currentCat });
+    if (!result.ok) {
+      listEl.innerHTML = `<div class="empty-state">خطا: ${result.error}</div>`;
+      return;
+    }
+    allItems = result.items || [];
+    renderList();
+  } catch (e) {
+    listEl.innerHTML = '<div class="empty-state">خطا: ' + (e.message || 'اتصال برقرار نشد') + '</div>';
+  }
+}
+
+function normalizeText(s) {
+  if (!s) return '';
+  return String(s).replace(/[\u200c\u200d\u200e\u200f]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+function inspectionTagClass(co) {
+  const v = String(co || '').trim().toUpperCase();
+  if (v === 'ISQI') return 'tag isqi';
+  if (v === 'AJG') return 'tag ajg';
+  return 'tag';
+}
+
+function getFilteredItems() {
+  const q = normalizeText(searchTerm);
+  let items = allItems.slice();
+  if (onlyPending) items = items.filter(it => (it.emptyKeys || []).length > 0);
+  if (filterStatus) items = items.filter(it => String(it.data.status || '').trim() === filterStatus);
+  if (filterInspection) items = items.filter(it => String(it.data.inspectionCo || '').trim().toUpperCase() === filterInspection);
+  if (filterCustomer) items = items.filter(it => String(it.data.customer || '').trim() === filterCustomer);
+  if (q) {
+    items = items.filter(it => {
+      const hay = normalizeText([it.data.serial, it.data.product, it.data.customer, it.data.group, it.data.inspectionCode, it.data.inspectionCo].join(' | '));
+      return hay.indexOf(q) !== -1;
+    });
+  }
+  return items;
+}
+
+function renderList() {
+  const listEl = document.getElementById('pendingList');
+  const cat = CATEGORIES[currentCat];
+  const items = getFilteredItems();
+
+  if (items.length === 0) {
+    listEl.innerHTML = '<div class="empty-state">چیزی پیدا نشد</div>';
+    return;
+  }
+
+  listEl.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    const emptyCount = (item.emptyKeys || []).length;
+    div.className = 'pending-item' + (emptyCount === 0 ? ' complete' : '');
+
+    const isSelected = selectedRows.has(item.row);
+    const status = String(item.data.status || '').trim();
+    const statusBadge = status
+      ? `<span class="status-badge" style="background:${STATUS_COLORS[status] || '#666'}">${status}</span>`
+      : '';
+    const co = item.data.inspectionCo && String(item.data.inspectionCo).trim();
+    const coBadge = co ? `<span class="${inspectionTagClass(co)}" style="margin-right:6px;">${co}</span>` : '';
+
+    const capacity = (item.data.capacity && String(item.data.capacity).trim()) || '—';
+    const pressure = item.data.pressure && String(item.data.pressure).trim();
+    const customer = item.data.customer && String(item.data.customer).trim();
+
+    const specsParts = [`ظرفیت: <span class="v">${capacity}</span>`];
+    if (pressure) specsParts.push(`فشار: <span class="v">${pressure}</span>`);
+    if (customer) specsParts.push(`مشتری: <span class="v">${customer}</span>`);
+
+    let tags;
+    if (emptyCount === 0) {
+      tags = '<span class="tag ok">✓ کامل</span>';
+    } else {
+      tags = item.emptyKeys.map(k => {
+        const f = cat.fields.find(x => x.key === k);
+        return `<span class="tag">${f ? f.label : k}</span>`;
+      }).join('');
+    }
+
+    div.innerHTML = `
+      <div class="top">
+        <input type="checkbox" class="bulk-select" data-row="${item.row}" ${isSelected ? 'checked' : ''}>
+        <div class="info">
+          <div class="serial">${item.data.serial || '(بدون سریال)'} ${coBadge} ${statusBadge}</div>
+          <div class="product">${item.data.product || ''}</div>
+          <div class="specs">${specsParts.join(' &nbsp;•&nbsp; ')}</div>
+          <div class="missing-tags">${tags}</div>
+        </div>
+        <div class="card-actions">
+          <button data-action="edit" title="ویرایش">✎</button>
+          <button data-action="copy" title="کپی به فرم">📋</button>
+        </div>
+      </div>`;
+
+    div.querySelector('.info').onclick = () => openModal(item);
+    div.querySelector('[data-action="edit"]').onclick = (e) => { e.stopPropagation(); openModal(item); };
+    div.querySelector('[data-action="copy"]').onclick = (e) => { e.stopPropagation(); copyItemToForm(item); };
+    const cb = div.querySelector('.bulk-select');
+    cb.onchange = (e) => {
+      if (e.target.checked) selectedRows.add(item.row);
+      else selectedRows.delete(item.row);
+      updateBulkBar();
+    };
+    listEl.appendChild(div);
+  });
+}
+
+function updateBulkBar() {
+  const bar = document.getElementById('bulkBar');
+  const cnt = document.getElementById('bulkCount');
+  if (selectedRows.size > 0) {
+    bar.classList.add('show');
+    cnt.textContent = selectedRows.size + ' ردیف';
+  } else {
+    bar.classList.remove('show');
+  }
+}
+
+async function applyBulkStatus() {
+  const statusEl = document.getElementById('bulkStatus');
+  const status = statusEl.value;
+  if (!status) { alert('وضعیت رو انتخاب کن'); return; }
+  if (selectedRows.size === 0) return;
+  const btn = document.getElementById('bulkApply');
+  btn.disabled = true;
+  btn.textContent = '...';
+  try {
+    const rows = Array.from(selectedRows);
+    const result = await callApi({ action: 'bulkUpdateStatus', category: currentCat, rows, status });
+    if (result.ok) {
+      selectedRows.clear();
+      updateBulkBar();
+      statusEl.value = '';
+      await loadItems();
+    } else {
+      alert('خطا: ' + (result.error || 'نامشخص'));
+    }
+  } catch (e) {
+    alert('خطا: ' + e.message);
+  }
+  btn.disabled = false;
+  btn.textContent = 'اعمال';
+}
+
+function openModal(item) {
+  currentModalItem = item;
+  modalShowAll = false;
+  const cat = CATEGORIES[currentCat];
+  document.getElementById('modalTitle').textContent = item.data.serial || '(بدون سریال)';
+
+  const capacity = (item.data.capacity && String(item.data.capacity).trim()) || '—';
+  const pressure = item.data.pressure && String(item.data.pressure).trim();
+  const subParts = ['ظرفیت: ' + capacity];
+  if (pressure) subParts.push('فشار: ' + pressure);
+  document.getElementById('modalSub').innerHTML =
+    (item.data.product || '') +
+    '<br><span style="color:var(--text); font-size:11.5px;">' + subParts.join(' • ') + '</span>';
+
+  renderModalFields();
+  document.getElementById('modalMsg').className = 'msg';
+  document.getElementById('modalBackdrop').classList.add('show');
+  document.getElementById('modalSaveBtn').onclick = () => saveModal();
+}
+
+function getModalKeys() {
+  const item = currentModalItem;
+  const cat = CATEGORIES[currentCat];
+  if (modalShowAll) return cat.fields.map(f => f.key);
+  if (item.emptyKeys && item.emptyKeys.length > 0) return item.emptyKeys.slice();
+  return cat.fields.filter(f => f.type === 'jdate' || f.key === 'status').map(f => f.key);
+}
+
+function renderModalFields() {
+  const cat = CATEGORIES[currentCat];
+  const item = currentModalItem;
+  const fieldsEl = document.getElementById('modalFields');
+  const viewBar = document.getElementById('modalViewBar');
+  const keysToShow = getModalKeys();
+
+  const emptyCount = (item.emptyKeys || []).length;
+  const totalCount = cat.fields.length;
+  let labelText;
+  if (modalShowAll) labelText = 'همه فیلدها (' + totalCount + ')';
+  else if (emptyCount > 0) labelText = 'فیلدهای خالی (' + emptyCount + ')';
+  else labelText = 'همه پر است';
+
+  viewBar.innerHTML = `
+    <div class="modal-view-bar">
+      <div class="label">${labelText}</div>
+      <button type="button" id="modalToggleView">
+        ${modalShowAll ? '↩ فقط خالی‌ها' : '✎ ویرایش همه'}
+      </button>
+    </div>`;
+
+  fieldsEl.innerHTML = keysToShow.map(k => {
+    const f = cat.fields.find(x => x.key === k);
+    if (!f) return '';
+    let html = fieldRowHTML(f, 'modal');
+    const oldVal = item.data[k];
+    if (oldVal !== undefined && oldVal !== null && String(oldVal).trim() !== '') {
+      const id = 'modal_' + k;
+      if (f.type === 'status') {
+        html = html.replace(`<select id="${id}">`, `<select id="${id}" data-select-val="${String(oldVal).replace(/"/g, '&quot;')}">`);
+      } else {
+        html = html.replace(`id="${id}"`, `id="${id}" data-prefill="${String(oldVal).replace(/"/g, '&quot;').replace(/&/g, '&amp;')}"`);
+      }
+    }
+    return html;
+  }).join('');
+
+  requestAnimationFrame(() => {
+    keysToShow.forEach(k => {
+      const el = document.getElementById('modal_' + k);
+      if (!el) return;
+      if (el.dataset.prefill) el.value = el.dataset.prefill;
+      if (el.dataset.selectVal) el.value = el.dataset.selectVal;
+      if (modalShowAll) {
+        const isEmpty = !el.value || !el.value.trim();
+        el.style.borderColor = isEmpty ? 'var(--danger)' : '';
+      } else {
+        el.style.borderColor = '';
+      }
+    });
+    const toggle = document.getElementById('modalToggleView');
+    if (toggle) toggle.onclick = () => { modalShowAll = !modalShowAll; renderModalFields(); };
+  });
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('show');
+  currentModalItem = null;
+}
+
+async function saveModal() {
+  const item = currentModalItem;
+  if (!item) return;
+  const keysToShow = getModalKeys();
+  const data = {};
+  keysToShow.forEach(k => {
+    const el = document.getElementById('modal_' + k);
+    if (el) {
+      const v = el.value.trim();
+      if (v) data[k] = v;
+    }
+  });
+  if (Object.keys(data).length === 0) {
+    showMsg('modalMsg', 'هیچ مقداری وارد نشده', true);
+    return;
+  }
+  const btn = document.getElementById('modalSaveBtn');
+  btn.disabled = true;
+  btn.textContent = 'در حال ذخیره...';
+  try {
+    const result = await callApi({ action: 'updatePending', category: currentCat, row: item.row, data });
+    if (result.ok) {
+      showMsg('modalMsg', '✅ ذخیره شد', false);
+      setTimeout(() => { closeModal(); loadItems(); }, 700);
+    } else {
+      showMsg('modalMsg', 'خطا: ' + (result.error || 'نامشخص'), true);
+    }
+  } catch (e) {
+    showMsg('modalMsg', 'خطا: ' + (e.message || 'اتصال برقرار نشد'), true);
+  }
+  btn.disabled = false;
+  btn.textContent = 'ذخیره';
+}
+
+function copyItemToForm(item) {
+  switchTab('new');
+  setTimeout(() => {
+    const cat = CATEGORIES[currentCat];
+    cat.fields.forEach(f => {
+      if (f.key === 'serial' || f.key === 'status') return;
+      const el = document.getElementById('new_' + f.key);
+      if (el && item.data[f.key]) el.value = item.data[f.key];
+    });
+    refreshSerial();
+    showMsg('newMsg', '📋 اطلاعات از سریال ' + (item.data.serial || '') + ' کپی شد', false);
+  }, 200);
+}
+
+async function openCopyModal() {
+  const listEl = document.getElementById('copyList');
+  listEl.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
+  document.getElementById('copyBackdrop').classList.add('show');
+  try {
+    const result = await callApi({ action: 'getRecentOrders', category: currentCat });
+    if (!result.ok) { listEl.innerHTML = '<div class="empty-state">خطا</div>'; return; }
+    if (!result.items || result.items.length === 0) {
+      listEl.innerHTML = '<div class="empty-state">سفارشی برای کپی نیست</div>';
+      return;
+    }
+    listEl.innerHTML = '';
+    result.items.forEach(item => {
+      const d = document.createElement('div');
+      d.className = 'pending-item';
+      d.style.cursor = 'pointer';
+      d.innerHTML = `
+        <div class="serial">${item.data.serial || ''}</div>
+        <div class="product">${item.data.product || ''}</div>
+        <div class="specs">مشتری: ${item.data.customer || '—'} • ظرفیت: ${item.data.capacity || '—'}</div>`;
+      d.onclick = () => {
+        document.getElementById('copyBackdrop').classList.remove('show');
+        copyItemToForm(item);
+      };
+      listEl.appendChild(d);
+    });
+  } catch (e) {
+    listEl.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>';
+  }
+}
+
+async function loadDashboard() {
+  const dash = document.getElementById('dashContent');
+  dash.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
+  try {
+    const result = await callApi({ action: 'getStats' });
+    if (!result.ok) { dash.innerHTML = '<div class="empty-state">خطا: ' + result.error + '</div>'; return; }
+    const s = result.stats;
+    let html = `<div class="dash-grid">
+      <div class="dash-card"><div class="num">${s.total}</div><div class="lbl">کل سفارش‌های سال ${currentYear}</div></div>
+      <div class="dash-card"><div class="num" style="color:#ffc107">${s.pendingCount}</div><div class="lbl">ناقص (با فیلد خالی)</div></div>
+    </div>`;
+
+    html += `<div class="dash-card wide" style="margin-bottom:12px;">
+      <div style="font-weight:bold;margin-bottom:8px;color:var(--green);">دسته‌بندی</div>`;
+    Object.keys(CAT_LABELS).forEach(c => {
+      html += `<div class="stat-row"><span>${CAT_LABELS[c]}</span><span class="val">${s.byCategory[c] || 0}</span></div>`;
+    });
+    html += `</div>`;
+
+    html += `<div class="dash-card wide" style="margin-bottom:12px;">
+      <div style="font-weight:bold;margin-bottom:8px;color:var(--green);">وضعیت‌ها</div>`;
+    STATUS_LIST.forEach(st => {
+      const count = s.byStatus[st] || 0;
+      html += `<div class="stat-row"><span class="key"><span class="dot" style="background:${STATUS_COLORS[st]}"></span>${st}</span><span class="val">${count}</span></div>`;
+    });
+    const unknown = s.byStatus['نامشخص'] || 0;
+    if (unknown > 0) {
+      html += `<div class="stat-row"><span class="key"><span class="dot" style="background:#666"></span>نامشخص</span><span class="val">${unknown}</span></div>`;
+    }
+    html += `</div>`;
+
+    html += `<div class="dash-card wide" style="margin-bottom:12px;">
+      <div style="font-weight:bold;margin-bottom:8px;color:var(--green);">شرکت بازرسی</div>`;
+    const insp = s.byInspection || {};
+    if (Object.keys(insp).length === 0) {
+      html += `<div class="stat-row"><span style="color:var(--text-dim);">موردی ثبت نشده</span></div>`;
+    } else {
+      Object.keys(insp).sort().forEach(k => {
+        const bg = k === 'ISQI' ? '#FFD700' : (k === 'AJG' ? '#E53935' : '#888');
+        html += `<div class="stat-row"><span class="key"><span class="dot" style="background:${bg}"></span>${k}</span><span class="val">${insp[k]}</span></div>`;
+      });
+    }
+    html += `</div>`;
+
+    dash.innerHTML = html;
+  } catch (e) {
+    dash.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>';
+  }
+}
+
+function exportCsv() {
+  const items = getFilteredItems();
+  if (items.length === 0) { alert('چیزی برای خروجی نیست'); return; }
+  const cat = CATEGORIES[currentCat];
+  const headers = cat.fields.map(f => f.label);
+  const rows = items.map(it => cat.fields.map(f => {
+    const v = it.data[f.key];
+    return '"' + String(v === undefined || v === null ? '' : v).replace(/"/g, '""') + '"';
+  }).join(','));
+  const csv = '\uFEFF' + headers.map(h => '"' + h + '"').join(',') + '\n' + rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `caspian-${currentCat}-${currentYear}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function openSettings() {
+  document.getElementById('settingsUrl').value = localStorage.getItem(STORAGE_KEY) || '';
+  document.getElementById('settingsMsg').className = 'msg';
+  document.getElementById('settingsBackdrop').classList.add('show');
+}
+function closeSettings() { document.getElementById('settingsBackdrop').classList.remove('show'); }
+
+async function saveSettings() {
+  const url = document.getElementById('settingsUrl').value.trim();
+  const msg = document.getElementById('settingsMsg');
+  if (!url) { msg.textContent='لطفاً لینک را وارد کنید'; msg.className='msg err'; return; }
+  if (url.indexOf('https://script.google.com/') !== 0) { msg.textContent='لینک باید با https://script.google.com/ شروع شود'; msg.className='msg err'; return; }
+  if (url.indexOf('/exec') === -1) { msg.textContent='لینک باید به /exec ختم شود'; msg.className='msg err'; return; }
+  localStorage.setItem(STORAGE_KEY, url);
+  msg.textContent = 'در حال تست...'; msg.className = 'msg ok';
+  try {
+    const pingUrl = url + (url.indexOf('?') === -1 ? '?' : '&') + 'action=ping';
+    const res = await fetch(pingUrl, { method: 'GET' });
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); }
+    catch (_) { msg.textContent = 'پاسخ JSON نبود: ' + text.slice(0,120); msg.className='msg err'; return; }
+    if (data.ok) {
+      if (data.years && data.years.length > 0) availableYears = data.years;
+      msg.textContent = '✅ اتصال برقرار — نسخه ' + (data.version || '?');
+      msg.className = 'msg ok';
+      updateConfigWarning();
+      setTimeout(() => { closeSettings(); render(); }, 900);
+    } else {
+      msg.textContent = 'خطا: ' + (data.error || 'نامشخص'); msg.className = 'msg err';
+    }
+  } catch (e) {
+    msg.textContent = 'اتصال برقرار نشد: ' + e.message; msg.className = 'msg err';
+  }
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tabNew').style.display = tab === 'new' ? 'block' : 'none';
+  document.getElementById('tabPending').style.display = tab === 'pending' ? 'block' : 'none';
+  document.getElementById('tabDashboard').style.display = tab === 'dashboard' ? 'block' : 'none';
+  document.getElementById('navNew').className = tab === 'new' ? 'active' : '';
+  document.getElementById('navPending').className = tab === 'pending' ? 'active' : '';
+  document.getElementById('navDashboard').className = tab === 'dashboard' ? 'active' : '';
+  if (tab !== 'pending') { selectedRows.clear(); updateBulkBar(); }
+  render();
+}
+
+async function render() {
+  buildYearRow();
+  buildCatRow();
+  updateReminder();
+  if (currentTab === 'new') await buildNewForm();
+  else if (currentTab === 'pending') await loadItems();
+  else if (currentTab === 'dashboard') await loadDashboard();
+}
+
+async function updateReminder() {
+  const r = document.getElementById('reminder');
+  if (!isUrlConfigured()) { r.classList.remove('show'); return; }
+  try {
+    const result = await callApi({ action: 'getStats' });
+    if (result.ok && result.stats.pendingCount > 0) {
+      document.getElementById('reminderText').textContent =
+        result.stats.pendingCount + ' سفارش ناقص در سال ' + currentYear + ' داری';
+      r.classList.add('show');
+    } else {
+      r.classList.remove('show');
+    }
+  } catch (e) { r.classList.remove('show'); }
+}
+
+function openGlobalSearch() {
+  document.getElementById('gsearchOverlay').classList.add('show');
+  setTimeout(() => document.getElementById('gsearchInput').focus(), 100);
+}
+function closeGlobalSearch() {
+  document.getElementById('gsearchOverlay').classList.remove('show');
+  document.getElementById('gsearchInput').value = '';
+  document.getElementById('gsearchResults').innerHTML = '';
+}
+
+async function doGlobalSearch(q) {
+  const out = document.getElementById('gsearchResults');
+  if (!q || q.trim().length < 2) { out.innerHTML = '<div class="empty-state">حداقل ۲ کاراکتر وارد کن</div>'; return; }
+  out.innerHTML = '<div class="spinner">در حال جستجو...</div>';
+  const nq = normalizeText(q);
+  const allCats = ['steam', 'hotwater', 'tanks'];
+  const results = [];
+  for (const c of allCats) {
+    try {
+      const r = await callApi({ action: 'listAll', category: c });
+      if (r.ok && r.items) {
+        r.items.forEach(it => {
+          const hay = normalizeText([it.data.serial, it.data.product, it.data.customer, it.data.group, it.data.inspectionCode, it.data.inspectionCo].join(' | '));
+          if (hay.indexOf(nq) !== -1) results.push({ cat: c, item: it });
+        });
+      }
+    } catch (e) {}
+  }
+  if (results.length === 0) { out.innerHTML = '<div class="empty-state">چیزی پیدا نشد</div>'; return; }
+  out.innerHTML = '';
+  results.forEach(r => {
+    const d = document.createElement('div');
+    d.className = 'gsearch-item';
+    const co = r.item.data.inspectionCo && String(r.item.data.inspectionCo).trim();
+    const coBadge = co ? `<span class="${inspectionTagClass(co)}" style="margin-right:6px;">${co}</span>` : '';
+    const status = String(r.item.data.status || '').trim();
+    const stBadge = status ? `<span class="status-badge" style="background:${STATUS_COLORS[status] || '#666'}">${status}</span>` : '';
+    d.innerHTML = `
+      <div style="font-size:11px;color:var(--text-dim);">${CAT_LABELS[r.cat]}</div>
+      <div style="font-weight:bold;color:var(--green);margin-top:2px;">${r.item.data.serial || '(بدون سریال)'} ${coBadge} ${stBadge}</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-top:2px;">${r.item.data.product || ''} — ${r.item.data.customer || ''}</div>`;
+    d.onclick = () => {
+      closeGlobalSearch();
+      currentCat = r.cat;
+      switchTab('pending');
+      setTimeout(() => openModal(r.item), 400);
+    };
+    out.appendChild(d);
+  });
+}
+
+document.getElementById('navNew').onclick = () => switchTab('new');
+document.getElementById('navPending').onclick = () => switchTab('pending');
+document.getElementById('navDashboard').onclick = () => switchTab('dashboard');
+document.getElementById('newSubmitBtn').onclick = submitNewOrder;
+document.getElementById('copyPrevBtn').onclick = openCopyModal;
+document.getElementById('modalCloseBtn').onclick = closeModal;
+document.getElementById('modalBackdrop').onclick = (e) => { if (e.target.id === 'modalBackdrop') closeModal(); };
+document.getElementById('copyCloseBtn').onclick = () => document.getElementById('copyBackdrop').classList.remove('show');
+document.getElementById('copyBackdrop').onclick = (e) => { if (e.target.id === 'copyBackdrop') document.getElementById('copyBackdrop').classList.remove('show'); };
+document.getElementById('settingsBtn').onclick = openSettings;
+document.getElementById('settingsCloseBtn').onclick = closeSettings;
+document.getElementById('settingsSaveBtn').onclick = saveSettings;
+document.getElementById('settingsBackdrop').onclick = (e) => { if (e.target.id === 'settingsBackdrop') closeSettings(); };
+document.getElementById('configWarning').onclick = openSettings;
+document.getElementById('globalSearchBtn').onclick = openGlobalSearch;
+document.getElementById('gsearchClose').onclick = closeGlobalSearch;
+document.getElementById('gsearchOverlay').onclick = (e) => { if (e.target.id === 'gsearchOverlay') closeGlobalSearch(); };
+document.getElementById('exportCsvBtn').onclick = exportCsv;
+document.getElementById('refreshDashBtn').onclick = loadDashboard;
+
+let gsearchTimer = null;
+document.getElementById('gsearchInput').addEventListener('input', (e) => {
+  clearTimeout(gsearchTimer);
+  gsearchTimer = setTimeout(() => doGlobalSearch(e.target.value), 400);
+});
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchTerm = e.target.value;
+  document.getElementById('searchClear').classList.toggle('show', searchTerm.length > 0);
+  renderList();
+});
+document.getElementById('searchClear').onclick = () => {
+  searchTerm = '';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchClear').classList.remove('show');
+  renderList();
+};
+document.getElementById('onlyPendingBtn').onclick = (e) => {
+  onlyPending = !onlyPending;
+  e.target.classList.toggle('active', onlyPending);
+  e.target.textContent = onlyPending ? 'فقط ناقص‌ها' : 'نمایش همه';
+  renderList();
+};
+document.getElementById('advFilterBtn').onclick = (e) => {
+  const adv = document.getElementById('advFilters');
+  adv.classList.toggle('show');
+  e.target.classList.toggle('active', adv.classList.contains('show'));
+};
+document.getElementById('filterStatus').onchange = (e) => { filterStatus = e.target.value; renderList(); };
+document.getElementById('filterInspection').onchange = (e) => { filterInspection = e.target.value; renderList(); };
+document.getElementById('filterCustomer').onchange = (e) => { filterCustomer = e.target.value; renderList(); };
+document.getElementById('clearFiltersBtn').onclick = () => {
+  filterStatus = ''; filterInspection = ''; filterCustomer = '';
+  document.getElementById('filterStatus').value = '';
+  document.getElementById('filterInspection').value = '';
+  document.getElementById('filterCustomer').value = '';
+  renderList();
+};
+document.getElementById('bulkApply').onclick = applyBulkStatus;
+document.getElementById('bulkClear').onclick = () => {
+  selectedRows.clear(); updateBulkBar();
+  document.querySelectorAll('.bulk-select').forEach(cb => cb.checked = false);
+};
+
+(function initDropdowns() {
+  const st = document.getElementById('bulkStatus');
+  STATUS_LIST.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s; o.textContent = s;
+    st.appendChild(o);
+  });
+  const fs = document.getElementById('filterStatus');
+  STATUS_LIST.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s; o.textContent = s;
+    fs.appendChild(o);
+  });
+})();
+
+document.addEventListener('input', (e) => {
+  if (e.target && (e.target.id === 'new_count' || e.target.id === 'new_serial')) {
+    updateCountHint();
+  }
+});
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('service-worker.js').catch(function(err) { console.warn('SW fail', err); });
+  });
+}
+
+updateConfigWarning();
+render();
+</script>
+</body>
+</html>
