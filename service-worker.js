@@ -1,4 +1,4 @@
-const CACHE_NAME = 'caspian-serial-v9';
+const CACHE_NAME = 'caspian-serial-v10';
 const ASSETS = ['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install', event => {
