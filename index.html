@@ -329,7 +329,8 @@ const PRODUCT_OPTIONS = {
     'سختی گیر تمام اتوماتیک', 'فیلتر شنی', 'منبع کوئلی', 'منبع اسپیرال',
     'منبع انبساط باز', 'منبع انبساط بسته', 'منبع کندانس', 'دی اریتور',
     'مبدل حرارتی', 'پکیج صنعتی ایر سپراتور', 'مخزن ذخیره مایعات',
-    'مبدل پالایشگاهی', 'دیگ روغن داغ', 'مولد بخار'
+    'مبدل پالایشگاهی', 'دیگ روغن داغ', 'مولد بخار',
+    'دیگ تک پاس گذر', 'آبگرم کن', 'منبع تکپاس گذر', 'مبدل اسپیرال'
   ]
 };
 
@@ -510,12 +511,10 @@ function fieldRowHTML(f, idPrefix) {
   }
 
   if (f.key === 'customer' && isNew) {
-    const options = customersCache.map(c => `<option value="${c.replace(/"/g, '&quot;')}"></option>`).join('');
     return `
       <label${f.required ? ' class="req"' : ''}>${f.label}</label>
-      <input type="text" id="${id}" list="datalist_customers"
-             placeholder="انتخاب یا تایپ..." autocomplete="off">
-      <datalist id="datalist_customers">${options}</datalist>`;
+      <input type="text" id="${id}" inputmode="numeric"
+             placeholder="کد مشتری را وارد کنید..." autocomplete="off">`;
   }
 
   if (f.type === 'standard') {
@@ -646,8 +645,6 @@ async function loadCustomers() {
     const result = await callApi({ action: 'getDistinctCustomers', category: currentCat });
     if (result.ok) {
       customersCache = result.customers || [];
-      const dl = document.getElementById('datalist_customers');
-      if (dl) dl.innerHTML = customersCache.map(c => `<option value="${c.replace(/"/g, '&quot;')}"></option>`).join('');
       const fs = document.getElementById('filterCustomer');
       if (fs) {
         fs.innerHTML = '<option value="">همه</option>' + customersCache.map(c => `<option value="${c.replace(/"/g, '&quot;')}">${c}</option>`).join('');
@@ -1368,18 +1365,12 @@ document.addEventListener('input', (e) => {
   }
 });
 
-// ============================================================
-// Service Worker
-// ============================================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('service-worker.js').catch(function(err) { console.warn('SW fail', err); });
   });
 }
 
-// ============================================================
-// Fullscreen
-// ============================================================
 (function setupFullscreen() {
   function requestFS() {
     const el = document.documentElement;
@@ -1411,7 +1402,7 @@ if ('serviceWorker' in navigator) {
   const isStandalone =
     window.matchMedia('(display-mode: standalone)').matches ||
     window.matchMedia('(display-mode: fullscreen)').matches ||
-    window.navigator.standalone === true;
+    window.navigator.webkitDisplayMode === true;
   if (isStandalone) {
     setTimeout(() => { requestFS().catch(() => {}); }, 500);
     const activate = () => {
