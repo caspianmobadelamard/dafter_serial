@@ -35,6 +35,11 @@
     border-radius:10px;border:1px solid var(--border);
     background:var(--bg-card);color:var(--text-dim);font-size:17px;
     cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .header-fullscreen{position:absolute;top:16px;right:60px;width:38px;height:38px;
+    border-radius:10px;border:1px solid var(--border);
+    background:var(--bg-card);color:var(--text-dim);font-size:17px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .header-fullscreen:hover{border-color:var(--green);color:var(--green);}
   .container{padding:0 14px;max-width:520px;margin:0 auto;}
   .year-row{display:flex;gap:6px;margin:14px 0 6px;justify-content:center;flex-wrap:wrap;}
   .year-btn{padding:8px 16px;border-radius:10px;border:1px solid var(--border);
@@ -191,6 +196,7 @@
 <header>
   <button class="header-settings" id="settingsBtn" title="تنظیمات">⚙️</button>
   <button class="header-search" id="globalSearchBtn" title="جستجو">🔍</button>
+  <button class="header-fullscreen" id="fullscreenBtn" title="تمام صفحه">⛶</button>
   <h1>📘 دفتر سریال کاسپین</h1>
   <p>ثبت سریع سفارش و تکمیل اطلاعات</p>
 </header>
@@ -1306,7 +1312,7 @@ document.addEventListener('input', (e) => {
 });
 
 // ============================================================
-// Service Worker + Fullscreen
+// Service Worker
 // ============================================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
@@ -1314,31 +1320,71 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// تلاش برای fullscreen روی دسکتاپ
+// ============================================================
+// Fullscreen روی دسکتاپ
+// ============================================================
 (function setupFullscreen() {
-  function tryFullscreen() {
+
+  function requestFS() {
     const el = document.documentElement;
-    if (!document.fullscreenElement) {
-      if (el.requestFullscreen) {
-        el.requestFullscreen().catch(() => {});
-      } else if (el.webkitRequestFullscreen) {
-        el.webkitRequestFullscreen();
-      } else if (el.msRequestFullscreen) {
-        el.msRequestFullscreen();
-      }
-    }
+    const fn = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (!fn) return Promise.reject('no API');
+    if (document.fullscreenElement) return Promise.resolve();
+    return fn.call(el).catch(() => {});
   }
 
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-                       window.matchMedia('(display-mode: fullscreen)').matches ||
-                       window.navigator.standalone === true;
+  function exitFS() {
+    if (document.exitFullscreen) return document.exitFullscreen().catch(() => {});
+    if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+    if (document.msExitFullscreen) return document.msExitFullscreen();
+    return Promise.resolve();
+  }
+
+  // دکمه هدر
+  const btn = document.getElementById('fullscreenBtn');
+  if (btn) {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      if (document.fullscreenElement) {
+        exitFS();
+      } else {
+        requestFS();
+      }
+    };
+  }
+
+  // به‌روزرسانی آیکن دکمه وقتی وضعیت fullscreen عوض می‌شه
+  function updateIcon() {
+    if (!btn) return;
+    if (document.fullscreenElement) {
+      btn.textContent = '⛉';
+      btn.title = 'خروج از تمام صفحه';
+    } else {
+      btn.textContent = '⛶';
+      btn.title = 'تمام صفحه';
+    }
+  }
+  document.addEventListener('fullscreenchange', updateIcon);
+  document.addEventListener('webkitfullscreenchange', updateIcon);
+
+  // وقتی اپ در حالت standalone باز شده، با اولین کلیک هر جای صفحه fullscreen بشه
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.navigator.standalone === true;
 
   if (isStandalone) {
-    // اولین کلیک → fullscreen
-    document.addEventListener('click', function once() {
-      tryFullscreen();
-      document.removeEventListener('click', once);
-    }, { once: true });
+    setTimeout(() => { requestFS().catch(() => {}); }, 500);
+
+    const activate = () => {
+      requestFS().catch(() => {});
+      document.removeEventListener('click', activate);
+      document.removeEventListener('touchstart', activate);
+      document.removeEventListener('keydown', activate);
+    };
+    document.addEventListener('click', activate, { once: true });
+    document.addEventListener('touchstart', activate, { once: true });
+    document.addEventListener('keydown', activate, { once: true });
   }
 })();
 
