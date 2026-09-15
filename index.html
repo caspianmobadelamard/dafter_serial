@@ -340,6 +340,9 @@ const STATUS_COLORS = {
   'ساخته شده':  '#28A745'
 };
 
+const STANDARD_LIST = ['ISIRI 7911', 'ISIRI 4231', 'INSO 22156'];
+const INSPECTION_LIST = ['ISQI', 'AJG'];
+
 const CAT_LABELS = { steam:'بخار', hotwater:'آبگرم استاندارد', tanks:'مخازن و دیگ نرمال' };
 
 const CATEGORIES = {
@@ -351,14 +354,14 @@ const CATEGORIES = {
       { key: 'notes', label: 'ملاحظات' },
       { key: 'capacity', label: 'ظرفیت محصول' },
       { key: 'pressure', label: 'فشار کاری' },
-      { key: 'group', label: 'گروه محصول' },
+      { key: 'standard', label: 'استاندارد مرجع', type: 'standard' },
       { key: 'customer', label: 'نام مشتری' },
-      { key: 'inspectionCo', label: 'نام شرکت بازرسی' },
+      { key: 'inspectionCo', label: 'نام شرکت بازرسی', type: 'inspection' },
       { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
+      { key: 'status', label: 'وضعیت', type: 'status' },
       { key: 'hydroDate', label: 'تاریخ تست هیدرو', type: 'jdate' },
-      { key: 'inspectionCode', label: 'کد بازرسی' },
-      { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' },
-      { key: 'status', label: 'وضعیت', type: 'status' }
+      { key: 'inspectionCode', label: 'کد بازرسی', required: true },
+      { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' }
     ]
   },
   hotwater: {
@@ -369,14 +372,14 @@ const CATEGORIES = {
       { key: 'notes', label: 'ملاحظات' },
       { key: 'capacity', label: 'ظرفیت محصول' },
       { key: 'desc', label: 'توضیحات' },
-      { key: 'standard', label: 'استاندارد مرجع' },
+      { key: 'standard', label: 'استاندارد مرجع', type: 'standard' },
       { key: 'customer', label: 'نام مشتری' },
-      { key: 'inspectionCo', label: 'نام شرکت بازرسی' },
+      { key: 'inspectionCo', label: 'نام شرکت بازرسی', type: 'inspection' },
       { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
+      { key: 'status', label: 'وضعیت', type: 'status' },
       { key: 'hydroDate', label: 'تاریخ تست هیدرو', type: 'jdate' },
-      { key: 'inspectionCode', label: 'کد بازرسی' },
-      { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' },
-      { key: 'status', label: 'وضعیت', type: 'status' }
+      { key: 'inspectionCode', label: 'کد بازرسی', required: true },
+      { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' }
     ]
   },
   tanks: {
@@ -387,11 +390,11 @@ const CATEGORIES = {
       { key: 'notes', label: 'ملاحظات' },
       { key: 'capacity', label: 'ظرفیت محصول' },
       { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
+      { key: 'status', label: 'وضعیت', type: 'status' },
       { key: 'orderDesc', label: 'توضیحات سفارش' },
       { key: 'group', label: 'گروه محصول' },
       { key: 'customer', label: 'نام مشتری' },
-      { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' },
-      { key: 'status', label: 'وضعیت', type: 'status' }
+      { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' }
     ]
   }
 };
@@ -495,6 +498,7 @@ function fieldRowHTML(f, idPrefix) {
         <button type="button" class="today-btn" onclick="refreshSerial()" title="سریال بعدی">🔄</button>
       </div>`;
   }
+
   if (f.key === 'product' && isNew) {
     const options = (PRODUCT_OPTIONS[currentCat] || [])
       .map(o => `<option value="${o.replace(/"/g, '&quot;')}"></option>`).join('');
@@ -504,6 +508,7 @@ function fieldRowHTML(f, idPrefix) {
              placeholder="انتخاب یا تایپ دستی..." autocomplete="off">
       <datalist id="datalist_${currentCat}_product">${options}</datalist>`;
   }
+
   if (f.key === 'customer' && isNew) {
     const options = customersCache.map(c => `<option value="${c.replace(/"/g, '&quot;')}"></option>`).join('');
     return `
@@ -512,12 +517,34 @@ function fieldRowHTML(f, idPrefix) {
              placeholder="انتخاب یا تایپ..." autocomplete="off">
       <datalist id="datalist_customers">${options}</datalist>`;
   }
+
+  if (f.type === 'standard') {
+    const opts = STANDARD_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
+    return `
+      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <select id="${id}">
+        <option value="">انتخاب کنید...</option>
+        ${opts}
+      </select>`;
+  }
+
+  if (f.type === 'inspection') {
+    const opts = INSPECTION_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
+    return `
+      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <select id="${id}">
+        <option value="">انتخاب کنید...</option>
+        ${opts}
+      </select>`;
+  }
+
   if (f.key === 'status') {
     const opts = STATUS_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
     return `
       <label${f.required ? ' class="req"' : ''}>${f.label}</label>
       <select id="${id}">${opts}</select>`;
   }
+
   if (f.type === 'jdate') {
     return `
       <label${f.required ? ' class="req"' : ''}>${f.label}</label>
@@ -526,6 +553,7 @@ function fieldRowHTML(f, idPrefix) {
         <button type="button" class="today-btn" onclick="document.getElementById('${id}').value = todayJalaliStr()">امروز</button>
       </div>`;
   }
+
   return `
     <label${f.required ? ' class="req"' : ''}>${f.label}</label>
     <input type="text" id="${id}" placeholder="${f.placeholder || ''}">`;
@@ -923,7 +951,7 @@ function renderModalFields() {
     const oldVal = item.data[k];
     if (oldVal !== undefined && oldVal !== null && String(oldVal).trim() !== '') {
       const id = 'modal_' + k;
-      if (f.type === 'status') {
+      if (f.type === 'standard' || f.type === 'inspection' || f.type === 'status') {
         html = html.replace(`<select id="${id}">`, `<select id="${id}" data-select-val="${String(oldVal).replace(/"/g, '&quot;')}">`);
       } else {
         html = html.replace(`id="${id}"`, `id="${id}" data-prefill="${String(oldVal).replace(/"/g, '&quot;').replace(/&/g, '&amp;')}"`);
@@ -937,7 +965,24 @@ function renderModalFields() {
       const el = document.getElementById('modal_' + k);
       if (!el) return;
       if (el.dataset.prefill) el.value = el.dataset.prefill;
-      if (el.dataset.selectVal) el.value = el.dataset.selectVal;
+      if (el.dataset.selectVal) {
+        const target = el.dataset.selectVal.trim();
+        let found = false;
+        for (let i = 0; i < el.options.length; i++) {
+          if (el.options[i].value.trim() === target) {
+            el.selectedIndex = i;
+            found = true;
+            break;
+          }
+        }
+        if (!found && target) {
+          const opt = document.createElement('option');
+          opt.value = target;
+          opt.textContent = target + ' (قبلی)';
+          el.appendChild(opt);
+          el.value = target;
+        }
+      }
       if (modalShowAll) {
         const isEmpty = !el.value || !el.value.trim();
         el.style.borderColor = isEmpty ? 'var(--danger)' : '';
@@ -996,7 +1041,19 @@ function copyItemToForm(item) {
     cat.fields.forEach(f => {
       if (f.key === 'serial' || f.key === 'status') return;
       const el = document.getElementById('new_' + f.key);
-      if (el && item.data[f.key]) el.value = item.data[f.key];
+      if (el && item.data[f.key]) {
+        if (el.tagName === 'SELECT') {
+          const target = String(item.data[f.key]).trim();
+          for (let i = 0; i < el.options.length; i++) {
+            if (el.options[i].value.trim() === target) {
+              el.selectedIndex = i;
+              break;
+            }
+          }
+        } else {
+          el.value = item.data[f.key];
+        }
+      }
     });
     refreshSerial();
     showMsg('newMsg', '📋 اطلاعات از سریال ' + (item.data.serial || '') + ' کپی شد', false);
@@ -1321,10 +1378,9 @@ if ('serviceWorker' in navigator) {
 }
 
 // ============================================================
-// Fullscreen روی دسکتاپ
+// Fullscreen
 // ============================================================
 (function setupFullscreen() {
-
   function requestFS() {
     const el = document.documentElement;
     const fn = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
@@ -1332,50 +1388,32 @@ if ('serviceWorker' in navigator) {
     if (document.fullscreenElement) return Promise.resolve();
     return fn.call(el).catch(() => {});
   }
-
   function exitFS() {
     if (document.exitFullscreen) return document.exitFullscreen().catch(() => {});
     if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
     if (document.msExitFullscreen) return document.msExitFullscreen();
     return Promise.resolve();
   }
-
-  // دکمه هدر
   const btn = document.getElementById('fullscreenBtn');
   if (btn) {
     btn.onclick = (e) => {
       e.stopPropagation();
-      if (document.fullscreenElement) {
-        exitFS();
-      } else {
-        requestFS();
-      }
+      if (document.fullscreenElement) exitFS(); else requestFS();
     };
   }
-
-  // به‌روزرسانی آیکن دکمه وقتی وضعیت fullscreen عوض می‌شه
   function updateIcon() {
     if (!btn) return;
-    if (document.fullscreenElement) {
-      btn.textContent = '⛉';
-      btn.title = 'خروج از تمام صفحه';
-    } else {
-      btn.textContent = '⛶';
-      btn.title = 'تمام صفحه';
-    }
+    if (document.fullscreenElement) { btn.textContent = '⛉'; btn.title = 'خروج از تمام صفحه'; }
+    else { btn.textContent = '⛶'; btn.title = 'تمام صفحه'; }
   }
   document.addEventListener('fullscreenchange', updateIcon);
   document.addEventListener('webkitfullscreenchange', updateIcon);
-
-  // وقتی اپ در حالت standalone باز شده، با اولین کلیک هر جای صفحه fullscreen بشه
   const isStandalone =
     window.matchMedia('(display-mode: standalone)').matches ||
     window.matchMedia('(display-mode: fullscreen)').matches ||
     window.navigator.standalone === true;
-
   if (isStandalone) {
     setTimeout(() => { requestFS().catch(() => {}); }, 500);
-
     const activate = () => {
       requestFS().catch(() => {});
       document.removeEventListener('click', activate);
