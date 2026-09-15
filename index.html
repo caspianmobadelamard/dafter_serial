@@ -6,6 +6,7 @@
 <title>دفتر سریال کاسپین</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1db954">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="دفتر سریال">
@@ -326,7 +327,6 @@ const PRODUCT_OPTIONS = {
   ]
 };
 
-// وضعیت دستگاه — سه حالت
 const STATUS_LIST = ['ساخته نشده', 'در حال ساخت', 'ساخته شده'];
 const STATUS_COLORS = {
   'ساخته نشده': '#E53935',
@@ -1305,11 +1305,42 @@ document.addEventListener('input', (e) => {
   }
 });
 
+// ============================================================
+// Service Worker + Fullscreen
+// ============================================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('service-worker.js').catch(function(err) { console.warn('SW fail', err); });
   });
 }
+
+// تلاش برای fullscreen روی دسکتاپ
+(function setupFullscreen() {
+  function tryFullscreen() {
+    const el = document.documentElement;
+    if (!document.fullscreenElement) {
+      if (el.requestFullscreen) {
+        el.requestFullscreen().catch(() => {});
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      } else if (el.msRequestFullscreen) {
+        el.msRequestFullscreen();
+      }
+    }
+  }
+
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                       window.matchMedia('(display-mode: fullscreen)').matches ||
+                       window.navigator.standalone === true;
+
+  if (isStandalone) {
+    // اولین کلیک → fullscreen
+    document.addEventListener('click', function once() {
+      tryFullscreen();
+      document.removeEventListener('click', once);
+    }, { once: true });
+  }
+})();
 
 updateConfigWarning();
 render();
