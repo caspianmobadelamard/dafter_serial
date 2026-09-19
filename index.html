@@ -1402,7 +1402,7 @@ if ('serviceWorker' in navigator) {
   const isStandalone =
     window.matchMedia('(display-mode: standalone)').matches ||
     window.matchMedia('(display-mode: fullscreen)').matches ||
-    window.navigator.webkitDisplayMode === true;
+    window.navigator.standalone === true;
   if (isStandalone) {
     setTimeout(() => { requestFS().catch(() => {}); }, 500);
     const activate = () => {
