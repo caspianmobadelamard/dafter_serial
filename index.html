@@ -2,14 +2,23 @@
 <html lang="fa" dir="rtl" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
-<title>دفتر سریال کاسپین مبدل آمارد</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, viewport-fit=cover">
 <meta name="theme-color" content="#131a26">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="دفتر سریال">
+<meta name="format-detection" content="telephone=no">
+<title>دفتر سریال کاسپین مبدل آمارد</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-android.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-ios.png">
+<link rel="manifest" href="manifest.json">
 
 <style>
+/* ============================================================
+   متغیرهای سراسری
+============================================================ */
 :root {
   --accent: #f59e0b;
   --accent-dim: #b87208;
@@ -19,8 +28,32 @@
   --danger: #ef4444;
   --cyan: #22d3ee;
   --purple: #a78bfa;
-  --radius: 6px;
+  --radius: 8px;
+  --radius-sm: 5px;
+  --radius-lg: 14px;
+
+  /* متغیرهای پویا بر اساس دستگاه */
+  --container-max: 780px;
+  --page-padding: 12px;
+  --card-padding: 12px;
+  --font-base: 13px;
+  --font-small: 11px;
+  --font-tiny: 10px;
+  --font-h1: 14px;
+  --font-serial: 14px;
+  --stat-cols: 4;
+  --spec-cols: 2;
+  --tab-padding: 10px;
+  --tab-font: 11.5px;
+  --tab-icon: 18px;
+  --fab-padding: 12px 22px;
+  --fab-font: 12.5px;
+  --header-padding: 10px 12px 0;
+  --logo-size: 44px;
+  --logo-svg: 24px;
+  --bottom-space: 96px;
 }
+
 html[data-theme="dark"] {
   --bg-base: #131a26;
   --bg-surface: #1a2233;
@@ -31,6 +64,7 @@ html[data-theme="dark"] {
   --text: #d4d8dd;
   --text-mid: #8b929b;
   --text-dim: #5a6373;
+  --shadow-color: rgba(0,0,0,0.5);
 }
 html[data-theme="light"] {
   --bg-base: #eef1f5;
@@ -42,16 +76,34 @@ html[data-theme="light"] {
   --text: #1a2029;
   --text-mid: #55606e;
   --text-dim: #8b95a4;
+  --shadow-color: rgba(0,0,0,0.12);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+/* ============================================================
+   ریست و پایه
+============================================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
 html, body {
   width: 100%;
-  overflow-x: hidden;
-  background: var(--bg-base);
-  color: var(--text);
-  font-family: 'Vazirmatn', 'Tahoma', sans-serif;
   min-height: 100vh;
   min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+  background: var(--bg-base);
+  color: var(--text);
+  font-family: 'Vazirmatn', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Tahoma', sans-serif;
+  font-size: var(--font-base);
+  line-height: 1.4;
   transition: background 0.3s, color 0.3s;
 }
 body {
@@ -59,11 +111,29 @@ body {
     linear-gradient(rgba(245,158,11,0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(245,158,11,0.02) 1px, transparent 1px);
   background-size: 24px 24px;
-  /* فضای کافی برای FAB و نوار پایین */
-  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(var(--bottom-space) + env(safe-area-inset-bottom, 0px));
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+button, input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+button { cursor: pointer; border: none; background: none; }
+a { color: var(--accent); }
 
-/* ================= هدر ================= */
+/* اسکرول‌بار */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* ============================================================
+   هدر
+============================================================ */
 .topbar {
   position: sticky;
   top: 0;
@@ -72,11 +142,13 @@ body {
   border-bottom: 2px solid var(--border-strong);
   box-shadow: 0 2px 0 rgba(245,158,11,0.15);
   padding-top: env(safe-area-inset-top, 0px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 .topbar-inner {
-  max-width: 780px;
+  max-width: var(--container-max);
   margin: 0 auto;
-  padding: 10px 12px 0;
+  padding: var(--header-padding);
 }
 .topbar-row {
   display: flex;
@@ -93,11 +165,9 @@ body {
   min-width: 0;
   flex: 1;
 }
-
-/* ================= لوگوی نئونی ================= */
 .brand-mark {
-  width: 44px;
-  height: 44px;
+  width: var(--logo-size);
+  height: var(--logo-size);
   background: var(--bg-input);
   border-radius: var(--radius);
   display: flex;
@@ -112,7 +182,7 @@ body {
   inset: 0;
   border-radius: var(--radius);
   border: 2px solid var(--accent);
-  animation: neonBorderColor 4s ease-in-out infinite;
+  animation: neonBorder 4s ease-in-out infinite;
   pointer-events: none;
 }
 .brand-mark::after {
@@ -125,19 +195,11 @@ body {
   pointer-events: none;
 }
 .brand-mark svg {
-  width: 24px;
-  height: 24px;
+  width: var(--logo-svg);
+  height: var(--logo-svg);
   animation: neonIcon 4s ease-in-out infinite;
 }
-.brand-mark .pulse-ring {
-  position: absolute;
-  inset: -3px;
-  border-radius: calc(var(--radius) + 2px);
-  border: 1px solid transparent;
-  animation: pulseRing 4s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes neonBorderColor {
+@keyframes neonBorder {
   0%, 100% { border-color: #f59e0b; box-shadow: 0 0 8px rgba(245,158,11,0.7), inset 0 0 8px rgba(245,158,11,0.15); }
   25% { border-color: #22d3ee; box-shadow: 0 0 8px rgba(34,211,238,0.7), inset 0 0 8px rgba(34,211,238,0.15); }
   50% { border-color: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,0.7), inset 0 0 8px rgba(167,139,250,0.15); }
@@ -155,17 +217,9 @@ body {
   50% { stroke: #a78bfa; filter: drop-shadow(0 0 4px rgba(167,139,250,0.7)); }
   75% { stroke: #4ade80; filter: drop-shadow(0 0 4px rgba(74,222,128,0.7)); }
 }
-@keyframes pulseRing {
-  0%, 100% { border-color: transparent; transform: scale(1); opacity: 1; }
-  50% { border-color: rgba(245,158,11,0.4); transform: scale(1.06); opacity: 0.6; }
-}
-
-.brand-text {
-  min-width: 0;
-  flex: 1;
-}
+.brand-text { min-width: 0; flex: 1; }
 .brand-text h1 {
-  font-size: 13.5px;
+  font-size: var(--font-h1);
   font-weight: 800;
   line-height: 1.3;
   white-space: nowrap;
@@ -173,10 +227,10 @@ body {
   text-overflow: ellipsis;
 }
 .brand-text .sub {
-  font-size: 10px;
+  font-size: var(--font-tiny);
   color: var(--text-dim);
   margin-top: 2px;
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Courier New', monospace;
   letter-spacing: 0.3px;
   display: flex;
   align-items: center;
@@ -192,10 +246,10 @@ body {
   background: var(--success);
   box-shadow: 0 0 6px var(--success);
   flex-shrink: 0;
+  transition: background 0.3s;
 }
 .conn-dot.offline { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
 
-/* ================= تاریخ شمسی ================= */
 .date-row {
   display: inline-flex;
   align-items: center;
@@ -204,8 +258,8 @@ body {
   padding: 3px 8px;
   background: linear-gradient(90deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02));
   border: 1px solid rgba(245,158,11,0.2);
-  border-radius: 4px;
-  font-size: 10.5px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-tiny);
   white-space: nowrap;
 }
 .date-row .cal-icon {
@@ -221,32 +275,24 @@ body {
 .date-row .date-full {
   color: var(--text);
   font-weight: 600;
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Courier New', monospace;
   letter-spacing: 0.3px;
 }
-.date-row .time {
-  color: var(--text-mid);
-  font-size: 10px;
-  font-family: 'Courier New', monospace;
-}
+.date-row .time { color: var(--text-mid); font-family: 'SF Mono', 'Courier New', monospace; }
 
-.topbar-actions {
-  display: flex;
-  gap: 5px;
-  flex-shrink: 0;
-}
+.topbar-actions { display: flex; gap: 5px; flex-shrink: 0; }
 .tool-btn {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   color: var(--text-mid);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   transition: 0.15s;
+  min-width: 36px;
 }
 .tool-btn:hover { color: var(--accent); border-color: var(--accent); }
 .tool-btn:active { transform: scale(0.94); }
@@ -260,7 +306,9 @@ body {
   stroke-linejoin: round;
 }
 
-/* ================= تب‌ها ================= */
+/* ============================================================
+   تب‌ها
+============================================================ */
 .tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -274,22 +322,22 @@ body {
 }
 .tab {
   background: var(--bg-elevated);
-  padding: 10px 4px;
-  cursor: pointer;
+  padding: var(--tab-padding) 4px;
   transition: 0.15s;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-size: 11.5px;
+  font-size: var(--tab-font);
   font-weight: 700;
   color: var(--text-mid);
   position: relative;
   user-select: none;
+  min-height: 44px;
 }
 .tab svg {
-  width: 18px;
-  height: 18px;
+  width: var(--tab-icon);
+  height: var(--tab-icon);
   fill: none;
   stroke: currentColor;
   stroke-width: 1.6;
@@ -307,24 +355,29 @@ body {
   position: absolute;
   top: 2px;
   left: 4px;
-  font-size: 8px;
-  padding: 1px 4px;
+  font-size: 8.5px;
+  padding: 1px 5px;
   background: rgba(245,158,11,0.15);
   color: var(--accent);
   border-radius: 3px;
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Courier New', monospace;
   font-weight: 800;
+  line-height: 1.4;
 }
 .tab.active .count { background: var(--accent); color: #000; }
 
-/* ================= کانتینر ================= */
+/* ============================================================
+   کانتینر اصلی
+============================================================ */
 .container {
-  max-width: 780px;
+  max-width: var(--container-max);
   margin: 0 auto;
-  padding: 12px 12px 0;
+  padding: var(--page-padding) var(--page-padding) 0;
 }
 
-/* ================= نوار هشدار ================= */
+/* ============================================================
+   نوار هشدار
+============================================================ */
 .alert-strip {
   display: flex;
   align-items: center;
@@ -337,8 +390,8 @@ body {
   margin-bottom: 12px;
 }
 .alert-strip .indicator {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   background: rgba(251,191,36,0.1);
   border: 1px solid rgba(251,191,36,0.4);
   border-radius: 4px;
@@ -347,19 +400,9 @@ body {
   justify-content: center;
   flex-shrink: 0;
 }
-.alert-strip .indicator svg {
-  width: 14px;
-  height: 14px;
-  stroke: var(--warning);
-  fill: none;
-  stroke-width: 2;
-}
+.alert-strip .indicator svg { width: 15px; height: 15px; stroke: var(--warning); fill: none; stroke-width: 2; }
 .alert-strip .body { flex: 1; min-width: 0; }
-.alert-strip .body b {
-  font-size: 12px;
-  color: var(--warning);
-  display: block;
-}
+.alert-strip .body b { font-size: 12px; color: var(--warning); display: block; }
 .alert-strip .body span {
   font-size: 10.5px;
   color: var(--text-dim);
@@ -372,21 +415,21 @@ body {
 .alert-strip .action {
   background: var(--warning);
   color: #000;
-  border: none;
-  padding: 6px 10px;
-  border-radius: var(--radius);
-  font-family: inherit;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
   font-size: 10.5px;
   font-weight: 800;
-  cursor: pointer;
   letter-spacing: 0.3px;
   flex-shrink: 0;
+  min-height: 32px;
 }
 
-/* ================= آمار ================= */
+/* ============================================================
+   آمار (واکنش‌گرا)
+============================================================ */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(var(--stat-cols), 1fr);
   gap: 6px;
   margin-bottom: 12px;
 }
@@ -394,16 +437,14 @@ body {
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 8px 6px 6px;
+  padding: 8px 8px 6px;
   position: relative;
   overflow: hidden;
 }
 .stat::before {
   content: '';
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
+  top: 0; right: 0; left: 0;
   height: 2px;
   background: var(--accent);
 }
@@ -414,11 +455,11 @@ body {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 2px;
+  gap: 4px;
 }
 .stat .num {
-  font-family: 'Courier New', monospace;
-  font-size: 18px;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  font-size: 19px;
   font-weight: 800;
   color: var(--text);
   line-height: 1;
@@ -428,57 +469,53 @@ body {
 .stat.bad .num { color: var(--danger); }
 .stat.good .num { color: var(--success); }
 .stat .icon-tiny {
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
   stroke: var(--text-dim);
   fill: none;
   stroke-width: 1.5;
   flex-shrink: 0;
 }
 .stat .lbl {
-  font-size: 8.5px;
+  font-size: 9px;
   color: var(--text-dim);
   margin-top: 4px;
   letter-spacing: 0.3px;
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Courier New', monospace;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* ================= نوار ابزار ================= */
-.toolbar {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-.search-box {
-  flex: 1;
-  position: relative;
-}
+/* ============================================================
+   نوار ابزار
+============================================================ */
+.toolbar { display: flex; gap: 6px; margin-bottom: 12px; }
+.search-box { flex: 1; position: relative; }
 .search-box input {
   width: 100%;
   background: var(--bg-input);
   border: 1px solid var(--border-strong);
   color: var(--text);
   border-radius: var(--radius);
-  padding: 10px 36px 10px 12px;
-  font-family: inherit;
-  font-size: 12.5px;
+  padding: 11px 36px 11px 12px;
+  font-size: 13px;
   transition: 0.15s;
+  min-height: 42px;
 }
 .search-box input:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
 }
+.search-box input::placeholder { color: var(--text-dim); }
 .search-box .search-icon {
   position: absolute;
-  right: 10px;
+  right: 11px;
   top: 50%;
   transform: translateY(-50%);
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   stroke: var(--text-dim);
   fill: none;
   stroke-width: 2;
@@ -490,45 +527,41 @@ body {
   color: var(--text-mid);
   border-radius: var(--radius);
   padding: 0 12px;
-  font-family: inherit;
   font-size: 11px;
   font-weight: 700;
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 5px;
   white-space: nowrap;
   transition: 0.15s;
+  min-height: 42px;
 }
-.chip svg {
-  width: 12px;
-  height: 12px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-}
-.chip.active {
-  background: var(--warning);
-  color: #000;
-  border-color: var(--warning);
-}
+.chip svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+.chip.active { background: var(--warning); color: #000; border-color: var(--warning); }
+.chip:active { transform: scale(0.97); }
 
-/* ================= کارت ================= */
+/* ============================================================
+   کارت سفارش
+============================================================ */
 .card {
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-right: 3px solid var(--border-strong);
   border-radius: var(--radius);
-  padding: 10px 12px;
+  padding: var(--card-padding);
   margin-bottom: 8px;
   cursor: pointer;
   transition: 0.15s;
   position: relative;
 }
-.card:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+@media (hover: hover) {
+  .card:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+}
+.card:active { transform: scale(0.995); }
 .card.complete { border-right-color: var(--success); }
 .card.missing { border-right-color: var(--warning); }
 .card.urgent { border-right-color: var(--danger); }
+
 .card-top {
   display: flex;
   justify-content: space-between;
@@ -543,19 +576,19 @@ body {
   flex: 1;
 }
 .card-icon {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
   background: var(--bg-input);
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .card-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
   fill: none;
   stroke: var(--accent);
   stroke-width: 1.5;
@@ -565,17 +598,19 @@ body {
 .card.missing .card-icon svg { stroke: var(--warning); }
 .card.urgent .card-icon svg { stroke: var(--danger); }
 .card.complete .card-icon svg { stroke: var(--success); }
+
+.card-body { min-width: 0; flex: 1; }
 .card-serial {
-  font-family: 'Courier New', monospace;
-  font-size: 13.5px;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  font-size: var(--font-serial);
   font-weight: 800;
   color: var(--text);
   letter-spacing: 0.5px;
   line-height: 1.2;
 }
-.card-serial.no-serial { color: var(--text-mid); font-style: italic; }
+.card-serial.no-serial { color: var(--text-mid); font-style: italic; font-size: 12.5px; }
 .card-prod {
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--text-mid);
   margin-top: 2px;
   white-space: nowrap;
@@ -587,7 +622,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Courier New', monospace;
   font-size: 9.5px;
   padding: 2px 6px;
   border-radius: 3px;
@@ -596,18 +631,14 @@ body {
   border: 1px solid;
   margin-top: 3px;
 }
-.customer-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-}
+.customer-dot { width: 5px; height: 5px; border-radius: 50%; }
 
 .status-badge {
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Courier New', monospace;
   font-size: 9px;
   font-weight: 800;
-  padding: 3px 6px;
-  border-radius: 3px;
+  padding: 3px 7px;
+  border-radius: var(--radius-sm);
   letter-spacing: 0.3px;
   text-transform: uppercase;
   white-space: nowrap;
@@ -626,27 +657,15 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.status-badge.ok {
-  color: var(--success);
-  background: rgba(74,222,128,0.08);
-  border-color: rgba(74,222,128,0.3);
-}
-.status-badge.warn {
-  color: var(--warning);
-  background: rgba(251,191,36,0.08);
-  border-color: rgba(251,191,36,0.3);
-}
-.status-badge.urgent {
-  color: var(--danger);
-  background: rgba(239,68,68,0.08);
-  border-color: rgba(239,68,68,0.3);
-}
+.status-badge.ok { color: var(--success); background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.3); }
+.status-badge.warn { color: var(--warning); background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.3); }
+.status-badge.urgent { color: var(--danger); background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.3); }
 
-.progress-block { margin: 8px 0 8px; }
+.progress-block { margin: 10px 0 8px; }
 .progress-head {
   display: flex;
   justify-content: space-between;
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Courier New', monospace;
   font-size: 9px;
   color: var(--text-dim);
   letter-spacing: 0.3px;
@@ -672,9 +691,9 @@ body {
 
 .specs {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px 10px;
-  font-size: 10.5px;
+  grid-template-columns: repeat(var(--spec-cols), 1fr);
+  gap: 4px 12px;
+  font-size: 11px;
   margin-top: 6px;
 }
 .spec {
@@ -687,10 +706,10 @@ body {
 }
 .spec .k {
   color: var(--text-dim);
-  font-family: 'Courier New', monospace;
-  font-size: 9px;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  font-size: 9.5px;
   letter-spacing: 0.3px;
-  min-width: 38px;
+  min-width: 42px;
   flex-shrink: 0;
 }
 .spec .v {
@@ -699,6 +718,7 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .issues {
@@ -711,60 +731,65 @@ body {
 }
 .issue-tag {
   font-size: 9.5px;
-  padding: 2px 7px;
+  padding: 3px 8px;
   background: rgba(239,68,68,0.08);
   color: var(--danger);
   border: 1px solid rgba(239,68,68,0.2);
-  border-radius: 3px;
-  font-family: 'Courier New', monospace;
+  border-radius: var(--radius-sm);
+  font-family: 'SF Mono', 'Courier New', monospace;
   letter-spacing: 0.3px;
 }
 
-/* ================= FAB ================= */
+/* ============================================================
+   FAB — دکمه ثبت سفارش
+============================================================ */
 .fab {
   position: fixed;
-  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
   background: var(--accent);
   color: #000;
-  border: none;
-  border-radius: var(--radius);
-  padding: 12px 22px;
-  font-family: inherit;
-  font-size: 12.5px;
+  border-radius: var(--radius-lg);
+  padding: var(--fab-padding);
+  font-size: var(--fab-font);
   font-weight: 800;
   letter-spacing: 0.3px;
-  cursor: pointer;
   z-index: 40;
   display: flex;
   align-items: center;
-  gap: 6px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.2), 0 0 24px rgba(245,158,11,0.25);
+  gap: 7px;
+  box-shadow:
+    0 6px 20px var(--shadow-color),
+    0 0 0 1px rgba(0,0,0,0.2),
+    0 0 24px rgba(245,158,11,0.25);
   transition: 0.15s;
   white-space: nowrap;
 }
 .fab svg {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   stroke: currentColor;
   fill: none;
   stroke-width: 2.5;
   stroke-linecap: round;
 }
-.fab:active { transform: translateX(-50%) scale(0.96); }
+.fab:hover { background: #ffb020; }
+.fab:active { transform: translateX(-50%) scale(0.95); }
 
-/* ================= Toast ================= */
+/* ============================================================
+   Toast
+============================================================ */
 .toast {
   position: fixed;
-  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
   background: var(--success);
   color: #04231a;
-  padding: 10px 14px;
+  padding: 11px 16px;
   border-radius: var(--radius);
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
   z-index: 60;
   opacity: 0;
@@ -773,9 +798,9 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  max-width: calc(100% - 24px);
-  white-space: nowrap;
+  box-shadow: 0 8px 24px var(--shadow-color);
+  max-width: calc(100vw - 24px);
+  word-break: break-word;
 }
 .toast.show {
   opacity: 1;
@@ -786,18 +811,17 @@ body {
 .toast .undo-btn {
   background: rgba(0,0,0,0.2);
   color: inherit;
-  border: none;
-  border-radius: 3px;
-  padding: 4px 9px;
-  font-size: 10.5px;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
   font-weight: 800;
-  cursor: pointer;
-  font-family: inherit;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-/* ================= Overlay ================= */
+/* ============================================================
+   Overlay و Sheet
+============================================================ */
 .overlay {
   position: fixed;
   inset: 0;
@@ -807,47 +831,49 @@ body {
   align-items: flex-end;
   justify-content: center;
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 .overlay.open { display: flex; }
 .sheet {
   background: var(--bg-surface);
   width: 100%;
   max-width: 540px;
-  border-radius: 14px 14px 0 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   max-height: 92vh;
   max-height: 92dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: 14px 16px calc(20px + env(safe-area-inset-bottom, 0px));
   border-top: 2px solid var(--accent);
   animation: slideUp 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
+  from { transform: translateY(40px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 .sheet-handle {
-  width: 36px;
+  width: 40px;
   height: 4px;
   background: var(--text-dim);
   border-radius: 99px;
-  margin: 0 auto 12px;
+  margin: 0 auto 14px;
   opacity: 0.5;
 }
-.sheet h2 { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+.sheet h2 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
 .sheet .sub {
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--text-dim);
   margin-bottom: 14px;
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Courier New', monospace;
 }
 
-.field { margin-bottom: 10px; }
+.field { margin-bottom: 11px; }
 .field label {
   display: block;
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--text-mid);
-  margin-bottom: 4px;
+  margin-bottom: 5px;
   font-weight: 600;
 }
 .field label.req::after { content: ' *'; color: var(--danger); }
@@ -859,10 +885,18 @@ body {
   border: 1px solid var(--border-strong);
   color: var(--text);
   border-radius: var(--radius);
-  padding: 10px 12px;
-  font-size: 13px;
-  font-family: inherit;
+  padding: 11px 12px;
+  font-size: 14px; /* جلوگیری از zoom در iOS */
   transition: 0.15s;
+  min-height: 44px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b929b' stroke-width='2' stroke-linecap='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  padding-left: 32px;
 }
 .field input:focus,
 .field textarea:focus,
@@ -871,8 +905,7 @@ body {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
 }
-.field textarea { resize: vertical; min-height: 56px; }
-.field select { cursor: pointer; }
+.field textarea { resize: vertical; min-height: 60px; }
 .field .row-2 {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -882,55 +915,50 @@ body {
   font-size: 10px;
   color: var(--text-dim);
   margin-top: 3px;
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Courier New', monospace;
 }
 .field.hidden { display: none; }
 .date-hint {
-  font-size: 10px;
+  font-size: 10.5px;
   color: var(--warning);
-  margin-top: 3px;
-  font-family: 'Courier New', monospace;
+  margin-top: 4px;
+  font-family: 'SF Mono', 'Courier New', monospace;
 }
 .water-heater-note {
   background: rgba(74,158,255,0.08);
   border: 1px dashed rgba(74,158,255,0.4);
   border-radius: var(--radius);
-  padding: 8px 10px;
-  font-size: 10.5px;
+  padding: 9px 11px;
+  font-size: 11px;
   color: var(--steel);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 }
 .form-actions {
   display: flex;
   gap: 8px;
   margin-top: 16px;
+  padding-top: 4px;
 }
 .btn {
   flex: 1;
-  padding: 11px;
+  padding: 12px;
   border-radius: var(--radius);
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 800;
-  border: none;
-  font-family: inherit;
-  cursor: pointer;
   transition: 0.15s;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 .btn:active { transform: scale(0.97); }
 .btn-primary { background: var(--accent); color: #000; }
-.btn-secondary {
-  background: var(--bg-elevated);
-  color: var(--text-mid);
-  border: 1px solid var(--border);
-}
-.btn-danger {
-  background: rgba(239,68,68,0.1);
-  color: var(--danger);
-  border: 1px solid rgba(239,68,68,0.25);
-}
+.btn-secondary { background: var(--bg-elevated); color: var(--text-mid); border: 1px solid var(--border); }
+.btn-danger { background: rgba(239,68,68,0.1); color: var(--danger); border: 1px solid rgba(239,68,68,0.25); }
 
 .setup-box {
   background: var(--bg-surface);
@@ -938,47 +966,131 @@ body {
   border-radius: var(--radius);
   padding: 18px;
   margin: 16px 12px;
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.9;
 }
-.import-banner {
-  background: rgba(245,158,11,0.05);
-  border: 1px dashed var(--accent);
-  border-radius: var(--radius);
-  padding: 12px;
-  margin-top: 12px;
+.setup-box code {
+  background: var(--bg-input);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'SF Mono', 'Courier New', monospace;
   font-size: 11.5px;
-  line-height: 1.7;
 }
 
-/* ================= ریسپانسیو ================= */
-@media (max-width: 420px) {
-  .brand-text h1 { font-size: 12px; }
-  .brand-mark { width: 40px; height: 40px; }
-  .brand-mark svg { width: 22px; height: 22px; }
+/* ============================================================
+   واکنش‌گرایی هوشمند
+============================================================ */
+
+/* موبایل کوچک */
+@media (max-width: 380px) {
+  :root {
+    --font-h1: 12.5px;
+    --font-serial: 13px;
+    --logo-size: 40px;
+    --logo-svg: 22px;
+    --page-padding: 10px;
+    --card-padding: 10px;
+    --stat-cols: 2;
+    --tab-icon: 16px;
+    --tab-font: 10.5px;
+    --tab-padding: 9px 3px;
+    --fab-padding: 11px 18px;
+    --fab-font: 12px;
+    --spec-cols: 1;
+    --bottom-space: 92px;
+  }
   .date-row { font-size: 9.5px; padding: 2px 6px; gap: 5px; }
-  .date-row .divider { height: 9px; }
-  .tab { font-size: 10px; padding: 9px 3px; gap: 5px; }
-  .tab svg { width: 16px; height: 16px; }
-  .tool-btn { width: 32px; height: 32px; }
-  .tool-btn svg { width: 15px; height: 15px; }
-  .stat .num { font-size: 16px; }
-  .stat .lbl { font-size: 8px; }
-  .specs { grid-template-columns: 1fr; }
-  .card-serial { font-size: 13px; }
-  .card-prod { font-size: 10.5px; }
-  .fab { padding: 11px 18px; font-size: 12px; }
+  .stat .num { font-size: 20px; }
+  .stat .lbl { font-size: 9.5px; }
+}
+
+/* موبایل عادی */
+@media (max-width: 600px) {
+  :root {
+    --spec-cols: 1;
+    --bottom-space: 96px;
+  }
+  .stat .num { font-size: 20px; }
+}
+
+/* تبلت و دسکتاپ */
+@media (min-width: 601px) {
+  :root {
+    --font-base: 14px;
+    --font-h1: 16px;
+    --font-serial: 15px;
+    --container-max: 820px;
+    --page-padding: 20px;
+    --card-padding: 16px;
+    --tab-padding: 12px 8px;
+    --tab-font: 13px;
+    --tab-icon: 20px;
+    --logo-size: 50px;
+    --logo-svg: 28px;
+    --stat-cols: 4;
+    --spec-cols: 2;
+    --fab-padding: 14px 28px;
+    --fab-font: 14px;
+    --header-padding: 14px 16px 0;
+    --bottom-space: 100px;
+  }
+  .tab .count { font-size: 9.5px; }
+  .card { margin-bottom: 10px; }
+  .alert-strip .body b { font-size: 13px; }
+  .alert-strip .body span { font-size: 11.5px; }
+}
+
+/* دسکتاپ بزرگ */
+@media (min-width: 900px) {
+  :root {
+    --container-max: 900px;
+  }
+  .stats-grid { gap: 10px; }
+  .stat { padding: 12px 12px 10px; }
+  .stat .num { font-size: 24px; }
+  .stat .lbl { font-size: 10.5px; }
+  .card-serial { font-size: 16px; }
+  .card-prod { font-size: 13px; }
+}
+
+/* حالت افقی موبایل */
+@media (max-height: 500px) and (orientation: landscape) {
+  .stats-grid { grid-template-columns: repeat(4, 1fr); }
+  .date-row { display: none; }
+  .fab { bottom: calc(10px + env(safe-area-inset-bottom, 0px)); padding: 10px 20px; }
+}
+
+/* iOS — پشتیبانی از notch و Dynamic Island */
+@supports (padding: env(safe-area-inset-top)) {
+  .topbar { padding-top: max(env(safe-area-inset-top), 0px); }
+  .fab { bottom: calc(20px + max(env(safe-area-inset-bottom), 0px)); }
+  .toast { bottom: calc(88px + max(env(safe-area-inset-bottom), 0px)); }
+}
+
+/* حذف انیمیشن برای کاربران با تنظیمات کاهش حرکت */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* حالت چاپ */
+@media print {
+  .topbar, .fab, .toolbar, .alert-strip, .stats-grid, .toast { display: none !important; }
+  body { padding: 0; background: white; color: black; }
+  .card { border: 1px solid #ccc; page-break-inside: avoid; }
 }
 </style>
 </head>
 <body>
 
+<!-- ==================== هدر ==================== -->
 <header class="topbar">
   <div class="topbar-inner">
     <div class="topbar-row">
       <div class="brand">
         <div class="brand-mark">
-          <div class="pulse-ring"></div>
           <svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-width="1.8">
             <rect x="9" y="9" width="14" height="18" rx="1"/>
             <rect x="12" y="3" width="8" height="6"/>
@@ -1012,13 +1124,13 @@ body {
         </div>
       </div>
       <div class="topbar-actions">
-        <button class="tool-btn" id="themeBtn" title="حالت روز/شب">
+        <button class="tool-btn" id="themeBtn" title="روز/شب" aria-label="تغییر تم">
           <svg viewBox="0 0 24 24" id="themeIcon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
-        <button class="tool-btn" id="exportBtn" title="خروجی اکسل">
+        <button class="tool-btn" id="exportBtn" title="خروجی CSV" aria-label="خروجی">
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </button>
-        <button class="tool-btn" id="settingsBtn" title="تنظیمات">
+        <button class="tool-btn" id="settingsBtn" title="تنظیمات" aria-label="تنظیمات">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
       </div>
@@ -1058,12 +1170,13 @@ body {
           <line x1="9" y1="20" x2="9" y2="26"/>
           <line x1="23" y1="20" x2="23" y2="26"/>
         </svg>
-        <span>مخازن و نرمال</span>
+        <span>مخازن</span>
       </div>
     </div>
   </div>
 </header>
 
+<!-- ==================== محتوا ==================== -->
 <div id="app" style="display:none;">
   <div class="container">
     <div class="alert-strip" id="alertStrip" style="display:none;">
@@ -1089,13 +1202,13 @@ body {
           <circle cx="11" cy="11" r="7"/>
           <line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
-        <input type="search" id="searchInput" placeholder="جستجو سریال، مشتری، محصول...">
+        <input type="search" id="searchInput" placeholder="جستجو سریال، مشتری، محصول..." autocomplete="off">
       </div>
       <button class="chip" id="filterMissing">
         <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
         </svg>
-        ناقص‌ها
+        ناقص
       </button>
     </div>
 
@@ -1106,7 +1219,7 @@ body {
       <line x1="12" y1="5" x2="12" y2="19"/>
       <line x1="5" y1="12" x2="19" y2="12"/>
     </svg>
-    ثبت سفارش جدید
+    ثبت سفارش
   </button>
 </div>
 
@@ -1118,7 +1231,7 @@ body {
 
 <script>
 /* ============================================================
-   CATS — دسته‌بندی‌ها با گزینه‌های محصول و واحد
+   CATS
 ============================================================ */
 const CATS = {
   steam: {
@@ -1240,7 +1353,6 @@ function hashColor(str){
   for (let i = 0; i < String(str).length; i++) h = String(str).charCodeAt(i) + ((h << 5) - h);
   return palette[Math.abs(h) % palette.length];
 }
-
 function parseCapacity(str) {
   if (!str) return { value: '', unit: '' };
   const s = String(str).trim();
@@ -1259,7 +1371,6 @@ function parseCapacity(str) {
   }
   return { value: s, unit: '' };
 }
-
 function combineCapacity(value, unit) {
   value = String(value || '').trim();
   unit = String(unit || '').trim();
@@ -1269,7 +1380,7 @@ function combineCapacity(value, unit) {
 }
 
 /* ============================================================
-   Jalali Date
+   تاریخ شمسی
 ============================================================ */
 function toJalali(gy, gm, gd) {
   const g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
@@ -1302,7 +1413,7 @@ updateDate();
 setInterval(updateDate, 30000);
 
 /* ============================================================
-   THEME
+   تم
 ============================================================ */
 function updateThemeIcon(theme) {
   const icon = document.getElementById('themeIcon');
@@ -1387,7 +1498,7 @@ function updateConnStatus(online) {
   if (online) {
     dot.classList.remove('offline');
     const total = allData.steam.length + allData.hotwater.length + allData.tanks.length;
-    text.textContent = 'ONLINE · ' + toFa(total) + ' REC';
+    text.textContent = 'ONLINE · ' + toFa(total) + ' رکورد';
   } else {
     dot.classList.add('offline');
     text.textContent = 'OFFLINE';
@@ -1460,8 +1571,8 @@ function renderAlert() {
   const strip = document.getElementById('alertStrip');
   if (missingCritical.length === 0) { strip.style.display = 'none'; return; }
   strip.style.display = 'flex';
-  document.getElementById('alertTitle').textContent = toFa(missingCritical.length) + ' سفارش در وضعیت هشدار';
-  document.getElementById('alertText').textContent = 'فیلدهای حیاتی ناقص دارند';
+  document.getElementById('alertTitle').textContent = toFa(missingCritical.length) + ' سفارش ناقص';
+  document.getElementById('alertText').textContent = 'فیلدهای حیاتی تکمیل نشده';
   document.getElementById('alertAction').onclick = () => {
     filterMissingOnly = true;
     document.getElementById('filterMissing').classList.add('active');
@@ -1481,7 +1592,7 @@ function renderList() {
 
   const container = document.getElementById('list');
   if (list.length === 0) {
-    container.innerHTML = `<div style="text-align:center; color:var(--text-dim); padding:40px 20px; font-family:'Courier New',monospace;">موردی یافت نشد</div>`;
+    container.innerHTML = `<div style="text-align:center; color:var(--text-dim); padding:40px 20px; font-family:'SF Mono',monospace; font-size:12px;">موردی یافت نشد</div>`;
     return;
   }
 
@@ -1495,7 +1606,7 @@ function renderList() {
     const progress = progressOf(currentCat, r);
     const cust = r['نام مشتری'];
     const custColor = hashColor(cust);
-    const custHtml = cust ? `<div class="customer-badge" style="color:${custColor};border-color:${custColor}55;background:${custColor}14;"><span class="customer-dot" style="background:${custColor};"></span>مشتری ${escapeHtml(cust)}</div>` : '';
+    const custHtml = cust ? `<div class="customer-badge" style="color:${custColor};border-color:${custColor}55;background:${custColor}14;"><span class="customer-dot" style="background:${custColor};"></span>${escapeHtml(cust)}</div>` : '';
     const badgeClass = urgent ? 'urgent' : (missing ? 'warn' : 'ok');
     const badgeLabel = urgent ? 'URGENT' : (missing ? 'PARTIAL' : 'OK');
     const progressClass = progress >= 80 ? 'high' : (progress >= 40 ? 'mid' : 'low');
@@ -1523,7 +1634,7 @@ function renderList() {
       <div class="card-top">
         <div class="card-id">
           <div class="card-icon">${catIcon(currentCat)}</div>
-          <div style="min-width:0;flex:1;">
+          <div class="card-body">
             <div class="card-serial ${!serial ? 'no-serial' : ''}">${serialDisplay}</div>
             <div class="card-prod">${escapeHtml(prod)}</div>
             ${custHtml}
@@ -1535,7 +1646,7 @@ function renderList() {
         </span>
       </div>
       <div class="progress-block">
-        <div class="progress-head"><span>وضعیت تکمیل</span><span class="pct">${toFa(progress)}٪</span></div>
+        <div class="progress-head"><span>وضعیت</span><span class="pct">${toFa(progress)}٪</span></div>
         <div class="progress-track"><div class="progress-fill ${progressClass}" style="width:${progress}%"></div></div>
       </div>
       <div class="specs">${specsHtml}</div>
@@ -1563,7 +1674,6 @@ function getUnitOptionsFor(cat, productName) {
   }
   return CATS[cat].capacityUnits || [];
 }
-
 function isNoSerialProduct(cat, productName) {
   if (cat === 'tanks') {
     const cfg = CATS.tanks.productUnits[productName];
@@ -1571,7 +1681,6 @@ function isNoSerialProduct(cat, productName) {
   }
   return false;
 }
-
 function suggestNextSerial(cat) {
   const list = allData[cat] || [];
   let max = 0;
@@ -1608,7 +1717,7 @@ function openForm(record) {
       const val = currentSerial || (isNew ? suggestNextSerial(currentCat) : '');
       return `<div class="field ${hidden}" id="field-serial" data-key="${escapeHtml(f.key)}">
         <label class="${labelClass}">${f.label}</label>
-        <input type="text" data-key="${escapeHtml(f.key)}" value="${escapeHtml(val)}">
+        <input type="text" data-key="${escapeHtml(f.key)}" value="${escapeHtml(val)}" autocomplete="off">
       </div>`;
     }
 
@@ -1626,7 +1735,7 @@ function openForm(record) {
         </select>
         <input type="text" id="productCustomInput" placeholder="نام محصول را وارد کنید"
           value="${isCustom ? escapeHtml(currentProduct) : ''}"
-          style="margin-top:6px;${isCustom ? '' : 'display:none;'}">
+          style="margin-top:6px;${isCustom ? '' : 'display:none;'}" autocomplete="off">
       </div>`;
     }
 
@@ -1639,7 +1748,7 @@ function openForm(record) {
       return `<div class="field">
         <label>${f.label}</label>
         <div class="row-2">
-          <input type="text" id="capacityValue" placeholder="مقدار" value="${escapeHtml(capParsed.value)}">
+          <input type="text" id="capacityValue" placeholder="مقدار" value="${escapeHtml(capParsed.value)}" inputmode="decimal" autocomplete="off">
           <select id="capacityUnit">
             ${unitOptionsHtml}
             <option value="__other__" ${isCustomUnit ? 'selected' : ''}>سایر</option>
@@ -1647,7 +1756,7 @@ function openForm(record) {
         </div>
         <input type="text" id="capacityCustomUnit" placeholder="واحد را وارد کنید"
           value="${isCustomUnit ? escapeHtml(capParsed.unit) : ''}"
-          style="margin-top:6px;${isCustomUnit ? '' : 'display:none;'}">
+          style="margin-top:6px;${isCustomUnit ? '' : 'display:none;'}" autocomplete="off">
       </div>`;
     }
 
@@ -1655,18 +1764,18 @@ function openForm(record) {
       return `<div class="field"><label class="${labelClass}">${f.label}</label><textarea rows="2" data-key="${escapeHtml(f.key)}">${escapeHtml(rec[f.key] || '')}</textarea></div>`;
     }
     if (f.type === 'date') {
-      return `<div class="field"><label class="${labelClass}">${f.label}</label><input type="text" inputmode="numeric" placeholder="مثلا: 1405.06.20" data-key="${escapeHtml(f.key)}" value="${escapeHtml(rec[f.key] || '')}">${f.critical ? '<div class="date-hint">⚠ این فیلد اغلب فراموش می‌شود</div>' : ''}</div>`;
+      return `<div class="field"><label class="${labelClass}">${f.label}</label><input type="text" inputmode="numeric" placeholder="مثلا: 1405.06.20" data-key="${escapeHtml(f.key)}" value="${escapeHtml(rec[f.key] || '')}" autocomplete="off">${f.critical ? '<div class="date-hint">⚠ این فیلد اغلب فراموش می‌شود</div>' : ''}</div>`;
     }
-    return `<div class="field"><label class="${labelClass}">${f.label}</label><input type="text" placeholder="${f.placeholder || ''}" data-key="${escapeHtml(f.key)}" value="${escapeHtml(rec[f.key] || '')}"></div>`;
+    return `<div class="field"><label class="${labelClass}">${f.label}</label><input type="text" placeholder="${f.placeholder || ''}" data-key="${escapeHtml(f.key)}" value="${escapeHtml(rec[f.key] || '')}" autocomplete="off"></div>`;
   }).join('');
 
   const waterHeaterNote = noSerial
-    ? '<div class="water-heater-note">💧 این محصول سریال نمی‌گیرد — سریال به محصول بعدی تعلق می‌گیرد</div>'
+    ? '<div class="water-heater-note">💧 این محصول سریال نمی‌گیرد</div>'
     : '';
 
   document.getElementById('sheetContent').innerHTML = `
     <h2>${isNew ? '➕ ثبت سفارش جدید' : '✏ ویرایش سفارش'} — ${conf.label}</h2>
-    <div class="sub">${isNew ? 'اطلاعات ضروری را وارد کن' : 'فیلدهای خالی را تکمیل کن'}</div>
+    <div class="sub">${isNew ? 'اطلاعات ضروری را وارد کن' : 'فیلدها را ویرایش کن'}</div>
     ${waterHeaterNote}
     <div id="formFields">${fieldsHtml}</div>
     <div class="form-actions">
@@ -1816,17 +1925,14 @@ function collectFormRecord() {
   if (isNoSerialProduct(currentCat, record[productKey])) {
     record['شماره سریال'] = '';
   }
-
   return record;
 }
 
 async function submitForm(isNew) {
   const record = collectFormRecord();
   const conf = CATS[currentCat];
-
   const productKey = conf.fields[1].key;
   if (!record[productKey]) { toastMsg('نام محصول الزامی است', true); return; }
-
   const noSerial = isNoSerialProduct(currentCat, record[productKey]);
   if (!noSerial && !record['شماره سریال']) {
     toastMsg('شماره سریال الزامی است', true);
@@ -1928,7 +2034,7 @@ function openSettings() {
     <div class="sub">آدرس Web App گوگل اسکریپت</div>
     <div class="field">
       <label>آدرس API</label>
-      <input type="url" id="apiUrlInput" placeholder="https://script.google.com/macros/s/.../exec" value="${escapeHtml(API_URL)}">
+      <input type="url" id="apiUrlInput" placeholder="https://script.google.com/macros/s/.../exec" value="${escapeHtml(API_URL)}" dir="ltr">
     </div>
     <div class="form-actions">
       <button class="btn btn-secondary" id="closeSettingsBtn">بستن</button>
@@ -1958,14 +2064,14 @@ function showSetupScreen(msg) {
   document.getElementById('connText').textContent = msg || 'متصل نیست';
   document.getElementById('setupScreen').innerHTML = `
     <div class="setup-box">
-      <b style="color:var(--accent); font-family:'Courier New',monospace;">⚙ راه‌اندازی</b><br><br>
+      <b style="color:var(--accent); font-family:'SF Mono',monospace;">⚙ راه‌اندازی</b><br><br>
       این اپ به یک Google Apps Script Web App متصل می‌شود.<br><br>
-      <b>۱.</b> کد <code style="background:var(--bg-input);padding:2px 6px;border-radius:3px;">Code.gs</code> را در Apps Script قرار بده<br>
+      <b>۱.</b> کد <code>Code.gs</code> را در Apps Script قرار بده<br>
       <b>۲.</b> Deploy کن (نوع Web App، دسترسی Anyone)<br>
-      <b>۳.</b> آدرس <code style="background:var(--bg-input);padding:2px 6px;border-radius:3px;">/exec</code> را کپی کن<br>
+      <b>۳.</b> آدرس <code>/exec</code> را کپی کن<br>
       <b>۴.</b> روی دکمه ⚙ بزن و پیست کن<br><br>
-      <div style="text-align:center; margin-top:14px;">
-        <button class="btn btn-primary" style="max-width:220px;" onclick="openSettings()">ورود آدرس اتصال</button>
+      <div style="text-align:center; margin-top:16px;">
+        <button class="btn btn-primary" style="max-width:240px;" onclick="openSettings()">ورود آدرس اتصال</button>
       </div>
     </div>
     ${msg && msg.includes('خطا') ? '<div class="setup-box" style="border-color:var(--danger);">❌ اتصال برقرار نشد</div>' : ''}
@@ -1997,6 +2103,9 @@ async function boot() {
     showSetupScreen('خطا در اتصال');
   }
 }
+
+window.addEventListener('online', () => updateConnStatus(true));
+window.addEventListener('offline', () => updateConnStatus(false));
 
 boot();
 </script>
