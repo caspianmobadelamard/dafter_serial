@@ -1,5 +1,9 @@
-const CACHE_NAME = 'caspian-serial-v11';
-const ASSETS = ['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png'];
+const CACHE_NAME = 'caspian-serial-v12';
+const ASSETS = [
+  './', './index.html', './manifest.json',
+  './icon-192.png', './icon-512.png',
+  './icon-ios.png', './icon-android.png'
+];
 
 self.addEventListener('install', event => {
   self.skipWaiting();
