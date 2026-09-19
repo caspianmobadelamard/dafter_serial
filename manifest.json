@@ -1,5 +1,5 @@
 {
-  "name": "دفتر سریال کاسپین",
+  "name": "دفتر سریال کاسپین مبدل آمارد",
   "short_name": "دفتر سریال",
   "description": "ثبت سریع سفارش و تکمیل اطلاعات",
   "start_url": "./",
@@ -8,12 +8,14 @@
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
   "orientation": "any",
-  "background_color": "#0a0e0c",
-  "theme_color": "#1db954",
+  "background_color": "#0f141c",
+  "theme_color": "#f59e0b",
   "lang": "fa",
   "dir": "rtl",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    { "src": "icon-android.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-android.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-512.png",     "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png",     "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
