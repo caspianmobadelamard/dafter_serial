@@ -18,10 +18,10 @@
     --bg-base:#0f141c;--bg-surface:#161e2b;--bg-elevated:#1e2838;--bg-input:#0a1018;
     --border:#2a3544;--border-strong:#3a4a5e;
     --text:#e8ecf1;--text-mid:#a8b0bc;--text-dim:#6b7789;
-    --accent:#f59e0b;--accent-dim:#b87208;
+    --accent:#f59e0b;--accent-dim:#b87208;--accent-glow:rgba(245,158,11,0.5);
     --steel:#4a9eff;--success:#22c55e;--warning:#fbbf24;--danger:#ef4444;
     --cyan:#22d3ee;--purple:#a78bfa;--pink:#ec4899;
-    --radius:10px;--radius-sm:6px;
+    --radius:10px;--radius-sm:8px;
     --shadow:0 4px 16px rgba(0,0,0,0.4);
     --shadow-hover:0 6px 24px rgba(0,0,0,0.55);
     --c1:#4a9eff;--c2:#22c55e;--c3:#f59e0b;--c4:#a78bfa;--c5:#ec4899;--c6:#22d3ee;--c7:#eab308;--c8:#f87171;
@@ -52,34 +52,162 @@
     background-size:28px 28px;padding-bottom:30px;
   }
 
-  .neon-select-wrap{position:relative;}
-  .neon-select-wrap::after{
-    content:'▾';position:absolute;left:14px;top:50%;transform:translateY(-50%);
-    color:var(--accent);font-size:14px;pointer-events:none;transition:all 0.2s;
-  }
-  select,input[type=text],input[type=date],input[type=number],textarea{
+  /* ==================== INPUT پایه ==================== */
+  input[type=text],input[type=date],input[type=number],textarea{
     width:100%;background:var(--bg-input);border:1.5px solid var(--border);
     border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);
     font-size:1em;font-family:inherit;outline:none;
     transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
   }
-  select{
-    appearance:none;-webkit-appearance:none;
-    padding-left:36px;cursor:pointer;
-    background-image:linear-gradient(90deg, rgba(245,158,11,0.03), rgba(245,158,11,0));
-  }
-  select:hover,input:hover,textarea:hover{
-    border-color:var(--accent);
-    box-shadow:0 0 12px rgba(245,158,11,0.2);
-  }
-  select:focus,input:focus,textarea:focus{
+  input:focus,textarea:focus{
     border-color:var(--accent);
     box-shadow:0 0 0 2px var(--accent),0 0 20px rgba(245,158,11,0.4),inset 0 0 12px rgba(245,158,11,0.08);
-    background-image:linear-gradient(90deg, rgba(245,158,11,0.08), transparent);
   }
-  select option{background:var(--bg-elevated);color:var(--text);padding:10px;}
-  .neon-select-wrap:focus-within::after{transform:translateY(-50%) rotate(180deg);color:#fff;}
 
+  /* ==================== انتخاب‌گر نئونی v2 ==================== */
+  .neon-selector{position:relative;width:100%;}
+  .neon-trigger{
+    width:100%;
+    background:linear-gradient(135deg, var(--bg-input), var(--bg-elevated));
+    border:2px solid var(--accent);
+    border-radius:var(--radius-sm);
+    padding:13px 15px;
+    color:var(--text);font-size:1em;font-family:inherit;font-weight:600;
+    cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;gap:8px;
+    transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+    box-shadow:
+      0 0 0 1px rgba(245,158,11,0.3),
+      0 0 16px rgba(245,158,11,0.25),
+      inset 0 0 20px rgba(245,158,11,0.08);
+    position:relative;overflow:hidden;text-align:right;
+  }
+  .neon-trigger::before{
+    content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+    background:linear-gradient(90deg, transparent, rgba(245,158,11,0.15), transparent);
+    transition:left 0.6s;
+  }
+  .neon-trigger:hover::before{left:100%;}
+  .neon-trigger:hover{
+    box-shadow:
+      0 0 0 2px var(--accent),
+      0 0 24px var(--accent-glow),
+      inset 0 0 30px rgba(245,158,11,0.15);
+    transform:translateY(-1px);
+  }
+  .neon-trigger.active{
+    box-shadow:
+      0 0 0 3px var(--accent),
+      0 0 32px var(--accent-glow),
+      inset 0 0 40px rgba(245,158,11,0.2);
+    border-color:#fbbf24;
+  }
+  .neon-trigger .text{
+    flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    color:var(--text);
+  }
+  .neon-trigger .text.placeholder{color:var(--text-dim);font-weight:400;}
+  .neon-trigger .icon{
+    color:var(--accent);font-size:14px;flex-shrink:0;
+    transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    text-shadow:0 0 8px var(--accent);
+  }
+  .neon-trigger.active .icon{transform:rotate(180deg);}
+  .neon-trigger:disabled{opacity:0.5;cursor:not-allowed;}
+
+  .neon-list{
+    position:absolute;top:calc(100% + 8px);left:0;right:0;
+    background:linear-gradient(180deg, #1a2434, #10161f);
+    border:2px solid var(--accent);
+    border-radius:var(--radius-sm);
+    max-height:320px;overflow-y:auto;
+    box-shadow:
+      0 0 24px rgba(245,158,11,0.4),
+      0 12px 40px rgba(0,0,0,0.7),
+      inset 0 0 20px rgba(245,158,11,0.05);
+    display:none;z-index:100;
+    animation:listIn 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  body.light .neon-list{background:linear-gradient(180deg, #ffffff, #f5f7fa);}
+  .neon-list.show{display:block;}
+  @keyframes listIn{
+    from{opacity:0;transform:translateY(-12px) scale(0.98);}
+    to{opacity:1;transform:translateY(0) scale(1);}
+  }
+  .neon-option{
+    padding:13px 16px;cursor:pointer;font-size:0.93em;
+    color:var(--text-mid);border-bottom:1px solid rgba(42,53,68,0.4);
+    transition:all 0.2s;
+    display:flex;justify-content:space-between;align-items:center;
+    position:relative;
+  }
+  .neon-option:last-child{border-bottom:none;}
+  .neon-option:hover{
+    background:linear-gradient(90deg, rgba(245,158,11,0.18), rgba(245,158,11,0.03));
+    color:var(--accent);padding-right:22px;
+    text-shadow:0 0 6px rgba(245,158,11,0.5);
+  }
+  .neon-option.selected{
+    background:linear-gradient(90deg, rgba(245,158,11,0.25), rgba(245,158,11,0.08));
+    color:var(--accent);font-weight:800;
+    border-right:4px solid var(--accent);
+  }
+  .neon-option.selected::before{
+    content:'✓';color:var(--accent);font-size:15px;
+    text-shadow:0 0 10px var(--accent);margin-left:8px;
+  }
+  .neon-option.manual{
+    background:linear-gradient(90deg, rgba(74,158,255,0.12), rgba(74,158,255,0.02));
+    color:var(--steel);
+    border-top:2px solid rgba(74,158,255,0.3);
+    font-weight:700;font-style:italic;margin-top:4px;
+  }
+  .neon-option.manual:hover{
+    background:linear-gradient(90deg, rgba(74,158,255,0.25), rgba(74,158,255,0.05));
+    color:#7bb8ff;text-shadow:0 0 8px rgba(74,158,255,0.6);
+  }
+  .neon-option.manual .pencil{font-size:14px;text-shadow:0 0 6px currentColor;}
+
+  .neon-list::-webkit-scrollbar{width:10px;}
+  .neon-list::-webkit-scrollbar-track{background:#0a1018;border-radius:5px;}
+  .neon-list::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg, var(--accent), var(--accent-dim));
+    border-radius:5px;box-shadow:0 0 8px var(--accent);
+  }
+
+  .manual-input-wrap{
+    display:none;margin-top:10px;
+    animation:manualIn 0.3s ease-out;
+  }
+  .manual-input-wrap.show{display:block;}
+  @keyframes manualIn{
+    from{opacity:0;transform:translateY(-8px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  .manual-input-wrap input{
+    width:100%;
+    background:linear-gradient(135deg, var(--bg-input), #0d1520);
+    border:2px solid var(--steel);
+    border-radius:var(--radius-sm);
+    padding:13px 15px;
+    color:var(--text);font-size:1em;font-family:inherit;font-weight:600;
+    outline:none;
+    box-shadow:
+      0 0 0 1px rgba(74,158,255,0.4),
+      0 0 20px rgba(74,158,255,0.3),
+      inset 0 0 20px rgba(74,158,255,0.08);
+    transition:all 0.25s;
+  }
+  .manual-input-wrap input:focus{
+    border-color:#7bb8ff;
+    box-shadow:
+      0 0 0 3px rgba(74,158,255,0.5),
+      0 0 32px rgba(74,158,255,0.5),
+      inset 0 0 30px rgba(74,158,255,0.12);
+  }
+  .manual-hint{font-size:0.8em;color:var(--steel);margin-top:6px;text-align:right;}
+
+  /* ==================== سایر استایل‌ها ==================== */
   .topbar{
     position:sticky;top:0;z-index:50;background:var(--bg-surface);
     border-bottom:2px solid var(--border-strong);
@@ -186,25 +314,6 @@
   .cat-btn.active{background:var(--accent-dim);border-color:var(--accent);color:#fff;box-shadow:0 0 14px rgba(245,158,11,0.3);}
 
   label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;font-weight:600;}
-  label.req::after{content:" *";color:var(--accent);font-weight:800;}
-
-  .neon-radio-group{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
-  .neon-radio{position:relative;background:var(--bg-input);border:1.5px solid var(--border);
-    border-radius:8px;padding:13px 8px;text-align:center;cursor:pointer;
-    transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
-    font-size:0.87em;font-weight:700;color:var(--text-mid);overflow:hidden;}
-  .neon-radio::before{content:'';position:absolute;inset:0;
-    background:linear-gradient(135deg, rgba(245,158,11,0.15), transparent);
-    opacity:0;transition:opacity 0.25s;}
-  .neon-radio:hover{border-color:var(--accent);color:var(--text);transform:translateY(-2px);
-    box-shadow:0 4px 14px rgba(245,158,11,0.2);}
-  .neon-radio:hover::before{opacity:1;}
-  .neon-radio.selected{background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.05));
-    border-color:var(--accent);color:var(--accent);
-    box-shadow:0 0 0 1px var(--accent),0 0 20px rgba(245,158,11,0.5),inset 0 0 12px rgba(245,158,11,0.15);
-    text-shadow:0 0 8px rgba(245,158,11,0.6);}
-  .neon-radio.selected::after{content:'✓';position:absolute;top:6px;left:8px;
-    font-size:0.73em;color:var(--accent);text-shadow:0 0 6px var(--accent);}
 
   .date-row{display:flex;gap:8px;align-items:stretch;}
   .date-row input{flex:1;}
@@ -223,10 +332,16 @@
     border:1px solid var(--border);background:var(--bg-elevated);
     color:var(--accent);font-weight:700;font-size:0.9em;font-family:inherit;cursor:pointer;}
   .secondary-btn:active{transform:scale(0.98);}
+  .assistant-btn{width:100%;margin-top:10px;padding:13px;border-radius:var(--radius);
+    border:2px solid var(--purple);background:linear-gradient(135deg, rgba(167,139,250,0.15), rgba(167,139,250,0.05));
+    color:var(--purple);font-weight:800;font-size:0.93em;font-family:inherit;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;}
+  .assistant-btn:hover{box-shadow:0 0 20px rgba(167,139,250,0.4);}
 
   .msg{text-align:center;padding:11px;border-radius:var(--radius-sm);margin-top:12px;font-size:0.87em;display:none;}
   .msg.ok{display:block;background:rgba(34,197,94,0.12);color:var(--success);border:1px solid var(--success);}
   .msg.err{display:block;background:rgba(239,68,68,0.12);color:var(--danger);border:1px solid var(--danger);}
+  .msg.warn{display:block;background:rgba(251,191,36,0.12);color:var(--warning);border:1px solid var(--warning);}
 
   .order-card{background:var(--bg-surface);border:1px solid var(--border);
     border-right:4px solid var(--c1);border-radius:var(--radius);
@@ -313,12 +428,23 @@
 
   .search-row{display:flex;gap:8px;align-items:stretch;margin-bottom:12px;}
   .search-input-wrap{position:relative;flex:1;}
-  .search-input-wrap input{padding-left:36px;padding-right:12px;}
-  .search-input-wrap .clear-btn{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  .search-input-wrap input{padding-left:76px;padding-right:12px;}
+  .search-input-wrap .clear-btn{position:absolute;left:44px;top:50%;transform:translateY(-50%);
     width:24px;height:24px;border-radius:50%;border:none;background:var(--bg-elevated);
     color:var(--text-mid);cursor:pointer;font-size:13px;display:none;
     align-items:center;justify-content:center;}
   .search-input-wrap .clear-btn.show{display:flex;}
+  .search-input-wrap .voice-btn{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:50%;border:1.5px solid var(--accent);
+    background:var(--bg-elevated);color:var(--accent);cursor:pointer;font-size:14px;
+    display:flex;align-items:center;justify-content:center;transition:0.15s;}
+  .search-input-wrap .voice-btn:hover{background:rgba(245,158,11,0.15);box-shadow:0 0 10px rgba(245,158,11,0.4);}
+  .search-input-wrap .voice-btn.recording{background:rgba(239,68,68,0.3);border-color:var(--danger);color:var(--danger);
+    animation:pulseVoice 1s infinite;}
+  @keyframes pulseVoice{
+    0%,100%{box-shadow:0 0 10px rgba(239,68,68,0.5);}
+    50%{box-shadow:0 0 20px rgba(239,68,68,0.9);}
+  }
   .filter-toggle{border:1px solid var(--border);background:var(--bg-elevated);
     color:var(--text-mid);border-radius:var(--radius-sm);padding:0 14px;
     font-size:0.83em;font-family:inherit;cursor:pointer;white-space:nowrap;font-weight:700;}
@@ -350,6 +476,25 @@
     padding:2px 6px;border-radius:4px;font-size:0.73em;font-family:'JetBrains Mono',monospace;
     border:1px solid var(--accent);}
   .bar-label{font-size:0.67em;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+  /* نمودار مقایسه سالانه */
+  .compare-chart{display:flex;align-items:flex-end;justify-content:space-between;
+    gap:4px;height:200px;padding:16px 0;margin-top:14px;}
+  .compare-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;position:relative;}
+  .compare-bars{display:flex;gap:2px;align-items:flex-end;height:100%;width:100%;justify-content:center;}
+  .compare-bar{width:45%;min-height:3px;border-radius:3px 3px 0 0;transition:height 0.6s;position:relative;}
+  .compare-bar.prev{background:linear-gradient(180deg, #6b7789, #4a5568);}
+  .compare-bar.curr{background:linear-gradient(180deg, var(--accent), var(--accent-dim));}
+  .compare-bar:hover::after{content:attr(data-val);position:absolute;top:-20px;left:50%;
+    transform:translateX(-50%);background:var(--bg-elevated);color:var(--text);
+    padding:2px 5px;border-radius:4px;font-size:0.7em;font-family:'JetBrains Mono',monospace;
+    border:1px solid var(--border-strong);z-index:5;}
+  .compare-label{font-size:0.65em;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-weight:700;}
+  .compare-legend{display:flex;justify-content:center;gap:16px;margin-top:12px;font-size:0.8em;}
+  .compare-legend .item{display:flex;align-items:center;gap:6px;}
+  .compare-legend .dot{width:12px;height:12px;border-radius:3px;}
+  .compare-legend .dot.prev{background:#6b7789;}
+  .compare-legend .dot.curr{background:var(--accent);}
 
   .line-chart-wrap{margin-top:16px;position:relative;height:180px;padding:12px 0;}
   .line-chart-svg{width:100%;height:100%;overflow:visible;}
@@ -433,8 +578,62 @@
 
   .empty-state{text-align:center;color:var(--text-dim);padding:40px 10px;font-size:0.9em;}
   .spinner{text-align:center;color:var(--text-dim);font-size:0.87em;padding:20px;}
-
   .hint-sm{font-size:0.8em;color:var(--text-dim);margin-top:6px;line-height:1.7;}
+
+  /* هشدارهای هوشمند */
+  .anomaly-box{margin-top:12px;padding:12px 14px;border-radius:var(--radius-sm);
+    background:rgba(251,191,36,0.1);border:1px solid var(--warning);
+    border-right:4px solid var(--warning);font-size:0.83em;color:var(--warning);
+    line-height:1.8;display:none;}
+  .anomaly-box.show{display:block;}
+  .anomaly-box .item{margin-bottom:6px;}
+  .anomaly-box .item:last-child{margin-bottom:0;}
+  .anomaly-box .item::before{content:'⚠️ ';}
+
+  /* دستیار هوشمند */
+  .assistant-panel{position:fixed;bottom:0;left:0;right:0;background:var(--bg-surface);
+    border-top:2px solid var(--purple);border-radius:24px 24px 0 0;
+    max-height:85vh;overflow-y:auto;z-index:150;
+    padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom));
+    transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    box-shadow:0 -8px 40px rgba(0,0,0,0.6);max-width:600px;margin:0 auto;}
+  .assistant-panel.show{transform:translateY(0);}
+  .assistant-panel h3{color:var(--purple);font-size:1.1em;font-weight:800;margin-bottom:6px;
+    display:flex;align-items:center;gap:8px;}
+  .assistant-panel h3 .ai-icon{width:32px;height:32px;background:rgba(167,139,250,0.15);
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    border:1.5px solid var(--purple);}
+  .assistant-panel .sub{color:var(--text-dim);font-size:0.87em;margin-bottom:16px;}
+  .assistant-progress{margin-bottom:16px;height:4px;background:var(--bg-input);
+    border-radius:2px;overflow:hidden;}
+  .assistant-progress .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--accent));
+    border-radius:2px;transition:width 0.3s;}
+  .assistant-question{font-size:1.05em;font-weight:800;color:var(--text);
+    margin-bottom:14px;padding:14px 16px;background:var(--bg-input);
+    border-radius:var(--radius-sm);border-right:4px solid var(--purple);}
+  .assistant-input-wrap{margin-bottom:14px;}
+  .assistant-options{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+  .assistant-option{padding:13px 16px;background:var(--bg-elevated);
+    border:1.5px solid var(--border);border-radius:var(--radius-sm);
+    cursor:pointer;font-size:0.93em;font-weight:600;color:var(--text);
+    transition:0.15s;text-align:right;}
+  .assistant-option:hover{border-color:var(--purple);color:var(--purple);
+    box-shadow:0 0 12px rgba(167,139,250,0.3);transform:translateX(-4px);}
+  .assistant-option.manual{
+    background:linear-gradient(90deg, rgba(74,158,255,0.12), rgba(74,158,255,0.02));
+    color:var(--steel);border-color:var(--steel);font-style:italic;}
+  .assistant-actions{display:flex;gap:8px;margin-top:14px;}
+  .assistant-actions button{flex:1;padding:12px;border-radius:var(--radius-sm);
+    font-family:inherit;font-weight:700;cursor:pointer;font-size:0.9em;}
+  .assistant-actions .back{background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-mid);}
+  .assistant-actions .next{background:linear-gradient(135deg,var(--purple),#8b5cf6);border:none;color:#fff;}
+  .assistant-summary{background:var(--bg-input);border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:14px;margin-bottom:14px;font-size:0.87em;line-height:2;}
+  .assistant-summary .row{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);
+    padding:6px 0;}
+  .assistant-summary .row:last-child{border-bottom:none;}
+  .assistant-summary .k{color:var(--text-dim);}
+  .assistant-summary .v{color:var(--text);font-weight:600;font-family:'JetBrains Mono',monospace;}
 
   @media (max-width: 480px){
     .brand-text h1{font-size:0.93em;}
@@ -447,7 +646,6 @@
     .tab svg{width:20px;height:20px;}
     .tab .count{font-size:0.6em;padding:1px 4px;}
     .dash-grid{grid-template-columns:1fr;}
-    .neon-radio-group{grid-template-columns:1fr;}
   }
 </style>
 </head>
@@ -542,9 +740,11 @@
     <div class="cat-row" id="catRow"></div>
     <div class="card">
       <form id="newForm" onsubmit="return false;"></form>
+      <button class="assistant-btn" id="assistantBtn">🤖 دستیار هوشمند — پرسش و پاسخ سریع</button>
       <button class="submit-btn" id="newSubmitBtn">ثبت سفارش</button>
       <button class="secondary-btn" id="copyPrevBtn" type="button">📋 کپی از سفارش قبلی</button>
       <div class="msg" id="newMsg"></div>
+      <div class="anomaly-box" id="anomalyBox"></div>
     </div>
   </div>
 
@@ -555,6 +755,7 @@
       <div class="search-row">
         <div class="search-input-wrap">
           <input type="text" id="searchInput" placeholder="جستجو..." dir="auto">
+          <button type="button" class="voice-btn" id="voiceBtn" title="جستجوی صوتی">🎤</button>
           <button type="button" class="clear-btn" id="searchClear">✕</button>
         </div>
         <button type="button" class="filter-toggle active" id="onlyPendingBtn">ناقص‌ها</button>
@@ -562,17 +763,11 @@
       </div>
       <div class="adv-filters" id="advFilters">
         <label>وضعیت</label>
-        <div class="neon-select-wrap"><select id="filterStatus"><option value="">همه</option></select></div>
+        <div id="filterStatusWrap"></div>
         <label>شرکت بازرسی</label>
-        <div class="neon-select-wrap">
-          <select id="filterInspection">
-            <option value="">همه</option>
-            <option value="ISQI">ISQI</option>
-            <option value="AJG">AJG</option>
-          </select>
-        </div>
+        <div id="filterInspectionWrap"></div>
         <label>مشتری</label>
-        <div class="neon-select-wrap"><select id="filterCustomer"><option value="">همه</option></select></div>
+        <div id="filterCustomerWrap"></div>
         <button type="button" class="filter-toggle" id="clearFiltersBtn" style="margin-top:12px;padding:9px 14px;width:100%;">پاک کردن فیلترها</button>
       </div>
       <div id="pendingList" style="margin-top:14px;"></div>
@@ -605,6 +800,7 @@
   </div>
 </div>
 
+<!-- مودال ویرایش -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <h3 id="modalTitle"></h3>
@@ -617,6 +813,7 @@
   </div>
 </div>
 
+<!-- مودال کپی -->
 <div class="modal-backdrop" id="copyBackdrop">
   <div class="modal">
     <h3>📋 کپی از سفارش قبلی</h3>
@@ -626,13 +823,14 @@
   </div>
 </div>
 
+<!-- مودال تنظیمات -->
 <div class="modal-backdrop" id="settingsBackdrop">
   <div class="modal">
     <h3>⚙️ تنظیمات</h3>
-    <label class="req">نام کاربر</label>
+    <label>نام کاربر</label>
     <input type="text" id="settingsUser" placeholder="مثلاً: علی" dir="auto">
     <div class="hint-sm">نامت برای ثبت در تاریخچه تغییرات</div>
-    <label class="req">لینک Web App</label>
+    <label>لینک Web App</label>
     <input type="text" id="settingsUrl" placeholder="https://script.google.com/macros/s/.../exec" dir="ltr" style="text-align:left;">
     <label>اندازه فونت</label>
     <div class="font-size-row">
@@ -650,6 +848,7 @@
   </div>
 </div>
 
+<!-- مودال هشدارها -->
 <div class="modal-backdrop" id="alertsBackdrop">
   <div class="modal">
     <h3>🔔 سفارش‌های نزدیک به بارگیری</h3>
@@ -659,6 +858,18 @@
   </div>
 </div>
 
+<!-- پنل دستیار هوشمند -->
+<div class="assistant-panel" id="assistantPanel">
+  <h3>
+    <span class="ai-icon">🤖</span>
+    <span>دستیار هوشمند</span>
+  </h3>
+  <div class="sub">فقط جواب بده — من فرم رو پر می‌کنم</div>
+  <div class="assistant-progress"><div class="fill" id="assistantProgress"></div></div>
+  <div id="assistantBody"></div>
+</div>
+
+<!-- Picker -->
 <div class="picker-overlay" id="pickerOverlay">
   <div class="picker-box">
     <h4 id="pickerTitle"></h4>
@@ -667,14 +878,19 @@
   </div>
 </div>
 
+<!-- Undo -->
 <div class="undo-bar" id="undoBar">
   <div class="undo-text" id="undoText"></div>
   <button id="undoBtn">بازگردانی</button>
 </div>
 
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
+// ============================================================
+// ثابت‌ها
+// ============================================================
 const SCRIPT_URL_DEFAULT = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 const STORAGE_KEY = "caspian_script_url";
 const USER_KEY = "caspian_user_name";
@@ -682,8 +898,11 @@ const FONT_KEY = "caspian_font_size";
 const THEME_KEY = "caspian_theme";
 const REFRESH_MS = 20000;
 
+// ============================================================
+// محصولات — با رفع غلط املایی
+// ============================================================
 const PRODUCT_OPTIONS = {
-  steam: ['دیگ بخار ایستاده', 'دیگ بخار افقی وت یک', 'دیگ بخار فایرباکس'],
+  steam: ['دیگ بخار ایستاده', 'دیگ بخار افقی وت بک', 'دیگ بخار فایرباکس'],
   hotwater: [
     'دیگ آبگرم دوپاس شعله برگشتی',
     'دیگ آبداغ دوپاس شعله برگشتی',
@@ -710,6 +929,7 @@ const STATUS_PILL_CLASS = {'ساخته نشده':'not-made','در حال ساخ�
 const STANDARD_LIST = ['ISIRI 7911', 'ISIRI 4231', 'INSO 22156'];
 const INSPECTION_LIST = ['ISQI', 'AJG'];
 const PRESSURE_UNITS = ['بار', 'psi'];
+const PRESSURE_VALUES = ['6', '8', '10', '12', '13', '16', '17', '20', '25'];
 const CAT_LABELS = { steam:'بخار', hotwater:'آبگرم', tanks:'مخازن' };
 const MONTH_NAMES = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 
@@ -744,14 +964,14 @@ function customerColorIndex(customer) {
 }
 
 // ============================================================
-// هیچ فیلدی اجباری نیست — حتی سریال و محصول
+// تعریف دسته‌ها
 // ============================================================
 const CATEGORIES = {
   steam: {
     label: 'بخار',
     fields: [
       { key: 'serial', label: 'شماره سریال' },
-      { key: 'product', label: 'نام محصول' },
+      { key: 'product', label: 'نام محصول', type: 'product' },
       { key: 'notes', label: 'توضیحات' },
       { key: 'capacity', label: 'ظرفیت محصول', type: 'capacity' },
       { key: 'pressure', label: 'فشار کاری', type: 'pressure' },
@@ -769,7 +989,7 @@ const CATEGORIES = {
     label: 'آبگرم',
     fields: [
       { key: 'serial', label: 'شماره سریال' },
-      { key: 'product', label: 'مدل محصول' },
+      { key: 'product', label: 'مدل محصول', type: 'product' },
       { key: 'pressure', label: 'فشار کاری', type: 'pressure' },
       { key: 'capacity', label: 'ظرفیت محصول', type: 'capacity' },
       { key: 'desc', label: 'توضیحات' },
@@ -787,7 +1007,7 @@ const CATEGORIES = {
     label: 'مخازن',
     fields: [
       { key: 'serial', label: 'شماره سریال' },
-      { key: 'product', label: 'نام محصول' },
+      { key: 'product', label: 'نام محصول', type: 'product' },
       { key: 'pressure', label: 'فشار کاری', type: 'pressure' },
       { key: 'capacity', label: 'ظرفیت محصول', type: 'capacity' },
       { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
@@ -800,6 +1020,9 @@ const CATEGORIES = {
   }
 };
 
+// ============================================================
+// State
+// ============================================================
 let currentYear = '1405';
 let availableYears = ['1405'];
 let currentCat = 'steam';
@@ -815,9 +1038,16 @@ let currentModalItem = null;
 let pendingUndo = null;
 let capacityUnitCache = {};
 let pressureUnitCache = {};
+let selectedValuesCache = {}; // برای انتخاب‌گر نئونی
 let refreshTimer = null;
 let lastFetchHash = '';
+let recognition = null;
+let isRecording = false;
+let assistantState = null;
 
+// ============================================================
+// ابزار پایه
+// ============================================================
 function getUserName() { return localStorage.getItem(USER_KEY) || ''; }
 function setUserName(n) { localStorage.setItem(USER_KEY, n); }
 function getScriptUrl() { return localStorage.getItem(STORAGE_KEY) || SCRIPT_URL_DEFAULT; }
@@ -866,7 +1096,15 @@ function showToast(msg, type) {
   t._timer = setTimeout(() => t.classList.remove('show'), 3500);
 }
 function isWaterHeater(product) { return String(product || '').trim() === 'آبگرم کن'; }
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, function(c) {
+    return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+  });
+}
 
+// ============================================================
+// API
+// ============================================================
 async function callApi(payload) {
   const url = getScriptUrl();
   if (!isUrlConfigured()) { openSettings(); throw new Error('لینک تنظیم نشده'); }
@@ -879,6 +1117,13 @@ async function callApi(payload) {
   if (payload.serial)   params.append('serial', payload.serial);
   if (payload.status)   params.append('status', payload.status);
   if (payload.limit)    params.append('limit', payload.limit);
+  if (payload.customer) params.append('customer', payload.customer);
+  if (payload.product)  params.append('product', payload.product);
+  if (payload.capacity) params.append('capacity', payload.capacity);
+  if (payload.pressure) params.append('pressure', payload.pressure);
+  if (payload.excludeRow) params.append('excludeRow', payload.excludeRow);
+  if (payload.currentYear) params.append('currentYear', payload.currentYear);
+  if (payload.previousYear) params.append('previousYear', payload.previousYear);
   if (payload.rows)     params.append('rows', JSON.stringify(payload.rows));
   if (payload.data)     params.append('data', JSON.stringify(payload.data));
   params.append('user', getUserName() || 'ناشناس');
@@ -889,6 +1134,631 @@ async function callApi(payload) {
   catch (_) { throw new Error('پاسخ JSON نبود: ' + text.slice(0, 150)); }
 }
 
+// ============================================================
+// انتخاب‌گر نئونی
+// ============================================================
+function closeAllNeonLists() {
+  document.querySelectorAll('.neon-list').forEach(l => l.classList.remove('show'));
+  document.querySelectorAll('.neon-trigger').forEach(t => t.classList.remove('active'));
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.neon-selector') && !e.target.closest('.manual-input-wrap')) {
+    closeAllNeonLists();
+  }
+});
+
+function toggleNeonList(listId, trigId) {
+  const list = document.getElementById(listId);
+  const trig = document.getElementById(trigId);
+  if (!list || !trig) return;
+  const isOpen = list.classList.contains('show');
+  closeAllNeonLists();
+  if (!isOpen) {
+    list.classList.add('show');
+    trig.classList.add('active');
+  }
+}
+
+function pickNeonOption(el, val, trigId, listId, fieldId, fieldKey) {
+  const trig = document.getElementById(trigId);
+  const trigText = trig.querySelector('.text');
+  trigText.textContent = val;
+  trigText.classList.remove('placeholder');
+
+  // ذخیره در کش
+  selectedValuesCache[fieldId] = val;
+
+  // مارک آیتم انتخاب‌شده
+  document.querySelectorAll('#' + listId + ' .neon-option').forEach(x => x.classList.remove('selected'));
+  el.classList.add('selected');
+
+  // اگه input مخفی هست، مقدارش رو ست کن
+  const hiddenInput = document.getElementById(fieldId);
+  if (hiddenInput && hiddenInput.tagName === 'INPUT') {
+    hiddenInput.value = val;
+  }
+
+  // رفتارهای خاص
+  if (fieldKey === 'product') {
+    onProductChange(fieldId);
+  }
+
+  setTimeout(() => {
+    document.getElementById(listId).classList.remove('show');
+    document.getElementById(trigId).classList.remove('active');
+  }, 200);
+}
+
+function manualNeonInput(listId, trigId, manualId, fieldId, fieldKey) {
+  document.getElementById(listId).classList.remove('show');
+  document.getElementById(trigId).classList.remove('active');
+
+  const wrap = document.getElementById(manualId);
+  wrap.classList.add('show');
+  const inp = wrap.querySelector('input');
+  setTimeout(() => inp.focus(), 100);
+
+  inp.onkeydown = (e) => {
+    if (e.key === 'Enter') {
+      const v = e.target.value.trim();
+      if (v) {
+        const trig = document.getElementById(trigId);
+        const trigText = trig.querySelector('.text');
+        trigText.textContent = v;
+        trigText.classList.remove('placeholder');
+        selectedValuesCache[fieldId] = v;
+        const hiddenInput = document.getElementById(fieldId);
+        if (hiddenInput && hiddenInput.tagName === 'INPUT') hiddenInput.value = v;
+        if (fieldKey === 'product') onProductChange(fieldId);
+      }
+      wrap.classList.remove('show');
+      inp.value = '';
+    }
+  };
+}
+
+function buildNeonSelector(fieldId, fieldKey, options, currentValue, placeholder, extraClasses) {
+  const listId = 'list_' + fieldId;
+  const trigId = 'trig_' + fieldId;
+  const manualId = 'manual_' + fieldId;
+  const opts = options.map(o => {
+    const sel = (currentValue && String(currentValue).trim() === String(o).trim()) ? ' selected' : '';
+    return `<div class="neon-option${sel}" onclick="pickNeonOption(this, '${escapeHtml(String(o).replace(/'/g, "\\'"))}', '${trigId}', '${listId}', '${fieldId}', '${fieldKey}')">${escapeHtml(o)}</div>`;
+  }).join('');
+  const manualLabel = fieldKey === 'product' ? '✎ ورود دستی (تایپ می‌کنم)' : '✎ ورود دستی';
+  const hasValue = currentValue && String(currentValue).trim() !== '';
+  return `
+    <div class="neon-selector ${extraClasses || ''}">
+      <div class="neon-trigger" id="${trigId}" onclick="toggleNeonList('${listId}', '${trigId}')">
+        <span class="text${hasValue ? '' : ' placeholder'}">${hasValue ? escapeHtml(currentValue) : escapeHtml(placeholder)}</span>
+        <span class="icon">▾</span>
+      </div>
+      <div class="neon-list" id="${listId}">
+        ${opts}
+        <div class="neon-option manual" onclick="manualNeonInput('${listId}', '${trigId}', '${manualId}', '${fieldId}', '${fieldKey}')">
+          <span>${manualLabel}</span>
+          <span class="pencil">✏️</span>
+        </div>
+      </div>
+    </div>
+    <div class="manual-input-wrap" id="${manualId}">
+      <input type="text" placeholder="تایپ کن و Enter بزن..." autocomplete="off">
+      <div class="manual-hint">✏️ کیبورد اینجا فعال می‌شه</div>
+    </div>
+    <input type="hidden" id="${fieldId}" value="${hasValue ? escapeHtml(currentValue) : ''}">
+  `;
+}
+
+// ============================================================
+// ساخت فیلد
+// ============================================================
+function getCapacityUnits(product) {
+  if (CAPACITY_UNITS[product]) return CAPACITY_UNITS[product];
+  if (currentCat === 'steam') return ['kg/hr', 'lb/hr'];
+  if (currentCat === 'hotwater') return ['kcal/hr'];
+  return ['lit'];
+}
+
+function fieldRowHTML(f, idPrefix, currentData) {
+  const id = idPrefix + '_' + f.key;
+  const isNew = idPrefix === 'new';
+  const currentVal = currentData ? (currentData[f.key] || '') : '';
+
+  if (f.key === 'serial' && isNew) {
+    return `
+      <label id="lbl_${id}">${f.label}</label>
+      <div class="date-row">
+        <input type="text" id="${id}" value="${escapeHtml(currentVal)}" placeholder="">
+        <button type="button" class="today-btn" onclick="refreshSerial()" title="سریال بعدی">🔄</button>
+      </div>
+      <div class="hint-sm" id="serialHint_${id}"></div>`;
+  }
+
+  if (f.type === 'product') {
+    const options = PRODUCT_OPTIONS[currentCat] || [];
+    return `
+      <label>${f.label}</label>
+      ${buildNeonSelector(id, 'product', options, currentVal, 'انتخاب یا ورود دستی...', '')}
+      <div class="hint-sm" id="similarHint_${id}"></div>`;
+  }
+
+  if (f.key === 'customer' && isNew) {
+    return `
+      <label>${f.label}</label>
+      <div class="date-row">
+        <input type="text" id="${id}" value="${escapeHtml(currentVal)}" inputmode="numeric" placeholder="کد مشتری..." autocomplete="off">
+        <button type="button" class="today-btn" onclick="openCustomerOrders()" title="سفارش‌های این مشتری">📋</button>
+      </div>`;
+  }
+
+  if (f.type === 'capacity') {
+    const unitBtnId = 'unitBtn_' + id;
+    return `
+      <label>${f.label}</label>
+      <div class="date-row">
+        <input type="text" id="${id}" value="${escapeHtml(currentVal)}" placeholder="مقدار..." inputmode="decimal">
+        <button type="button" class="today-btn" id="${unitBtnId}" onclick="pickUnit('${id}')">lit ▾</button>
+      </div>`;
+  }
+
+  if (f.type === 'pressure') {
+    const pressBtnId = 'pressureUnitBtn_' + id;
+    // فیلد فشار اصلی با انتخاب‌گر عددی نئونی + واحد
+    return `
+      <label>${f.label}</label>
+      <div class="date-row" style="align-items:stretch;">
+        <div style="flex:1;position:relative;" id="pressSel_${id}"></div>
+        <button type="button" class="today-btn" id="${pressBtnId}" onclick="pickPressureUnit('${id}')">بار ▾</button>
+      </div>
+      <input type="hidden" id="${id}" value="">`;
+  }
+
+  if (f.type === 'standard') {
+    return `
+      <label>${f.label}</label>
+      ${buildNeonSelector(id, 'standard', STANDARD_LIST, currentVal, 'انتخاب...', '')}`;
+  }
+
+  if (f.type === 'inspection') {
+    return `
+      <label>${f.label}</label>
+      ${buildNeonSelector(id, 'inspection', INSPECTION_LIST, currentVal, 'انتخاب...', '')}`;
+  }
+
+  if (f.key === 'status') {
+    return `
+      <label>${f.label}</label>
+      ${buildNeonSelector(id, 'status', STATUS_LIST, currentVal || STATUS_LIST[0], '', '')}`;
+  }
+
+  if (f.type === 'group') {
+    const opts = GROUP_OPTIONS_TANKS.map(s => {
+      const sel = (s === (currentVal || 'مخازن')) ? ' selected' : '';
+      return `<div class="neon-option${sel}" onclick="pickNeonOption(this, '${s}', 'trig_${id}', 'list_${id}', '${id}', 'group')">${s}</div>`;
+    }).join('');
+    return `
+      <label>${f.label}</label>
+      <div class="neon-selector">
+        <div class="neon-trigger" id="trig_${id}" onclick="toggleNeonList('list_${id}', 'trig_${id}')">
+          <span class="text">${currentVal || 'مخازن'}</span>
+          <span class="icon">▾</span>
+        </div>
+        <div class="neon-list" id="list_${id}">
+          ${opts}
+          <div class="neon-option manual" onclick="manualNeonInput('list_${id}', 'trig_${id}', 'manual_${id}', '${id}', 'group')">
+            <span>✎ ورود دستی</span>
+            <span class="pencil">✏️</span>
+          </div>
+        </div>
+      </div>
+      <div class="manual-input-wrap" id="manual_${id}">
+        <input type="text" placeholder="تایپ کن..." autocomplete="off">
+      </div>
+      <input type="hidden" id="${id}" value="${escapeHtml(currentVal || 'مخازن')}">`;
+  }
+
+  if (f.type === 'jdate') {
+    return `
+      <label>${f.label}</label>
+      <div class="date-row">
+        <input type="text" id="${id}" value="${escapeHtml(currentVal)}" placeholder="۱۴۰۵.۰۶.۲۰" dir="ltr" style="text-align:left;">
+        <button type="button" class="today-btn" onclick="document.getElementById('${id}').value = todayJalaliStr()">امروز</button>
+      </div>`;
+  }
+
+  return `
+    <label>${f.label}</label>
+    <input type="text" id="${id}" value="${escapeHtml(currentVal)}" placeholder="">`;
+}
+
+// ============================================================
+// پس از ساخت فرم، فیلد فشار رو با انتخاب‌گر نئونی بازسازی می‌کنیم
+// ============================================================
+function buildPressureSelectors(prefix, currentData) {
+  ['steam', 'hotwater', 'tanks'].forEach(() => {}); // just for scope
+  const cat = CATEGORIES[currentCat];
+  const pressField = cat.fields.find(f => f.type === 'pressure');
+  if (!pressField) return;
+  const id = prefix + '_pressure';
+  const wrap = document.getElementById('pressSel_' + id);
+  if (!wrap) return;
+  const currentVal = currentData ? String(currentData.pressure || '').trim() : '';
+  const numMatch = currentVal.match(/^([\d.]+)/);
+  const currentNum = numMatch ? numMatch[1] : '';
+  wrap.innerHTML = `
+    <div class="neon-selector">
+      <div class="neon-trigger" id="trig_${id}" onclick="toggleNeonList('list_${id}', 'trig_${id}')">
+        <span class="text${currentNum ? '' : ' placeholder'}">${currentNum ? escapeHtml(currentNum) + ' بار' : 'انتخاب فشار...'}</span>
+        <span class="icon">▾</span>
+      </div>
+      <div class="neon-list" id="list_${id}">
+        ${PRESSURE_VALUES.map(v => `<div class="neon-option" onclick="pickPressureValue('${v}', '${id}')">${v} بار</div>`).join('')}
+        <div class="neon-option manual" onclick="manualPressure('${id}')">
+          <span>✎ ورود دستی</span>
+          <span class="pencil">✏️</span>
+        </div>
+      </div>
+    </div>
+    <div class="manual-input-wrap" id="manual_${id}">
+      <input type="text" inputmode="decimal" placeholder="مقدار فشار..." autocomplete="off">
+      <div class="manual-hint">✏️ فقط عدد رو وارد کن</div>
+    </div>
+  `;
+  // مقدار مخفی
+  const hidden = document.getElementById(id);
+  if (hidden) hidden.value = currentNum;
+}
+
+function pickPressureValue(val, id) {
+  const trig = document.getElementById('trig_' + id);
+  const trigText = trig.querySelector('.text');
+  trigText.textContent = val + ' بار';
+  trigText.classList.remove('placeholder');
+  document.querySelectorAll('#list_' + id + ' .neon-option').forEach(x => x.classList.remove('selected'));
+  const hidden = document.getElementById(id);
+  if (hidden) hidden.value = val;
+  closeAllNeonLists();
+}
+
+function manualPressure(id) {
+  const list = document.getElementById('list_' + id);
+  const trig = document.getElementById('trig_' + id);
+  if (list) list.classList.remove('show');
+  if (trig) trig.classList.remove('active');
+  const wrap = document.getElementById('manual_' + id);
+  if (!wrap) return;
+  wrap.classList.add('show');
+  const inp = wrap.querySelector('input');
+  setTimeout(() => inp.focus(), 100);
+  inp.onkeydown = (e) => {
+    if (e.key === 'Enter') {
+      const v = e.target.value.trim();
+      if (v) {
+        const trigText = trig.querySelector('.text');
+        trigText.textContent = v + ' بار';
+        trigText.classList.remove('placeholder');
+        const hidden = document.getElementById(id);
+        if (hidden) hidden.value = v;
+      }
+      wrap.classList.remove('show');
+      inp.value = '';
+    }
+  };
+}
+
+function onProductChange(fieldId) {
+  const el = document.getElementById(fieldId);
+  if (!el) return;
+  const product = String(el.value || '').trim();
+  const prefix = fieldId.split('_')[0];
+  const capInputId = prefix + '_capacity';
+  const unitBtn = document.getElementById('unitBtn_' + capInputId);
+  if (unitBtn) {
+    const units = getCapacityUnits(product);
+    capacityUnitCache[capInputId] = units[0];
+    unitBtn.textContent = units[0] + ' ▾';
+  }
+  if (prefix === 'new') {
+    const serialInput = document.getElementById('new_serial');
+    const serialLabel = document.getElementById('lbl_new_serial');
+    if (isWaterHeater(product)) {
+      if (serialInput) { serialInput.value = ''; serialInput.disabled = true; serialInput.placeholder = '— (بدون سریال)'; }
+      if (serialLabel) serialLabel.style.opacity = '0.5';
+    } else {
+      if (serialInput) { serialInput.disabled = false; serialInput.placeholder = ''; }
+      if (serialLabel) serialLabel.style.opacity = '1';
+      if (!serialInput.value) autofillSerial(false);
+    }
+  }
+  // چک ناهنجاری
+  checkAnomalyNow(prefix);
+}
+
+// ============================================================
+// اعتبارسنجی سریال
+// ============================================================
+async function validateSerialNow(prefix) {
+  const serialEl = document.getElementById(prefix + '_serial');
+  const hintEl = document.getElementById('serialHint_' + prefix + '_serial');
+  if (!serialEl || !hintEl) return;
+  const s = serialEl.value.trim();
+  if (!s || isWaterHeater(document.getElementById(prefix + '_product')?.value)) {
+    hintEl.textContent = '';
+    return;
+  }
+  try {
+    const r = await callApi({ action: 'validateSerial', category: currentCat, serial: s });
+    if (r.ok && r.warnings && r.warnings.length > 0) {
+      hintEl.innerHTML = r.warnings.map(w => '<span style="color:var(--warning)">⚠️ ' + escapeHtml(w.msg) + '</span>').join('<br>');
+    } else {
+      hintEl.innerHTML = '<span style="color:var(--success)">✓ سریال معتبر</span>';
+    }
+  } catch (e) {
+    hintEl.textContent = '';
+  }
+}
+
+// ============================================================
+// چک ناهنجاری
+// ============================================================
+async function checkAnomalyNow(prefix) {
+  const box = document.getElementById('anomalyBox');
+  if (!box) return;
+  const prodEl = document.getElementById(prefix + '_product');
+  const capEl = document.getElementById(prefix + '_capacity');
+  const pressEl = document.getElementById(prefix + '_pressure');
+  const product = prodEl ? prodEl.value.trim() : '';
+  if (!product || product.length < 3) { box.classList.remove('show'); return; }
+  const cap = capEl ? capEl.value.trim() : '';
+  const press = pressEl ? pressEl.value.trim() : '';
+  if (!cap && !press) { box.classList.remove('show'); return; }
+  try {
+    const r = await callApi({
+      action: 'checkAnomaly',
+      category: currentCat,
+      product: product,
+      capacity: cap,
+      pressure: press
+    });
+    if (r.ok && r.warnings && r.warnings.length > 0) {
+      box.innerHTML = r.warnings.map(w => '<div class="item">' + escapeHtml(w.msg) + '</div>').join('');
+      box.classList.add('show');
+    } else {
+      box.classList.remove('show');
+    }
+  } catch (e) { box.classList.remove('show'); }
+}
+
+// ============================================================
+// انتخاب واحد ظرفیت
+// ============================================================
+function pickUnit(inputId) {
+  const input = document.getElementById(inputId);
+  const prefix = inputId.split('_')[0];
+  const product = (document.getElementById(prefix + '_product') || {}).value || '';
+  const units = getCapacityUnits(String(product).trim());
+  const current = capacityUnitCache[inputId] || units[0];
+  openPicker('واحد ظرفیت', units, current, (selected) => {
+    capacityUnitCache[inputId] = selected;
+    const btn = document.getElementById('unitBtn_' + inputId);
+    if (btn) btn.textContent = selected + ' ▾';
+    if (input) input.placeholder = 'مقدار (' + selected + ')...';
+  });
+}
+
+function pickPressureUnit(inputId) {
+  const input = document.getElementById(inputId);
+  const current = pressureUnitCache[inputId] || 'بار';
+  openPicker('واحد فشار', PRESSURE_UNITS, current, (selected) => {
+    pressureUnitCache[inputId] = selected;
+    const btn = document.getElementById('pressureUnitBtn_' + inputId);
+    if (btn) btn.textContent = selected + ' ▾';
+    if (input) input.placeholder = 'مقدار (' + selected + ')...';
+  });
+}
+
+function openPicker(title, items, current, onPick) {
+  document.getElementById('pickerTitle').textContent = title;
+  const list = document.getElementById('pickerList');
+  list.innerHTML = '';
+  items.forEach(it => {
+    const d = document.createElement('div');
+    d.className = 'picker-item' + (it === current ? ' selected' : '');
+    d.textContent = it;
+    d.onclick = () => { onPick(it); closePicker(); };
+    list.appendChild(d);
+  });
+  document.getElementById('pickerOverlay').classList.add('show');
+}
+function closePicker() { document.getElementById('pickerOverlay').classList.remove('show'); }
+document.getElementById('pickerCloseBtn').onclick = closePicker;
+document.getElementById('pickerOverlay').onclick = e => { if (e.target.id === 'pickerOverlay') closePicker(); };
+
+// ============================================================
+// ساخت فرم ثبت
+// ============================================================
+async function buildNewForm() {
+  const form = document.getElementById('newForm');
+  const cat = CATEGORIES[currentCat];
+  form.innerHTML = cat.fields.map(f => fieldRowHTML(f, 'new', null)).join('');
+
+  // بازسازی انتخاب‌گر فشار
+  buildPressureSelectors('new', null);
+
+  const productEl = document.getElementById('new_product');
+  if (productEl && !document.getElementById('new_count')) {
+    productEl.parentNode.insertAdjacentHTML('afterend', `
+      <label for="new_count">تعداد دستگاه</label>
+      <input type="number" id="new_count" min="1" value="1" step="1">
+      <div class="hint-sm" id="countHint">اگه بیشتر از ۱ باشه، ردیف جدا با سریال متوالی ثبت می‌شه.</div>`);
+  }
+
+  const capInput = document.getElementById('new_capacity');
+  if (capInput) {
+    const units = getCapacityUnits('');
+    capacityUnitCache['new_capacity'] = units[0];
+    const btn = document.getElementById('unitBtn_new_capacity');
+    if (btn) btn.textContent = units[0] + ' ▾';
+  }
+  pressureUnitCache['new_pressure'] = 'بار';
+  const pBtn = document.getElementById('pressureUnitBtn_new_pressure');
+  if (pBtn) pBtn.textContent = 'بار ▾';
+
+  // رویدادهای input
+  const serialEl = document.getElementById('new_serial');
+  if (serialEl) {
+    serialEl.addEventListener('blur', () => validateSerialNow('new'));
+  }
+  const capEl = document.getElementById('new_capacity');
+  if (capEl) {
+    capEl.addEventListener('blur', () => checkAnomalyNow('new'));
+  }
+
+  await Promise.all([autofillSerial(false), loadCustomers()]);
+  updateCountHint();
+}
+
+async function autofillSerial(force) {
+  const el = document.getElementById('new_serial');
+  if (!el || el.disabled) return;
+  if (!force && el.value && el.value.trim()) return;
+  if (!isUrlConfigured()) return;
+  try {
+    const r = await callApi({ action: 'getNextSerial', category: currentCat });
+    if (r.ok && r.serial) { el.value = r.serial; el.placeholder = ''; }
+    else if (r.ok && r.lastSerial) { el.value = ''; el.placeholder = 'آخرین: ' + r.lastSerial; }
+    updateCountHint();
+  } catch (e) {}
+}
+
+async function refreshSerial() {
+  const el = document.getElementById('new_serial');
+  if (el) el.value = '';
+  await autofillSerial(true);
+}
+
+function updateCountHint() {
+  const countEl = document.getElementById('new_count');
+  const hintEl = document.getElementById('countHint');
+  const serialEl = document.getElementById('new_serial');
+  if (!countEl || !hintEl) return;
+  const count = Math.max(1, parseInt(countEl.value, 10) || 1);
+  const serial = (serialEl && serialEl.value.trim()) || '';
+  if (count > 1 && serial) {
+    const m = serial.match(/^(.*?)(\d+)\s*$/);
+    if (m) {
+      const last = m[1] + String(parseInt(m[2],10) + count - 1).padStart(m[2].length, '0');
+      hintEl.textContent = '✅ ' + serial + ' تا ' + last + ' (' + count + ' ردیف)';
+      hintEl.style.color = 'var(--accent)';
+      return;
+    }
+  }
+  hintEl.textContent = 'اگه بیشتر از ۱ باشه، ردیف جدا با سریال متوالی ثبت می‌شه.';
+  hintEl.style.color = '';
+}
+
+// ============================================================
+// ثبت سفارش
+// ============================================================
+async function submitNewOrder() {
+  const cat = CATEGORIES[currentCat];
+  const data = {};
+  cat.fields.forEach(f => {
+    const el = document.getElementById('new_' + f.key);
+    if (el && el.disabled) return;
+    let val = el ? String(el.value || '').trim() : '';
+    // اضافه کردن واحد ظرفیت
+    if (f.type === 'capacity' && val) {
+      const unit = capacityUnitCache['new_capacity'] || '';
+      val = val + (unit ? ' ' + unit : '');
+    }
+    // اضافه کردن واحد فشار
+    if (f.type === 'pressure' && val) {
+      const unit = pressureUnitCache['new_pressure'] || 'بار';
+      val = val + ' ' + unit;
+    }
+    data[f.key] = val;
+  });
+
+  const allEmpty = Object.keys(data).every(k => {
+    if (k === 'status') return true;
+    return !data[k] || String(data[k]).trim() === '';
+  });
+  if (allEmpty) { showToast('حداقل یه فیلد رو پر کن', 'err'); return; }
+
+  if (data.serial && !isWaterHeater(data.product)) {
+    const dup = await checkDuplicate(data.serial);
+    if (dup.exists) { showToast('⚠️ سریال «' + data.serial + '» قبلاً ثبت شده', 'err'); return; }
+  }
+
+  const count = Math.max(1, parseInt(document.getElementById('new_count').value, 10) || 1);
+  const btn = document.getElementById('newSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = count > 1 ? 'در حال ثبت ' + count + ' ردیف...' : 'در حال ثبت...';
+  try {
+    const r = await callApi({ action: 'addOrder', category: currentCat, data, count });
+    if (r.ok) {
+      showToast(r.count > 1 ? r.count + ' سفارش ثبت شد' : '✅ سفارش ثبت شد', 'ok');
+      clearNewForm();
+    } else {
+      showToast('خطا: ' + (r.error || 'نامشخص'), 'err');
+    }
+  } catch (e) { showToast('خطا: ' + e.message, 'err'); }
+  btn.disabled = false;
+  btn.textContent = 'ثبت سفارش';
+}
+
+function clearNewForm() {
+  const cat = CATEGORIES[currentCat];
+  cat.fields.forEach(f => {
+    if (f.key === 'serial') return;
+    const el = document.getElementById('new_' + f.key);
+    if (el) {
+      if (!el.disabled) el.value = '';
+    }
+    // پاک کردن انتخاب‌گرها
+    const trig = document.getElementById('trig_new_' + f.key);
+    if (trig) {
+      const txt = trig.querySelector('.text');
+      if (txt) { txt.textContent = ''; txt.classList.add('placeholder'); }
+    }
+    const list = document.getElementById('list_new_' + f.key);
+    if (list) list.querySelectorAll('.neon-option').forEach(x => x.classList.remove('selected'));
+  });
+  // فشار
+  const pTrig = document.getElementById('trig_new_pressure');
+  if (pTrig) {
+    const txt = pTrig.querySelector('.text');
+    if (txt) { txt.textContent = 'انتخاب فشار...'; txt.classList.add('placeholder'); }
+  }
+  document.getElementById('new_count').value = '1';
+  const serial = document.getElementById('new_serial');
+  if (serial && !serial.disabled) autofillSerial(true);
+  updateCountHint();
+  document.getElementById('anomalyBox').classList.remove('show');
+  const hint = document.getElementById('serialHint_new_serial');
+  if (hint) hint.textContent = '';
+}
+
+async function checkDuplicate(serial) {
+  if (!serial || !serial.trim()) return { exists: false };
+  try { return await callApi({ action: 'checkDuplicateSerial', category: currentCat, serial }); }
+  catch (e) { return { exists: false }; }
+}
+
+async function loadCustomers() {
+  if (!isUrlConfigured()) return;
+  try {
+    const r = await callApi({ action: 'getDistinctCustomers', category: currentCat });
+    if (r.ok) {
+      customersCache = r.customers || [];
+    }
+  } catch (e) {}
+}
+
+// ============================================================
+// تب‌ها
+// ============================================================
 document.querySelectorAll('.tab').forEach(tab => {
   tab.onclick = () => switchTab(tab.dataset.tab);
 });
@@ -941,329 +1811,9 @@ function buildCatRow(containerId) {
   });
 }
 
-function getCapacityUnits(product) {
-  if (CAPACITY_UNITS[product]) return CAPACITY_UNITS[product];
-  if (currentCat === 'steam') return ['kg/hr', 'lb/hr'];
-  if (currentCat === 'hotwater') return ['kcal/hr'];
-  return ['lit'];
-}
-
-function fieldRowHTML(f, idPrefix) {
-  const id = idPrefix + '_' + f.key;
-  const isNew = idPrefix === 'new';
-  const isRequired = false; // هیچ فیلدی اجباری نیست
-
-  if (f.key === 'serial' && isNew) {
-    return `
-      <label id="lbl_${id}">${f.label}</label>
-      <div class="date-row">
-        <input type="text" id="${id}" placeholder="">
-        <button type="button" class="today-btn" onclick="refreshSerial()" title="سریال بعدی">🔄</button>
-      </div>`;
-  }
-  if (f.key === 'product' && isNew) {
-    const opts = (PRODUCT_OPTIONS[currentCat] || []).map(o => `<option value="${o.replace(/"/g,'&quot;')}"></option>`).join('');
-    return `
-      <label>${f.label}</label>
-      <input type="text" id="${id}" list="dl_${currentCat}_product" placeholder="انتخاب یا تایپ..." autocomplete="off" oninput="onProductChange('${id}')">
-      <datalist id="dl_${currentCat}_product">${opts}</datalist>`;
-  }
-  if (f.key === 'customer' && isNew) {
-    return `
-      <label>${f.label}</label>
-      <input type="text" id="${id}" inputmode="numeric" placeholder="کد مشتری..." autocomplete="off">`;
-  }
-  if (f.type === 'capacity') {
-    return `
-      <label>${f.label}</label>
-      <div class="date-row">
-        <input type="text" id="${id}" placeholder="مقدار..." inputmode="decimal">
-        <button type="button" class="today-btn" id="unitBtn_${id}" onclick="pickUnit('${id}')">lit ▾</button>
-      </div>`;
-  }
-  if (f.type === 'pressure') {
-    return `
-      <label>${f.label}</label>
-      <div class="date-row">
-        <input type="text" id="${id}" placeholder="مقدار فشار..." inputmode="decimal">
-        <button type="button" class="today-btn" id="pressureUnitBtn_${id}" onclick="pickPressureUnit('${id}')">بار ▾</button>
-      </div>`;
-  }
-  if (f.type === 'standard') {
-    const opts = STANDARD_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
-    return `<label>${f.label}</label>
-      <div class="neon-select-wrap"><select id="${id}"><option value="">انتخاب...</option>${opts}</select></div>`;
-  }
-  if (f.type === 'inspection') {
-    const opts = INSPECTION_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
-    return `<label>${f.label}</label>
-      <div class="neon-select-wrap"><select id="${id}"><option value="">انتخاب...</option>${opts}</select></div>`;
-  }
-  if (f.key === 'status') {
-    const opts = STATUS_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
-    return `<label>${f.label}</label>
-      <div class="neon-select-wrap"><select id="${id}">${opts}</select></div>`;
-  }
-  if (f.type === 'group') {
-    const opts = GROUP_OPTIONS_TANKS.map(s =>
-      `<div class="neon-radio${s === 'مخازن' ? ' selected' : ''}" data-val="${s}" onclick="selectGroupRadio(this, '${id}')">${s}</div>`
-    ).join('');
-    return `<label>${f.label}</label>
-      <div class="neon-radio-group" id="group_${id}">${opts}</div>
-      <input type="hidden" id="${id}" value="مخازن">`;
-  }
-  if (f.type === 'jdate') {
-    return `<label>${f.label}</label>
-      <div class="date-row">
-        <input type="text" id="${id}" placeholder="۱۴۰۵.۰۶.۲۰" dir="ltr" style="text-align:left;">
-        <button type="button" class="today-btn" onclick="document.getElementById('${id}').value = todayJalaliStr()">امروز</button>
-      </div>`;
-  }
-  return `<label>${f.label}</label>
-    <input type="text" id="${id}" placeholder="">`;
-}
-
-function selectGroupRadio(el, hiddenId) {
-  const group = el.parentNode;
-  group.querySelectorAll('.neon-radio').forEach(x => x.classList.remove('selected'));
-  el.classList.add('selected');
-  const hidden = document.getElementById(hiddenId);
-  if (hidden) hidden.value = el.dataset.val;
-}
-
-function onProductChange(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const product = el.value.trim();
-  const prefix = id.split('_')[0];
-  const capInputId = prefix + '_capacity';
-  const unitBtn = document.getElementById('unitBtn_' + capInputId);
-  if (unitBtn) {
-    const units = getCapacityUnits(product);
-    capacityUnitCache[capInputId] = units[0];
-    unitBtn.textContent = units[0] + ' ▾';
-  }
-  if (prefix === 'new') {
-    const serialInput = document.getElementById('new_serial');
-    const serialLabel = document.getElementById('lbl_new_serial');
-    if (isWaterHeater(product)) {
-      if (serialInput) { serialInput.value = ''; serialInput.disabled = true; serialInput.placeholder = '— (بدون سریال)'; }
-      if (serialLabel) serialLabel.style.opacity = '0.5';
-    } else {
-      if (serialInput) { serialInput.disabled = false; serialInput.placeholder = ''; }
-      if (serialLabel) serialLabel.style.opacity = '1';
-      if (!serialInput.value) autofillSerial(false);
-    }
-  }
-}
-
-function pickUnit(inputId) {
-  const input = document.getElementById(inputId);
-  const product = (document.getElementById(inputId.replace('_capacity','_product')) || {}).value || '';
-  const units = getCapacityUnits(String(product).trim());
-  const current = capacityUnitCache[inputId] || units[0];
-  openPicker('واحد ظرفیت', units, current, (selected) => {
-    capacityUnitCache[inputId] = selected;
-    const btn = document.getElementById('unitBtn_' + inputId);
-    if (btn) btn.textContent = selected + ' ▾';
-    if (input) input.placeholder = 'مقدار (' + selected + ')...';
-  });
-}
-
-function pickPressureUnit(inputId) {
-  const input = document.getElementById(inputId);
-  const current = pressureUnitCache[inputId] || 'بار';
-  openPicker('واحد فشار', PRESSURE_UNITS, current, (selected) => {
-    pressureUnitCache[inputId] = selected;
-    const btn = document.getElementById('pressureUnitBtn_' + inputId);
-    if (btn) btn.textContent = selected + ' ▾';
-    if (input) input.placeholder = 'مقدار (' + selected + ')...';
-  });
-}
-
-function openPicker(title, items, current, onPick) {
-  document.getElementById('pickerTitle').textContent = title;
-  const list = document.getElementById('pickerList');
-  list.innerHTML = '';
-  items.forEach(it => {
-    const d = document.createElement('div');
-    d.className = 'picker-item' + (it === current ? ' selected' : '');
-    d.textContent = it;
-    d.onclick = () => { onPick(it); closePicker(); };
-    list.appendChild(d);
-  });
-  document.getElementById('pickerOverlay').classList.add('show');
-}
-function closePicker() { document.getElementById('pickerOverlay').classList.remove('show'); }
-document.getElementById('pickerCloseBtn').onclick = closePicker;
-document.getElementById('pickerOverlay').onclick = e => { if (e.target.id === 'pickerOverlay') closePicker(); };
-
-async function buildNewForm() {
-  const form = document.getElementById('newForm');
-  const cat = CATEGORIES[currentCat];
-  form.innerHTML = cat.fields.map(f => fieldRowHTML(f, 'new')).join('');
-
-  const productEl = document.getElementById('new_product');
-  if (productEl && !document.getElementById('new_count')) {
-    productEl.parentNode.insertAdjacentHTML('afterend', `
-      <label for="new_count">تعداد دستگاه</label>
-      <input type="number" id="new_count" min="1" value="1" step="1">
-      <div class="hint-sm" id="countHint">
-        اگه بیشتر از ۱ باشه، ردیف جدا با سریال متوالی ثبت می‌شه.
-      </div>`);
-  }
-
-  const capInput = document.getElementById('new_capacity');
-  if (capInput) {
-    const units = getCapacityUnits('');
-    capacityUnitCache['new_capacity'] = units[0];
-    const btn = document.getElementById('unitBtn_new_capacity');
-    if (btn) btn.textContent = units[0] + ' ▾';
-  }
-  const pressBtn = document.getElementById('pressureUnitBtn_new_pressure');
-  if (pressBtn) {
-    pressureUnitCache['new_pressure'] = 'بار';
-    pressBtn.textContent = 'بار ▾';
-  }
-
-  await Promise.all([autofillSerial(false), loadCustomers()]);
-  updateCountHint();
-}
-
-async function autofillSerial(force) {
-  const el = document.getElementById('new_serial');
-  if (!el || el.disabled) return;
-  if (!force && el.value && el.value.trim()) return;
-  if (!isUrlConfigured()) return;
-  try {
-    const r = await callApi({ action: 'getNextSerial', category: currentCat });
-    if (r.ok && r.serial) { el.value = r.serial; el.placeholder = ''; }
-    else if (r.ok && r.lastSerial) { el.value = ''; el.placeholder = 'آخرین: ' + r.lastSerial; }
-    updateCountHint();
-  } catch (e) {}
-}
-
-async function refreshSerial() {
-  const el = document.getElementById('new_serial');
-  if (el) el.value = '';
-  await autofillSerial(true);
-}
-
-function updateCountHint() {
-  const countEl = document.getElementById('new_count');
-  const hintEl = document.getElementById('countHint');
-  const serialEl = document.getElementById('new_serial');
-  if (!countEl || !hintEl) return;
-  const count = Math.max(1, parseInt(countEl.value, 10) || 1);
-  const serial = (serialEl && serialEl.value.trim()) || '';
-  if (count > 1 && serial) {
-    const m = serial.match(/^(.*?)(\d+)\s*$/);
-    if (m) {
-      const last = m[1] + String(parseInt(m[2],10) + count - 1).padStart(m[2].length, '0');
-      hintEl.textContent = '✅ ' + serial + ' تا ' + last + ' (' + count + ' ردیف)';
-      hintEl.style.color = 'var(--accent)';
-      return;
-    }
-  }
-  hintEl.textContent = 'اگه بیشتر از ۱ باشه، ردیف جدا با سریال متوالی ثبت می‌شه.';
-  hintEl.style.color = '';
-}
-
 // ============================================================
-// ثبت سفارش — فقط چک «حداقل یه فیلد پر باشه»
+// تب مدیریت
 // ============================================================
-async function submitNewOrder() {
-  const cat = CATEGORIES[currentCat];
-  const data = {};
-  cat.fields.forEach(f => {
-    const el = document.getElementById('new_' + f.key);
-    if (el && el.disabled) return;
-    const val = el ? el.value.trim() : '';
-    data[f.key] = val;
-  });
-  if (data.capacity) {
-    const unit = capacityUnitCache['new_capacity'] || '';
-    data.capacity = data.capacity + (unit ? ' ' + unit : '');
-  }
-  if (data.pressure) {
-    const unit = pressureUnitCache['new_pressure'] || 'بار';
-    data.pressure = data.pressure + ' ' + unit;
-  }
-
-  // چک: حداقل یه فیلد باید پر باشه
-  const allEmpty = Object.keys(data).every(k => {
-    if (k === 'status') return true; // وضعیت پیش‌فرض داره
-    return !data[k] || String(data[k]).trim() === '';
-  });
-  if (allEmpty) {
-    showToast('حداقل یه فیلد رو پر کن', 'err');
-    return;
-  }
-
-  // چک سریال تکراری فقط اگه سریال پر باشه
-  if (data.serial && !isWaterHeater(data.product)) {
-    const dup = await checkDuplicate(data.serial);
-    if (dup.exists) { showToast('⚠️ سریال «' + data.serial + '» قبلاً ثبت شده', 'err'); return; }
-  }
-
-  const count = Math.max(1, parseInt(document.getElementById('new_count').value, 10) || 1);
-  const btn = document.getElementById('newSubmitBtn');
-  btn.disabled = true;
-  btn.textContent = count > 1 ? 'در حال ثبت ' + count + ' ردیف...' : 'در حال ثبت...';
-  try {
-    const r = await callApi({ action: 'addOrder', category: currentCat, data, count });
-    if (r.ok) {
-      showToast(r.count > 1 ? r.count + ' سفارش ثبت شد' : '✅ سفارش ثبت شد', 'ok');
-      clearNewForm();
-    } else {
-      showToast('خطا: ' + (r.error || 'نامشخص'), 'err');
-    }
-  } catch (e) { showToast('خطا: ' + e.message, 'err'); }
-  btn.disabled = false;
-  btn.textContent = 'ثبت سفارش';
-}
-
-function clearNewForm() {
-  const cat = CATEGORIES[currentCat];
-  cat.fields.forEach(f => {
-    if (f.key === 'serial') return;
-    if (f.type === 'group') {
-      const hidden = document.getElementById('new_group');
-      if (hidden) hidden.value = 'مخازن';
-      const group = document.getElementById('group_new_group');
-      if (group) group.querySelectorAll('.neon-radio').forEach((x, i) => x.classList.toggle('selected', i === 0));
-      return;
-    }
-    const el = document.getElementById('new_' + f.key);
-    if (el) {
-      if (el.tagName === 'SELECT') el.selectedIndex = 0;
-      else if (!el.disabled) el.value = '';
-    }
-  });
-  document.getElementById('new_count').value = '1';
-  const serial = document.getElementById('new_serial');
-  if (serial && !serial.disabled) autofillSerial(true);
-  updateCountHint();
-}
-
-async function checkDuplicate(serial) {
-  if (!serial || !serial.trim()) return { exists: false };
-  try { return await callApi({ action: 'checkDuplicateSerial', category: currentCat, serial }); }
-  catch (e) { return { exists: false }; }
-}
-
-async function loadCustomers() {
-  if (!isUrlConfigured()) return;
-  try {
-    const r = await callApi({ action: 'getDistinctCustomers', category: currentCat });
-    if (r.ok) {
-      customersCache = r.customers || [];
-      const fs = document.getElementById('filterCustomer');
-      if (fs) fs.innerHTML = '<option value="">همه</option>' + customersCache.map(c => `<option value="${c.replace(/"/g,'&quot;')}">${c}</option>`).join('');
-    }
-  } catch (e) {}
-}
-
 async function loadItems(silent) {
   const listEl = document.getElementById('pendingList');
   if (!isUrlConfigured()) { listEl.innerHTML = '<div class="empty-state">لینک اتصال تنظیم نشده</div>'; return; }
@@ -1352,21 +1902,21 @@ function renderList() {
     ).join('');
 
     const meta = [];
-    if (d.capacity) meta.push(`<span><span class="label">ظرفیت:</span> <span class="value">${d.capacity}</span></span>`);
-    if (d.pressure) meta.push(`<span><span class="label">فشار:</span> <span class="value">${d.pressure}</span></span>`);
-    const custTag = d.customer ? `<span class="customer-tag ${CUSTOMER_COLORS[colorIdx]}">مشتری: ${d.customer}</span>` : '';
-    const stdTag = d.standard ? `<span class="customer-tag">${d.standard}</span>` : '';
-    const grpTag = d.group ? `<span class="customer-tag">${d.group}</span>` : '';
+    if (d.capacity) meta.push(`<span><span class="label">ظرفیت:</span> <span class="value">${escapeHtml(d.capacity)}</span></span>`);
+    if (d.pressure) meta.push(`<span><span class="label">فشار:</span> <span class="value">${escapeHtml(d.pressure)}</span></span>`);
+    const custTag = d.customer ? `<span class="customer-tag ${CUSTOMER_COLORS[colorIdx]}">مشتری: ${escapeHtml(d.customer)}</span>` : '';
+    const stdTag = d.standard ? `<span class="customer-tag">${escapeHtml(d.standard)}</span>` : '';
+    const grpTag = d.group ? `<span class="customer-tag">${escapeHtml(d.group)}</span>` : '';
 
     const card = document.createElement('div');
     card.className = 'order-card ' + cardClass;
     card.innerHTML = `
       <div class="card-head">
-        <div class="serial">${d.serial || '(بدون سریال)'} ${coBadge}</div>
-        <span class="status-pill ${pillClass}">${status}</span>
+        <div class="serial">${escapeHtml(d.serial) || '(بدون سریال)'} ${coBadge}</div>
+        <span class="status-pill ${pillClass}">${escapeHtml(status)}</span>
       </div>
       <div class="card-body">
-        <div class="product">${d.product || ''}</div>
+        <div class="product">${escapeHtml(d.product) || ''}</div>
         <div class="meta-row">${meta.join('')}</div>
         <div class="meta-row">${custTag} ${stdTag} ${grpTag}</div>
       </div>
@@ -1388,6 +1938,9 @@ function findItemByRow(row) {
   return allItems.find(it => it.row === row);
 }
 
+// ============================================================
+// مودال ویرایش
+// ============================================================
 async function openModal(row) {
   const item = findItemByRow(row);
   if (!item) return;
@@ -1413,7 +1966,58 @@ async function openModal(row) {
   if (item.data.capacity) sub.push('ظرفیت: ' + item.data.capacity);
   if (item.data.pressure) sub.push('فشار: ' + item.data.pressure);
   document.getElementById('modalSub').innerHTML = sub.join(' • ');
-  renderModalFields();
+
+  const cat = CATEGORIES[currentCat];
+  const fieldsEl = document.getElementById('modalFields');
+  fieldsEl.innerHTML = cat.fields.map(f => fieldRowHTML(f, 'modal', item.data)).join('');
+  buildPressureSelectors('modal', item.data);
+
+  // بارگذاری مقادیر انتخاب‌گرها
+  requestAnimationFrame(() => {
+    cat.fields.forEach(f => {
+      const val = item.data[f.key];
+      const trig = document.getElementById('trig_modal_' + f.key);
+      if (trig && val) {
+        const txt = trig.querySelector('.text');
+        if (txt) { txt.textContent = String(val); txt.classList.remove('placeholder'); }
+      }
+      // برای فشار، عدد رو جدا کن
+      if (f.type === 'pressure') {
+        const pTrig = document.getElementById('trig_modal_pressure');
+        if (pTrig) {
+          const numMatch = String(val || '').match(/^([\d.]+)/);
+          const num = numMatch ? numMatch[1] : '';
+          const txt = pTrig.querySelector('.text');
+          if (txt) {
+            txt.textContent = num ? num + ' بار' : 'انتخاب فشار...';
+            if (num) txt.classList.remove('placeholder');
+          }
+          const hidden = document.getElementById('modal_pressure');
+          if (hidden) hidden.value = num;
+          // واحد
+          const unitMatch = String(val || '').match(/(بار|psi)/i);
+          const unit = unitMatch ? unitMatch[1] : 'بار';
+          pressureUnitCache['modal_pressure'] = unit;
+          const pBtn = document.getElementById('pressureUnitBtn_modal_pressure');
+          if (pBtn) pBtn.textContent = unit + ' ▾';
+        }
+      }
+      if (f.type === 'capacity') {
+        const oldCap = String(item.data.capacity || '').trim();
+        const m = oldCap.match(/\s+([^\d]+)$/);
+        const unit = m ? m[1].trim() : '';
+        const btn = document.getElementById('unitBtn_modal_capacity');
+        if (btn) {
+          const units = getCapacityUnits(item.data.product);
+          capacityUnitCache['modal_capacity'] = unit || units[0];
+          btn.textContent = (unit || units[0]) + ' ▾';
+        }
+        const capEl = document.getElementById('modal_capacity');
+        if (capEl && m) capEl.value = capEl.value.replace(/\s+[^\d]+$/, '');
+      }
+    });
+  });
+
   document.getElementById('modalMsg').className = 'msg';
   document.getElementById('modalBackdrop').classList.add('show');
   document.getElementById('modalSaveBtn').onclick = saveModal;
@@ -1427,82 +2031,6 @@ function closeModal() {
   currentModalItem = null;
 }
 
-function renderModalFields() {
-  const cat = CATEGORIES[currentCat];
-  const item = currentModalItem;
-  const fieldsEl = document.getElementById('modalFields');
-  const viewBar = document.getElementById('modalViewBar');
-
-  viewBar.innerHTML = `<div class="modal-view-bar"><div class="label">همه فیلدها قابل ویرایش — مقادیر خالی هم ذخیره می‌شن</div></div>`;
-
-  fieldsEl.innerHTML = cat.fields.map(f => {
-    let html = fieldRowHTML(f, 'modal');
-    const oldVal = item.data[f.key];
-    const id = 'modal_' + f.key;
-    if (oldVal !== undefined && oldVal !== null && String(oldVal).trim() !== '') {
-      if (f.type === 'standard' || f.type === 'inspection' || f.key === 'status') {
-        html = html.replace(`<select id="${id}">`, `<select id="${id}" data-select-val="${String(oldVal).replace(/"/g,'&quot;')}">`);
-      } else if (f.type === 'group') {
-        html = html.replace(`<input type="hidden" id="${id}" value="مخازن">`, `<input type="hidden" id="${id}" value="${String(oldVal).replace(/"/g,'&quot;')}">`);
-      } else {
-        html = html.replace(`id="${id}"`, `id="${id}" data-prefill="${String(oldVal).replace(/"/g,'&quot;').replace(/&/g,'&amp;')}"`);
-      }
-    }
-    return html;
-  }).join('');
-
-  requestAnimationFrame(() => {
-    cat.fields.forEach(f => {
-      const el = document.getElementById('modal_' + f.key);
-      if (!el) return;
-      if (el.dataset.prefill) el.value = el.dataset.prefill;
-      if (el.dataset.selectVal) {
-        const target = el.dataset.selectVal.trim();
-        let found = false;
-        for (let i = 0; i < el.options.length; i++) {
-          if (el.options[i].value.trim() === target) { el.selectedIndex = i; found = true; break; }
-        }
-        if (!found && target) {
-          const opt = document.createElement('option');
-          opt.value = target; opt.textContent = target + ' (قبلی)';
-          el.appendChild(opt); el.value = target;
-        }
-      }
-      if (f.type === 'capacity') {
-        const oldCap = String(item.data.capacity || '').trim();
-        const m = oldCap.match(/\s+([^\d]+)$/);
-        const unit = m ? m[1].trim() : '';
-        const btn = document.getElementById('unitBtn_modal_capacity');
-        if (btn) {
-          const units = getCapacityUnits(item.data.product);
-          capacityUnitCache['modal_capacity'] = unit || units[0];
-          btn.textContent = (unit || units[0]) + ' ▾';
-          if (el.value) el.value = el.value.replace(/\s+[^\d]+$/, '');
-        }
-      }
-      if (f.type === 'pressure') {
-        const oldP = String(item.data.pressure || '').trim();
-        const m = oldP.match(/\s+(بار|psi)\s*$/i);
-        const unit = m ? m[1] : 'بار';
-        const btn = document.getElementById('pressureUnitBtn_modal_pressure');
-        if (btn) {
-          pressureUnitCache['modal_pressure'] = unit;
-          btn.textContent = unit + ' ▾';
-          if (el.value) el.value = el.value.replace(/\s+(بار|psi)\s*$/i, '');
-        }
-      }
-      if (f.type === 'group') {
-        const hidden = document.getElementById('modal_group');
-        if (hidden) {
-          const val = hidden.value;
-          const grp = document.getElementById('group_modal_group');
-          if (grp) grp.querySelectorAll('.neon-radio').forEach(x => x.classList.toggle('selected', x.dataset.val === val));
-        }
-      }
-    });
-  });
-}
-
 async function saveModal() {
   const item = currentModalItem;
   if (!item) return;
@@ -1510,8 +2038,7 @@ async function saveModal() {
   const data = {};
   cat.fields.forEach(f => {
     const el = document.getElementById('modal_' + f.key);
-    if (!el) return;
-    let v = String(el.value || '').trim();
+    let v = el ? String(el.value || '').trim() : '';
     if (f.type === 'capacity' && v) {
       const unit = capacityUnitCache['modal_capacity'] || '';
       v = v + (unit ? ' ' + unit : '');
@@ -1558,6 +2085,9 @@ document.getElementById('undoBtn').onclick = async () => {
   document.getElementById('undoBar').classList.remove('show');
 };
 
+// ============================================================
+// کپی از سفارش قبلی
+// ============================================================
 async function openCopyModal() {
   const listEl = document.getElementById('copyList');
   listEl.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -1571,9 +2101,9 @@ async function openCopyModal() {
       const d = document.createElement('div');
       d.className = 'picker-item';
       d.style.marginBottom = '6px';
-      d.innerHTML = `<div style="font-weight:800;color:var(--accent);font-family:'JetBrains Mono',monospace;">${item.data.serial || ''}</div>
-        <div style="font-size:0.8em;color:var(--text-mid);margin-top:4px;">${item.data.product || ''}</div>
-        <div style="font-size:0.77em;color:var(--text-dim);margin-top:2px;">${item.data.customer || ''}</div>`;
+      d.innerHTML = `<div style="font-weight:800;color:var(--accent);font-family:'JetBrains Mono',monospace;">${escapeHtml(item.data.serial) || ''}</div>
+        <div style="font-size:0.8em;color:var(--text-mid);margin-top:4px;">${escapeHtml(item.data.product) || ''}</div>
+        <div style="font-size:0.77em;color:var(--text-dim);margin-top:2px;">${escapeHtml(item.data.customer) || ''}</div>`;
       d.onclick = () => { closeCopy(); copyItemToForm(item.row); };
       listEl.appendChild(d);
     });
@@ -1591,12 +2121,12 @@ function copyItemToForm(row) {
       if (f.key === 'serial' || f.key === 'status') return;
       const el = document.getElementById('new_' + f.key);
       if (!el || !item.data[f.key]) return;
-      if (f.type === 'group') {
-        const hidden = document.getElementById('new_group');
-        if (hidden) hidden.value = item.data[f.key];
-        const grp = document.getElementById('group_new_group');
-        if (grp) grp.querySelectorAll('.neon-radio').forEach(x => x.classList.toggle('selected', x.dataset.val === item.data[f.key]));
-        return;
+
+      // انتخاب‌گر نئونی
+      const trig = document.getElementById('trig_new_' + f.key);
+      if (trig) {
+        const txt = trig.querySelector('.text');
+        if (txt) { txt.textContent = String(item.data[f.key]); txt.classList.remove('placeholder'); }
       }
       if (f.type === 'capacity' || f.type === 'pressure') {
         const oldVal = String(item.data[f.key]).trim();
@@ -1615,12 +2145,7 @@ function copyItemToForm(row) {
         } else if (el) el.value = oldVal;
         return;
       }
-      if (el.tagName === 'SELECT') {
-        const target = String(item.data[f.key]).trim();
-        for (let i = 0; i < el.options.length; i++) {
-          if (el.options[i].value.trim() === target) { el.selectedIndex = i; break; }
-        }
-      } else if (!el.disabled) {
+      if (el && el.tagName !== 'SELECT' && !el.disabled) {
         el.value = item.data[f.key];
       }
     });
@@ -1630,6 +2155,37 @@ function copyItemToForm(row) {
   }, 200);
 }
 
+// ============================================================
+// سفارش‌های مشتری
+// ============================================================
+async function openCustomerOrders() {
+  const custEl = document.getElementById('new_customer');
+  const cust = custEl ? custEl.value.trim() : '';
+  if (!cust) { showToast('اول کد مشتری رو وارد کن', 'err'); return; }
+  const listEl = document.getElementById('copyList');
+  listEl.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
+  document.getElementById('copyBackdrop').classList.add('show');
+  try {
+    const r = await callApi({ action: 'getCustomerOrders', category: currentCat, customer: cust });
+    if (!r.ok) { listEl.innerHTML = '<div class="empty-state">خطا</div>'; return; }
+    if (!r.items || r.items.length === 0) { listEl.innerHTML = '<div class="empty-state">این مشتری قبلاً سفارشی نداشته</div>'; return; }
+    listEl.innerHTML = `<div style="font-weight:700;color:var(--accent);margin-bottom:10px;">${r.items.length} سفارش از مشتری ${escapeHtml(cust)}</div>`;
+    r.items.forEach(item => {
+      const d = document.createElement('div');
+      d.className = 'picker-item';
+      d.style.marginBottom = '6px';
+      d.innerHTML = `<div style="font-weight:800;color:var(--accent);font-family:'JetBrains Mono',monospace;">${escapeHtml(item.data.serial) || ''}</div>
+        <div style="font-size:0.8em;color:var(--text-mid);margin-top:4px;">${escapeHtml(item.data.product) || ''}</div>
+        <div style="font-size:0.77em;color:var(--text-dim);margin-top:2px;">ظرفیت: ${escapeHtml(item.data.capacity) || '—'} • وضعیت: ${escapeHtml(item.data.status) || '—'}</div>`;
+      d.onclick = () => { closeCopy(); copyItemToForm(item.row); };
+      listEl.appendChild(d);
+    });
+  } catch (e) { listEl.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
+}
+
+// ============================================================
+// داشبورد
+// ============================================================
 async function loadDashboard() {
   const dash = document.getElementById('dashContent');
   dash.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -1662,10 +2218,28 @@ async function loadDashboard() {
     });
     if (Object.keys(insp).length === 0) html += `<div class="stat-row"><span style="color:var(--text-dim)">موردی ثبت نشده</span></div>`;
     html += `</div>`;
+
+    // آمار مشتری‌ها
+    try {
+      const rc = await callApi({ action: 'getCustomerStats', category: currentCat });
+      if (rc.ok && rc.customers.length > 0) {
+        html += `<div class="dash-card wide" style="margin-top:12px;">
+          <div style="font-weight:800;margin-bottom:10px;color:var(--accent);">👥 مشتری‌های برتر</div>`;
+        rc.customers.slice(0, 10).forEach(c => {
+          const colorIdx = customerColorIndex(c.customer);
+          html += `<div class="stat-row"><span class="key"><span class="dot" style="background:var(--${CUSTOMER_COLORS[colorIdx]})"></span>${escapeHtml(c.customer)}</span><span class="val">${toFa(c.total)}</span></div>`;
+        });
+        html += `</div>`;
+      }
+    } catch (e) {}
+
     dash.innerHTML = html;
   } catch (e) { dash.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
+// ============================================================
+// گزارش
+// ============================================================
 async function loadReport() {
   const rep = document.getElementById('reportContent');
   rep.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -1693,6 +2267,35 @@ async function loadReport() {
     }
     html += `</div>`;
 
+    // مقایسه سالانه
+    try {
+      const prevYear = String(parseInt(currentYear, 10) - 1);
+      const rc = await callApi({ action: 'getYearlyComparison', category: currentCat, currentYear, previousYear: prevYear });
+      if (rc.ok && rc.comparison) {
+        let maxC = 0;
+        rc.comparison.forEach(c => { if (c.current > maxC) maxC = c.current; if (c.previous > maxC) maxC = c.previous; });
+        html += `<div style="margin-top:24px;font-weight:800;color:var(--accent);">📊 مقایسه ${prevYear} و ${currentYear}</div>`;
+        html += `<div class="compare-chart">`;
+        rc.comparison.forEach(c => {
+          const hPrev = maxC > 0 ? Math.round((c.previous / maxC) * 150) : 0;
+          const hCurr = maxC > 0 ? Math.round((c.current / maxC) * 150) : 0;
+          html += `<div class="compare-col">
+            <div class="compare-bars">
+              <div class="compare-bar prev" style="height:${Math.max(hPrev,3)}px;" data-val="${c.previous}"></div>
+              <div class="compare-bar curr" style="height:${Math.max(hCurr,3)}px;" data-val="${c.current}"></div>
+            </div>
+            <div class="compare-label">${MONTH_NAMES[c.month-1].slice(0,3)}</div>
+          </div>`;
+        });
+        html += `</div>`;
+        html += `<div class="compare-legend">
+          <div class="item"><span class="dot prev"></span>سال ${prevYear}</div>
+          <div class="item"><span class="dot curr"></span>سال ${currentYear}</div>
+        </div>`;
+      }
+    } catch (e) {}
+
+    // روند 6 ماه
     if (rTrend.ok && rTrend.trend) {
       const trend = rTrend.trend;
       const maxT = Math.max(...trend.map(t => t.total), 1);
@@ -1734,6 +2337,9 @@ async function loadReport() {
   } catch (e) { rep.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
+// ============================================================
+// تاریخچه
+// ============================================================
 async function loadAudit() {
   const el = document.getElementById('auditContent');
   el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -1745,22 +2351,20 @@ async function loadAudit() {
       return;
     }
     document.getElementById('tabCountAudit').textContent = toFa(r.items.length);
-    let html = `<div style="font-size:0.83em;color:var(--text-dim);margin-bottom:12px;">
-      📋 ${toFa(r.items.length)} تغییر اخیر
-    </div>`;
+    let html = `<div style="font-size:0.83em;color:var(--text-dim);margin-bottom:12px;">📋 ${toFa(r.items.length)} تغییر اخیر</div>`;
     r.items.forEach(item => {
       html += `<div class="audit-item">
         <div class="top">
-          <span class="user">👤 ${item.user || 'ناشناس'}</span>
+          <span class="user">👤 ${escapeHtml(item.user) || 'ناشناس'}</span>
           <span class="when">${item.date || ''} ${item.time || ''}</span>
         </div>
         <div class="body">
-          <span style="color:var(--accent);font-weight:700;">${item.category || ''}</span>
-          ${item.serial ? ' • سریال ' + item.serial : ''}<br>
-          <span class="field-name">${item.field}:</span>
-          ${item.oldVal ? '<span class="old-val">' + item.oldVal + '</span>' : '<span style="color:var(--text-dim)">(خالی)</span>'}
+          <span style="color:var(--accent);font-weight:700;">${escapeHtml(item.category) || ''}</span>
+          ${item.serial ? ' • سریال ' + escapeHtml(item.serial) : ''}<br>
+          <span class="field-name">${escapeHtml(item.field)}:</span>
+          ${item.oldVal ? '<span class="old-val">' + escapeHtml(item.oldVal) + '</span>' : '<span style="color:var(--text-dim)">(خالی)</span>'}
           →
-          <span class="new-val">${item.newVal || '(خالی)'}</span>
+          <span class="new-val">${escapeHtml(item.newVal) || '(خالی)'}</span>
         </div>
       </div>`;
     });
@@ -1768,6 +2372,9 @@ async function loadAudit() {
   } catch (e) { el.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
+// ============================================================
+// هشدارها
+// ============================================================
 async function openAlerts() {
   const el = document.getElementById('alertsList');
   el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -1785,10 +2392,10 @@ async function openAlerts() {
       const daysTxt = a.daysLeft === 0 ? 'امروز' : (a.daysLeft === 1 ? 'فردا' : a.daysLeft + ' روز دیگه');
       d.innerHTML = `
         <div class="top">
-          <span style="color:var(--accent);font-weight:800;">${a.serial || '(بدون سریال)'}</span>
+          <span style="color:var(--accent);font-weight:800;">${escapeHtml(a.serial) || '(بدون سریال)'}</span>
           <span style="color:var(--warning);font-weight:800;">${daysTxt}</span>
         </div>
-        <div class="body">${a.product || ''}<br>مشتری: ${a.customer || '—'}<br>تاریخ بارگیری: ${a.loadDate}</div>`;
+        <div class="body">${escapeHtml(a.product) || ''}<br>مشتری: ${escapeHtml(a.customer) || '—'}<br>تاریخ بارگیری: ${escapeHtml(a.loadDate)}</div>`;
       el.appendChild(d);
     });
   } catch (e) { el.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
@@ -1810,6 +2417,9 @@ async function updateReminders() {
   } catch (e) {}
 }
 
+// ============================================================
+// خروجی CSV
+// ============================================================
 function exportCsv() {
   const items = getFilteredItems();
   if (items.length === 0) { showToast('چیزی برای خروجی نیست', 'err'); return; }
@@ -1829,6 +2439,9 @@ function exportCsv() {
   URL.revokeObjectURL(url);
 }
 
+// ============================================================
+// تنظیمات
+// ============================================================
 function openSettings() {
   document.getElementById('settingsUrl').value = localStorage.getItem(STORAGE_KEY) || '';
   document.getElementById('settingsUser').value = getUserName();
@@ -1901,6 +2514,228 @@ function applyFontSize() {
   document.body.classList.add('font-' + font);
 }
 
+// ============================================================
+// جستجوی صوتی
+// ============================================================
+function initVoiceSearch() {
+  const btn = document.getElementById('voiceBtn');
+  if (!btn) return;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    btn.style.opacity = '0.5';
+    btn.title = 'مرورگر پشتیبانی نمی‌کند';
+    return;
+  }
+  btn.onclick = () => {
+    if (isRecording) {
+      try { recognition.stop(); } catch (e) {}
+      return;
+    }
+    recognition = new SR();
+    recognition.lang = 'fa-IR';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => {
+      isRecording = true;
+      btn.classList.add('recording');
+      showToast('🎤 بگو...', 'ok');
+    };
+    recognition.onresult = (e) => {
+      const text = e.results[0][0].transcript;
+      const inp = document.getElementById('searchInput');
+      if (inp) {
+        inp.value = text;
+        searchTerm = text;
+        document.getElementById('searchClear').classList.add('show');
+        renderList();
+      }
+    };
+    recognition.onerror = (e) => {
+      isRecording = false;
+      btn.classList.remove('recording');
+      showToast('خطای صوتی: ' + e.error, 'err');
+    };
+    recognition.onend = () => {
+      isRecording = false;
+      btn.classList.remove('recording');
+    };
+    try { recognition.start(); } catch (e) { showToast('خطا: ' + e.message, 'err'); }
+  };
+}
+
+// ============================================================
+// دستیار هوشمند
+// ============================================================
+const ASSISTANT_STEPS = [
+  { key: 'product',  question: 'چه محصولی می‌خوای؟', type: 'product' },
+  { key: 'capacity', question: 'ظرفیتش چقدره؟ (فقط عدد + واحد)', type: 'text' },
+  { key: 'pressure', question: 'فشار کاری؟', type: 'pressure' },
+  { key: 'customer', question: 'کد مشتری؟', type: 'text' },
+  { key: 'count',    question: 'چند تا؟ (عدد)', type: 'number' },
+  { key: 'notes',    question: 'توضیحات خاصی داری؟ (اختیاری)', type: 'text', optional: true }
+];
+
+function openAssistant() {
+  assistantState = { step: 0, data: {} };
+  document.getElementById('assistantPanel').classList.add('show');
+  renderAssistantStep();
+}
+
+function closeAssistant() {
+  document.getElementById('assistantPanel').classList.remove('show');
+  assistantState = null;
+}
+
+function renderAssistantStep() {
+  if (!assistantState) return;
+  const body = document.getElementById('assistantBody');
+  const progress = document.getElementById('assistantProgress');
+  const stepIdx = assistantState.step;
+
+  if (stepIdx >= ASSISTANT_STEPS.length) {
+    // خلاصه
+    progress.style.width = '100%';
+    const d = assistantState.data;
+    body.innerHTML = `
+      <div class="assistant-summary">
+        <div class="row"><span class="k">محصول</span><span class="v">${escapeHtml(d.product) || '—'}</span></div>
+        <div class="row"><span class="k">ظرفیت</span><span class="v">${escapeHtml(d.capacity) || '—'}</span></div>
+        <div class="row"><span class="k">فشار</span><span class="v">${escapeHtml(d.pressure) || '—'}</span></div>
+        <div class="row"><span class="k">مشتری</span><span class="v">${escapeHtml(d.customer) || '—'}</span></div>
+        <div class="row"><span class="k">تعداد</span><span class="v">${escapeHtml(d.count) || '1'}</span></div>
+        <div class="row"><span class="k">توضیحات</span><span class="v">${escapeHtml(d.notes) || '—'}</span></div>
+      </div>
+      <div class="assistant-actions">
+        <button class="back" onclick="closeAssistant()">انصراف</button>
+        <button class="next" onclick="applyAssistantData()">✓ اعمال روی فرم</button>
+      </div>
+    `;
+    return;
+  }
+
+  const step = ASSISTANT_STEPS[stepIdx];
+  progress.style.width = Math.round((stepIdx / ASSISTANT_STEPS.length) * 100) + '%';
+
+  let optionsHTML = '';
+  if (step.type === 'product') {
+    const prods = PRODUCT_OPTIONS[currentCat] || [];
+    optionsHTML = prods.map(p => `<div class="assistant-option" onclick="assistantPick('${escapeHtml(p).replace(/'/g, "\\'")}', ${stepIdx})">${escapeHtml(p)}</div>`).join('');
+  } else if (step.type === 'pressure') {
+    optionsHTML = PRESSURE_VALUES.map(v => `<div class="assistant-option" onclick="assistantPick('${v} بار', ${stepIdx})">${v} بار</div>`).join('');
+  }
+
+  body.innerHTML = `
+    <div class="assistant-question">${escapeHtml(step.question)}</div>
+    ${optionsHTML}
+    <div class="assistant-input-wrap">
+      <input type="text" id="assistantInput" placeholder="${step.optional ? 'اگه نداری خالی بذار...' : 'تایپ کن...'}"
+        inputmode="${step.type === 'number' ? 'numeric' : 'text'}"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();assistantNext();}">
+    </div>
+    <div class="assistant-actions">
+      <button class="back" onclick="assistantBack()">◀ قبلی</button>
+      <button class="next" onclick="assistantNext()">بعدی ▶</button>
+    </div>
+  `;
+  setTimeout(() => {
+    const inp = document.getElementById('assistantInput');
+    if (inp) inp.focus();
+  }, 100);
+}
+
+function assistantPick(val, stepIdx) {
+  const step = ASSISTANT_STEPS[stepIdx];
+  assistantState.data[step.key] = val;
+  assistantState.step = stepIdx + 1;
+  renderAssistantStep();
+}
+
+function assistantNext() {
+  const step = ASSISTANT_STEPS[assistantState.step];
+  const inp = document.getElementById('assistantInput');
+  const v = inp ? inp.value.trim() : '';
+  if (v) assistantState.data[step.key] = v;
+  else if (!step.optional) { showToast('این فیلد لازمه', 'err'); return; }
+  assistantState.step++;
+  renderAssistantStep();
+}
+
+function assistantBack() {
+  if (assistantState.step <= 0) { closeAssistant(); return; }
+  assistantState.step--;
+  renderAssistantStep();
+}
+
+function applyAssistantData() {
+  const d = assistantState.data;
+  closeAssistant();
+  switchTab('new');
+  setTimeout(() => {
+    // محصول
+    if (d.product) {
+      const el = document.getElementById('new_product');
+      if (el) el.value = d.product;
+      const trig = document.getElementById('trig_new_product');
+      if (trig) {
+        const txt = trig.querySelector('.text');
+        if (txt) { txt.textContent = d.product; txt.classList.remove('placeholder'); }
+      }
+      onProductChange('new_product');
+    }
+    // ظرفیت
+    if (d.capacity) {
+      const capEl = document.getElementById('new_capacity');
+      if (capEl) {
+        const m = d.capacity.match(/^([\d.]+)\s*(.*)$/);
+        if (m) {
+          capEl.value = m[1];
+          if (m[2]) {
+            const btn = document.getElementById('unitBtn_new_capacity');
+            if (btn) { btn.textContent = m[2] + ' ▾'; capacityUnitCache['new_capacity'] = m[2]; }
+          }
+        } else {
+          capEl.value = d.capacity;
+        }
+      }
+    }
+    // فشار
+    if (d.pressure) {
+      const m = d.pressure.match(/^([\d.]+)/);
+      const num = m ? m[1] : '';
+      const hidden = document.getElementById('new_pressure');
+      if (hidden) hidden.value = num;
+      const trig = document.getElementById('trig_new_pressure');
+      if (trig) {
+        const txt = trig.querySelector('.text');
+        if (txt) { txt.textContent = num + ' بار'; txt.classList.remove('placeholder'); }
+      }
+    }
+    // مشتری
+    if (d.customer) {
+      const el = document.getElementById('new_customer');
+      if (el) el.value = d.customer;
+    }
+    // توضیحات
+    if (d.notes) {
+      const el = document.getElementById('new_notes');
+      if (el) el.value = d.notes;
+      const el2 = document.getElementById('new_desc');
+      if (el2) el2.value = d.notes;
+    }
+    // تعداد
+    if (d.count) {
+      const el = document.getElementById('new_count');
+      if (el) { el.value = d.count; updateCountHint(); }
+    }
+    showToast('✅ فرم پر شد — چک کن و ثبت بزن', 'ok');
+  }, 200);
+}
+
+document.getElementById('assistantBtn').onclick = openAssistant;
+
+// ============================================================
+// رویدادها
+// ============================================================
 document.getElementById('newSubmitBtn').onclick = submitNewOrder;
 document.getElementById('copyPrevBtn').onclick = openCopyModal;
 document.getElementById('modalCloseBtn').onclick = closeModal;
@@ -1942,15 +2777,39 @@ document.getElementById('advFilterBtn').onclick = e => {
   const adv = document.getElementById('advFilters');
   adv.classList.toggle('show');
   e.target.classList.toggle('active', adv.classList.contains('show'));
+  if (adv.classList.contains('show')) buildAdvancedFilters();
 };
-document.getElementById('filterStatus').onchange = e => { filterStatus = e.target.value; renderList(); };
-document.getElementById('filterInspection').onchange = e => { filterInspection = e.target.value; renderList(); };
-document.getElementById('filterCustomer').onchange = e => { filterCustomer = e.target.value; renderList(); };
+
+function buildAdvancedFilters() {
+  // وضعیت
+  const sw = document.getElementById('filterStatusWrap');
+  if (sw && !sw.innerHTML.trim()) {
+    sw.innerHTML = buildNeonSelector('filterStatus', 'filterStatus', STATUS_LIST, filterStatus, 'همه', '');
+  }
+  // بازرسی
+  const iw = document.getElementById('filterInspectionWrap');
+  if (iw && !iw.innerHTML.trim()) {
+    iw.innerHTML = buildNeonSelector('filterInspection', 'filterInspection', INSPECTION_LIST, filterInspection, 'همه', '');
+  }
+  // مشتری
+  const cw = document.getElementById('filterCustomerWrap');
+  if (cw && !cw.innerHTML.trim()) {
+    const list = customersCache.length > 0 ? customersCache : ['—'];
+    cw.innerHTML = buildNeonSelector('filterCustomer', 'filterCustomer', list, filterCustomer, 'همه', '');
+  }
+}
+
 document.getElementById('clearFiltersBtn').onclick = () => {
   filterStatus = ''; filterInspection = ''; filterCustomer = '';
-  document.getElementById('filterStatus').value = '';
-  document.getElementById('filterInspection').value = '';
-  document.getElementById('filterCustomer').value = '';
+  ['filterStatus','filterInspection','filterCustomer'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+    const trig = document.getElementById('trig_' + id);
+    if (trig) {
+      const txt = trig.querySelector('.text');
+      if (txt) { txt.textContent = 'همه'; txt.classList.add('placeholder'); }
+    }
+  });
   renderList();
 };
 
@@ -1958,6 +2817,7 @@ document.addEventListener('input', e => {
   if (e.target && (e.target.id === 'new_count' || e.target.id === 'new_serial')) updateCountHint();
 });
 
+// Fullscreen
 (function(){
   function requestFS() {
     const el = document.documentElement;
@@ -1976,6 +2836,7 @@ document.addEventListener('input', e => {
   if (btn) btn.onclick = () => { if (document.fullscreenElement) exitFS(); else requestFS(); };
 })();
 
+// دستگاه
 (function detectDevice() {
   const ua = navigator.userAgent || '';
   const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
@@ -1999,6 +2860,9 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// ============================================================
+// رفرش خودکار
+// ============================================================
 function startAutoRefresh() {
   if (refreshTimer) clearInterval(refreshTimer);
   refreshTimer = setInterval(() => {
@@ -2011,19 +2875,20 @@ function startAutoRefresh() {
   }, REFRESH_MS);
 }
 
+// ============================================================
+// Init
+// ============================================================
 (function init() {
   if (localStorage.getItem(THEME_KEY) === 'light') document.body.classList.add('light');
   applyFontSize();
   updateClock();
   setInterval(updateClock, 30000);
 
-  const fs = document.getElementById('filterStatus');
-  STATUS_LIST.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; fs.appendChild(o); });
-
   updateConfigWarning();
   switchTab('new');
   updateReminders();
   startAutoRefresh();
+  initVoiceSearch();
 
   setInterval(async () => {
     if (!('Notification' in window)) return;
