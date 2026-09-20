@@ -748,13 +748,16 @@ function customerColorIndex(customer) {
   return Math.abs(hash) % CUSTOMER_COLORS.length;
 }
 
+// ============================================================
+// ساختار دسته‌ها — دقیقاً مطابق شیت (v24)
+// ============================================================
 const CATEGORIES = {
   steam: {
     label: 'بخار',
     fields: [
       { key: 'serial', label: 'شماره سریال', required: true },
       { key: 'product', label: 'نام محصول', required: true },
-      { key: 'notes', label: 'ملاحظات' },
+      { key: 'notes', label: 'توضیحات' },
       { key: 'capacity', label: 'ظرفیت محصول', type: 'capacity' },
       { key: 'pressure', label: 'فشار کاری', type: 'pressure' },
       { key: 'standard', label: 'استاندارد مرجع', type: 'standard' },
@@ -772,7 +775,7 @@ const CATEGORIES = {
     fields: [
       { key: 'serial', label: 'شماره سریال', required: true },
       { key: 'product', label: 'مدل محصول', required: true },
-      { key: 'notes', label: 'ملاحظات' },
+      { key: 'pressure', label: 'فشار کاری', type: 'pressure' },
       { key: 'capacity', label: 'ظرفیت محصول', type: 'capacity' },
       { key: 'desc', label: 'توضیحات' },
       { key: 'standard', label: 'استاندارد مرجع', type: 'standard' },
@@ -790,12 +793,12 @@ const CATEGORIES = {
     fields: [
       { key: 'serial', label: 'شماره سریال', required: true },
       { key: 'product', label: 'نام محصول', required: true },
-      { key: 'group', label: 'گروه محصول', type: 'group' },
-      { key: 'notes', label: 'ملاحظات' },
+      { key: 'pressure', label: 'فشار کاری', type: 'pressure' },
       { key: 'capacity', label: 'ظرفیت محصول', type: 'capacity' },
       { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
       { key: 'status', label: 'وضعیت', type: 'status' },
       { key: 'orderDesc', label: 'توضیحات سفارش' },
+      { key: 'group', label: 'گروه محصول', type: 'group' },
       { key: 'customer', label: 'نام مشتری' },
       { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' }
     ]
@@ -1181,9 +1184,7 @@ async function submitNewOrder() {
     if (el && el.disabled) return;
     const val = el ? el.value.trim() : '';
     data[f.key] = val;
-    // فقط سریال، محصول، کد بازرسی اجباری
     if (f.required && !val) {
-      // استثنا: آبگرم کن بدون سریال
       if (f.key === 'serial' && isWaterHeater(data.product)) return;
       missing = f.label;
     }
