@@ -52,7 +52,6 @@
     background-size:28px 28px;padding-bottom:30px;
   }
 
-  /* ===== نئون ===== */
   .neon-select-wrap{position:relative;}
   .neon-select-wrap::after{
     content:'▾';position:absolute;left:14px;top:50%;transform:translateY(-50%);
@@ -81,7 +80,6 @@
   select option{background:var(--bg-elevated);color:var(--text);padding:10px;}
   .neon-select-wrap:focus-within::after{transform:translateY(-50%) rotate(180deg);color:#fff;}
 
-  /* ===== هدر ===== */
   .topbar{
     position:sticky;top:0;z-index:50;background:var(--bg-surface);
     border-bottom:2px solid var(--border-strong);
@@ -139,7 +137,6 @@
   .tool-btn:active{transform:scale(0.92);}
   .tool-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 
-  /* ===== تب‌ها ===== */
   .tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);
     border:1px solid var(--border);border-top:none;
     border-radius:0 0 var(--radius) var(--radius);overflow:hidden;margin-top:12px;}
@@ -196,7 +193,6 @@
   label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;font-weight:600;}
   label.req::after{content:" *";color:var(--accent);font-weight:800;}
 
-  /* ===== گروه محصول نئونی ===== */
   .neon-radio-group{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
   .neon-radio{position:relative;background:var(--bg-input);border:1.5px solid var(--border);
     border-radius:8px;padding:13px 8px;text-align:center;cursor:pointer;
@@ -250,8 +246,6 @@
   .order-card.customer-c6{border-right-color:var(--c6);}
   .order-card.customer-c7{border-right-color:var(--c7);}
   .order-card.customer-c8{border-right-color:var(--c8);}
-  .order-card.locked{opacity:0.6;border-right-color:var(--warning) !important;cursor:not-allowed;}
-  .order-card.locked::after{content:'🔒';position:absolute;top:8px;left:8px;font-size:14px;}
 
   .card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px;}
   .card-head .serial{font-family:'JetBrains Mono',monospace;font-size:1.07em;font-weight:800;
@@ -351,7 +345,6 @@
   .stat-row .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
   .stat-row .val{font-weight:800;color:var(--text);font-family:'JetBrains Mono',monospace;}
 
-  /* ===== نمودار میله‌ای ===== */
   .bar-chart{display:flex;align-items:flex-end;justify-content:space-between;
     gap:6px;height:180px;padding:16px 0;margin-top:14px;}
   .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;}
@@ -363,7 +356,6 @@
     border:1px solid var(--accent);}
   .bar-label{font-size:0.67em;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-weight:700;}
 
-  /* ===== نمودار خطی ===== */
   .line-chart-wrap{margin-top:16px;position:relative;height:180px;padding:12px 0;}
   .line-chart-svg{width:100%;height:100%;overflow:visible;}
   .line-path{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;
@@ -377,7 +369,6 @@
   .line-labels{display:flex;justify-content:space-around;margin-top:6px;padding:0 12px;}
   .line-label{font-size:0.67em;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-weight:700;}
 
-  /* ===== Audit Log ===== */
   .audit-item{background:var(--bg-elevated);border:1px solid var(--border);
     border-right:3px solid var(--accent);border-radius:var(--radius-sm);
     padding:10px 12px;margin-bottom:8px;font-size:0.83em;}
@@ -389,14 +380,12 @@
   .audit-item .old-val{color:var(--danger);text-decoration:line-through;font-family:'JetBrains Mono',monospace;}
   .audit-item .new-val{color:var(--success);font-weight:700;font-family:'JetBrains Mono',monospace;}
 
-  /* ===== Font Size ===== */
   .font-size-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
   .font-btn{flex:1;padding:10px 8px;border-radius:var(--radius-sm);border:1.5px solid var(--border);
     background:var(--bg-elevated);color:var(--text-mid);font-size:0.87em;
     font-family:inherit;cursor:pointer;font-weight:700;transition:0.15s;text-align:center;}
   .font-btn.active{background:rgba(245,158,11,0.12);border-color:var(--accent);color:var(--accent);}
 
-  /* ===== مودال ===== */
   .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.7);
     display:none;align-items:flex-end;z-index:100;backdrop-filter:blur(4px);}
   .modal-backdrop.show{display:flex;}
@@ -413,10 +402,7 @@
     margin:8px 0 12px;padding:10px 12px;border-radius:var(--radius-sm);
     background:var(--bg-input);border:1px solid var(--border);}
   .modal-view-bar .label{font-size:0.83em;color:var(--text-mid);font-weight:600;}
-  .modal-view-bar button{background:none;border:none;color:var(--accent);
-    font-size:0.8em;font-family:inherit;cursor:pointer;font-weight:700;}
 
-  /* ===== Undo ===== */
   .undo-bar{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));
     left:16px;right:16px;max-width:768px;margin:0 auto;background:var(--bg-elevated);
     border:1px solid var(--accent);border-radius:var(--radius);padding:12px 16px;
@@ -453,9 +439,7 @@
   .empty-state{text-align:center;color:var(--text-dim);padding:40px 10px;font-size:0.9em;}
   .spinner{text-align:center;color:var(--text-dim);font-size:0.87em;padding:20px;}
 
-  .lock-badge{display:inline-flex;align-items:center;gap:4px;font-size:0.73em;
-    background:rgba(251,191,36,0.15);color:var(--warning);border:1px solid var(--warning);
-    padding:2px 8px;border-radius:5px;font-weight:700;}
+  .hint-sm{font-size:0.8em;color:var(--text-dim);margin-top:6px;line-height:1.7;}
 
   @media (max-width: 480px){
     .brand-text h1{font-size:0.93em;}
@@ -626,7 +610,6 @@
   </div>
 </div>
 
-<!-- مودال ویرایش -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <h3 id="modalTitle"></h3>
@@ -639,7 +622,6 @@
   </div>
 </div>
 
-<!-- مودال کپی -->
 <div class="modal-backdrop" id="copyBackdrop">
   <div class="modal">
     <h3>📋 کپی از سفارش قبلی</h3>
@@ -649,18 +631,14 @@
   </div>
 </div>
 
-<!-- مودال تنظیمات -->
 <div class="modal-backdrop" id="settingsBackdrop">
   <div class="modal">
     <h3>⚙️ تنظیمات</h3>
-
     <label class="req">نام کاربر</label>
     <input type="text" id="settingsUser" placeholder="مثلاً: علی" dir="auto">
-    <div style="font-size:0.8em;color:var(--text-dim);margin-top:6px;">نامت برای ثبت در تاریخچه تغییرات</div>
-
+    <div class="hint-sm">نامت برای ثبت در تاریخچه تغییرات</div>
     <label class="req">لینک Web App</label>
     <input type="text" id="settingsUrl" placeholder="https://script.google.com/macros/s/.../exec" dir="ltr" style="text-align:left;">
-
     <label>اندازه فونت</label>
     <div class="font-size-row">
       <button class="font-btn" data-size="small">کوچک</button>
@@ -668,18 +646,15 @@
       <button class="font-btn" data-size="large">بزرگ</button>
       <button class="font-btn" data-size="xlarge">خیلی بزرگ</button>
     </div>
-
     <label style="margin-top:18px;">اعلان مرورگر</label>
     <button class="secondary-btn" id="notifPermBtn" style="margin-top:0;">🔔 فعال‌سازی اعلان‌ها</button>
-    <div style="font-size:0.8em;color:var(--text-dim);margin-top:6px;" id="notifStatus">وضعیت: نامشخص</div>
-
+    <div class="hint-sm" id="notifStatus">وضعیت: نامشخص</div>
     <button class="submit-btn" id="settingsSaveBtn">ذخیره و تست اتصال</button>
     <div class="msg" id="settingsMsg"></div>
     <button class="close-modal" id="settingsCloseBtn">بستن</button>
   </div>
 </div>
 
-<!-- مودال هشدارها -->
 <div class="modal-backdrop" id="alertsBackdrop">
   <div class="modal">
     <h3>🔔 سفارش‌های نزدیک به بارگیری</h3>
@@ -689,7 +664,6 @@
   </div>
 </div>
 
-<!-- Picker -->
 <div class="picker-overlay" id="pickerOverlay">
   <div class="picker-box">
     <h4 id="pickerTitle"></h4>
@@ -698,19 +672,14 @@
   </div>
 </div>
 
-<!-- Undo -->
 <div class="undo-bar" id="undoBar">
   <div class="undo-text" id="undoText"></div>
   <button id="undoBtn">بازگردانی</button>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ============================================================
-// ثابت‌ها
-// ============================================================
 const SCRIPT_URL_DEFAULT = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 const STORAGE_KEY = "caspian_script_url";
 const USER_KEY = "caspian_user_name";
@@ -740,14 +709,12 @@ const PRODUCT_OPTIONS = {
 };
 
 const GROUP_OPTIONS_TANKS = ['مخازن', 'دیگ نرمال', 'دیگ روغن داغ'];
-
 const STATUS_LIST = ['ساخته نشده', 'در حال ساخت', 'ساخته شده'];
 const STATUS_COLORS = {'ساخته نشده':'#E53935','در حال ساخت':'#FFC107','ساخته شده':'#28A745'};
 const STATUS_PILL_CLASS = {'ساخته نشده':'not-made','در حال ساخت':'making','ساخته شده':'done'};
-
 const STANDARD_LIST = ['ISIRI 7911', 'ISIRI 4231', 'INSO 22156'];
 const INSPECTION_LIST = ['ISQI', 'AJG'];
-
+const PRESSURE_UNITS = ['بار', 'psi'];
 const CAT_LABELS = { steam:'بخار', hotwater:'آبگرم', tanks:'مخازن' };
 const MONTH_NAMES = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 
@@ -781,9 +748,6 @@ function customerColorIndex(customer) {
   return Math.abs(hash) % CUSTOMER_COLORS.length;
 }
 
-// ============================================================
-// تعریف دسته‌ها
-// ============================================================
 const CATEGORIES = {
   steam: {
     label: 'بخار',
@@ -792,7 +756,7 @@ const CATEGORIES = {
       { key: 'product', label: 'نام محصول', required: true },
       { key: 'notes', label: 'ملاحظات' },
       { key: 'capacity', label: 'ظرفیت محصول', type: 'capacity' },
-      { key: 'pressure', label: 'فشار کاری' },
+      { key: 'pressure', label: 'فشار کاری', type: 'pressure' },
       { key: 'standard', label: 'استاندارد مرجع', type: 'standard' },
       { key: 'customer', label: 'نام مشتری' },
       { key: 'inspectionCo', label: 'نام شرکت بازرسی', type: 'inspection' },
@@ -838,9 +802,6 @@ const CATEGORIES = {
   }
 };
 
-// ============================================================
-// State
-// ============================================================
 let currentYear = '1405';
 let availableYears = ['1405'];
 let currentCat = 'steam';
@@ -854,29 +815,24 @@ let filterInspection = '';
 let filterCustomer = '';
 let currentModalItem = null;
 let selectedRows = new Set();
-let lastEdit = null;
 let pendingUndo = null;
 let capacityUnitCache = {};
+let pressureUnitCache = {};
 let refreshTimer = null;
 let lastFetchHash = '';
 
-// ============================================================
-// ابزار
-// ============================================================
 function getUserName() { return localStorage.getItem(USER_KEY) || ''; }
-function setUserName(name) { localStorage.setItem(USER_KEY, name); }
+function setUserName(n) { localStorage.setItem(USER_KEY, n); }
 function getScriptUrl() { return localStorage.getItem(STORAGE_KEY) || SCRIPT_URL_DEFAULT; }
 function isUrlConfigured() {
   const u = getScriptUrl();
   return u && u.indexOf('PASTE_YOUR') !== 0 && u.indexOf('https://script.google.com/') === 0;
 }
-
 function updateConfigWarning() {
   const w = document.getElementById('configWarning');
   if (isUrlConfigured()) w.style.display='none';
   else w.style.display='block';
 }
-
 function toFa(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
 function toJalali(gy, gm, gd) {
   const g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
@@ -899,13 +855,11 @@ function todayJalaliStr() {
 function updateClock() {
   const now = new Date();
   const [jy, jm, jd] = toJalali(now.getFullYear(), now.getMonth()+1, now.getDate());
-  const dow = now.getDay();
   const faDayNames = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
-  document.getElementById('dayName').textContent = faDayNames[(dow + 1) % 7];
+  document.getElementById('dayName').textContent = faDayNames[(now.getDay() + 1) % 7];
   document.getElementById('dateFull').textContent = toFa(jy)+'/'+String(jm).padStart(2,'0')+'/'+String(jd).padStart(2,'0');
   document.getElementById('timeNow').textContent = toFa(String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0'));
 }
-
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -914,14 +868,8 @@ function showToast(msg, type) {
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), 3500);
 }
+function isWaterHeater(product) { return String(product || '').trim() === 'آبگرم کن'; }
 
-function isWaterHeater(product) {
-  return String(product || '').trim() === 'آبگرم کن';
-}
-
-// ============================================================
-// API
-// ============================================================
 async function callApi(payload) {
   const url = getScriptUrl();
   if (!isUrlConfigured()) { openSettings(); throw new Error('لینک تنظیم نشده'); }
@@ -936,19 +884,14 @@ async function callApi(payload) {
   if (payload.limit)    params.append('limit', payload.limit);
   if (payload.rows)     params.append('rows', JSON.stringify(payload.rows));
   if (payload.data)     params.append('data', JSON.stringify(payload.data));
-  // همیشه نام کاربر رو بفرست
   params.append('user', getUserName() || 'ناشناس');
   const sep = url.indexOf('?') === -1 ? '?' : '&';
-  const finalUrl = url + sep + params.toString();
-  const res = await fetch(finalUrl, { method: 'GET', redirect: 'follow' });
+  const res = await fetch(url + sep + params.toString(), { method: 'GET', redirect: 'follow' });
   const text = await res.text();
   try { return JSON.parse(text); }
   catch (_) { throw new Error('پاسخ JSON نبود: ' + text.slice(0, 150)); }
 }
 
-// ============================================================
-// تب‌ها
-// ============================================================
 document.querySelectorAll('.tab').forEach(tab => {
   tab.onclick = () => switchTab(tab.dataset.tab);
 });
@@ -967,9 +910,6 @@ function switchTab(tab) {
   else if (tab === 'audit') { buildYearRow('yearRow5'); loadAudit(); }
 }
 
-// ============================================================
-// ساخت ردیف سال و دسته
-// ============================================================
 function buildYearRow(containerId) {
   const row = document.getElementById(containerId);
   if (!row) return;
@@ -1005,9 +945,6 @@ function buildCatRow(containerId) {
   });
 }
 
-// ============================================================
-// ساخت فیلد
-// ============================================================
 function getCapacityUnits(product) {
   if (CAPACITY_UNITS[product]) return CAPACITY_UNITS[product];
   if (currentCat === 'steam') return ['kg/hr', 'lb/hr'];
@@ -1045,6 +982,14 @@ function fieldRowHTML(f, idPrefix) {
       <div class="date-row">
         <input type="text" id="${id}" placeholder="مقدار..." inputmode="decimal">
         <button type="button" class="today-btn" id="unitBtn_${id}" onclick="pickUnit('${id}')">lit ▾</button>
+      </div>`;
+  }
+  if (f.type === 'pressure') {
+    return `
+      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <div class="date-row">
+        <input type="text" id="${id}" placeholder="مقدار فشار..." inputmode="decimal">
+        <button type="button" class="today-btn" id="pressureUnitBtn_${id}" onclick="pickPressureUnit('${id}')">بار ▾</button>
       </div>`;
   }
   if (f.type === 'standard') {
@@ -1101,7 +1046,6 @@ function onProductChange(id) {
     capacityUnitCache[capInputId] = units[0];
     unitBtn.textContent = units[0] + ' ▾';
   }
-  // آبگرم کن
   if (prefix === 'new') {
     const serialInput = document.getElementById('new_serial');
     const serialLabel = document.getElementById('lbl_new_serial');
@@ -1129,6 +1073,17 @@ function pickUnit(inputId) {
   });
 }
 
+function pickPressureUnit(inputId) {
+  const input = document.getElementById(inputId);
+  const current = pressureUnitCache[inputId] || 'بار';
+  openPicker('واحد فشار', PRESSURE_UNITS, current, (selected) => {
+    pressureUnitCache[inputId] = selected;
+    const btn = document.getElementById('pressureUnitBtn_' + inputId);
+    if (btn) btn.textContent = selected + ' ▾';
+    if (input) input.placeholder = 'مقدار (' + selected + ')...';
+  });
+}
+
 function openPicker(title, items, current, onPick) {
   document.getElementById('pickerTitle').textContent = title;
   const list = document.getElementById('pickerList');
@@ -1146,9 +1101,6 @@ function closePicker() { document.getElementById('pickerOverlay').classList.remo
 document.getElementById('pickerCloseBtn').onclick = closePicker;
 document.getElementById('pickerOverlay').onclick = e => { if (e.target.id === 'pickerOverlay') closePicker(); };
 
-// ============================================================
-// فرم ثبت
-// ============================================================
 async function buildNewForm() {
   const form = document.getElementById('newForm');
   const cat = CATEGORIES[currentCat];
@@ -1159,7 +1111,7 @@ async function buildNewForm() {
     productEl.parentNode.insertAdjacentHTML('afterend', `
       <label for="new_count">تعداد دستگاه</label>
       <input type="number" id="new_count" min="1" value="1" step="1">
-      <div style="font-size:0.77em;color:var(--text-dim);margin-top:6px;" id="countHint">
+      <div class="hint-sm" id="countHint">
         اگه بیشتر از ۱ باشه، ردیف جدا با سریال متوالی ثبت می‌شه.
       </div>`);
   }
@@ -1170,6 +1122,11 @@ async function buildNewForm() {
     capacityUnitCache['new_capacity'] = units[0];
     const btn = document.getElementById('unitBtn_new_capacity');
     if (btn) btn.textContent = units[0] + ' ▾';
+  }
+  const pressBtn = document.getElementById('pressureUnitBtn_new_pressure');
+  if (pressBtn) {
+    pressureUnitCache['new_pressure'] = 'بار';
+    pressBtn.textContent = 'بار ▾';
   }
 
   await Promise.all([autofillSerial(false), loadCustomers()]);
@@ -1224,11 +1181,20 @@ async function submitNewOrder() {
     if (el && el.disabled) return;
     const val = el ? el.value.trim() : '';
     data[f.key] = val;
-    if (f.required && !val && !isWaterHeater(data.product)) missing = f.label;
+    // فقط سریال، محصول، کد بازرسی اجباری
+    if (f.required && !val) {
+      // استثنا: آبگرم کن بدون سریال
+      if (f.key === 'serial' && isWaterHeater(data.product)) return;
+      missing = f.label;
+    }
   });
   if (data.capacity) {
     const unit = capacityUnitCache['new_capacity'] || '';
     data.capacity = data.capacity + (unit ? ' ' + unit : '');
+  }
+  if (data.pressure) {
+    const unit = pressureUnitCache['new_pressure'] || 'بار';
+    data.pressure = data.pressure + ' ' + unit;
   }
   if (missing) { showToast('لطفاً «' + missing + '» رو وارد کن', 'err'); return; }
 
@@ -1262,9 +1228,7 @@ function clearNewForm() {
       const hidden = document.getElementById('new_group');
       if (hidden) hidden.value = 'مخازن';
       const group = document.getElementById('group_new_group');
-      if (group) {
-        group.querySelectorAll('.neon-radio').forEach((x, i) => x.classList.toggle('selected', i === 0));
-      }
+      if (group) group.querySelectorAll('.neon-radio').forEach((x, i) => x.classList.toggle('selected', i === 0));
       return;
     }
     const el = document.getElementById('new_' + f.key);
@@ -1297,9 +1261,6 @@ async function loadCustomers() {
   } catch (e) {}
 }
 
-// ============================================================
-// تب مدیریت
-// ============================================================
 async function loadItems(silent) {
   const listEl = document.getElementById('pendingList');
   if (!isUrlConfigured()) { listEl.innerHTML = '<div class="empty-state">لینک اتصال تنظیم نشده</div>'; return; }
@@ -1424,14 +1385,9 @@ function findItemByRow(row) {
   return allItems.find(it => it.row === row);
 }
 
-// ============================================================
-// مودال ویرایش
-// ============================================================
 async function openModal(row) {
   const item = findItemByRow(row);
   if (!item) return;
-
-  // چک قفل
   const serial = String(item.data.serial || '').trim();
   if (serial) {
     try {
@@ -1439,7 +1395,6 @@ async function openModal(row) {
       if (lockCheck.ok && lockCheck.locked && lockCheck.lockedBy && lockCheck.lockedBy !== getUserName()) {
         if (!confirm('⚠️ این رکورد توسط «' + lockCheck.lockedBy + '» در حال ویرایش است. ادامه می‌دی؟')) return;
       }
-      // قفل بگیر
       const lockRes = await callApi({ action: 'lockRecord', category: currentCat, serial });
       if (lockRes.ok && lockRes.locked && lockRes.lockedBy !== getUserName()) {
         showToast('🔒 این رکورد توسط «' + lockRes.lockedBy + '» قفل شده', 'warn');
@@ -1449,13 +1404,12 @@ async function openModal(row) {
   }
 
   currentModalItem = item;
-  const cat = CATEGORIES[currentCat];
   document.getElementById('modalTitle').textContent = item.data.serial || '(بدون سریال)';
   const sub = [];
   if (item.data.product) sub.push(item.data.product);
   if (item.data.capacity) sub.push('ظرفیت: ' + item.data.capacity);
+  if (item.data.pressure) sub.push('فشار: ' + item.data.pressure);
   document.getElementById('modalSub').innerHTML = sub.join(' • ');
-
   renderModalFields();
   document.getElementById('modalMsg').className = 'msg';
   document.getElementById('modalBackdrop').classList.add('show');
@@ -1463,12 +1417,9 @@ async function openModal(row) {
 }
 function closeModal() {
   document.getElementById('modalBackdrop').classList.remove('show');
-  // آزادسازی قفل
   if (currentModalItem) {
     const serial = String(currentModalItem.data.serial || '').trim();
-    if (serial) {
-      callApi({ action: 'unlockRecord', category: currentCat, serial }).catch(() => {});
-    }
+    if (serial) callApi({ action: 'unlockRecord', category: currentCat, serial }).catch(() => {});
   }
   currentModalItem = null;
 }
@@ -1479,7 +1430,7 @@ function renderModalFields() {
   const fieldsEl = document.getElementById('modalFields');
   const viewBar = document.getElementById('modalViewBar');
 
-  viewBar.innerHTML = `<div class="modal-view-bar"><div class="label">همه فیلدها قابل ویرایش</div></div>`;
+  viewBar.innerHTML = `<div class="modal-view-bar"><div class="label">همه فیلدها قابل ویرایش — مقادیر خالی هم ذخیره می‌شن</div></div>`;
 
   fieldsEl.innerHTML = cat.fields.map(f => {
     let html = fieldRowHTML(f, 'modal');
@@ -1526,16 +1477,23 @@ function renderModalFields() {
           if (el.value) el.value = el.value.replace(/\s+[^\d]+$/, '');
         }
       }
+      if (f.type === 'pressure') {
+        const oldP = String(item.data.pressure || '').trim();
+        const m = oldP.match(/\s+(بار|psi)\s*$/i);
+        const unit = m ? m[1] : 'بار';
+        const btn = document.getElementById('pressureUnitBtn_modal_pressure');
+        if (btn) {
+          pressureUnitCache['modal_pressure'] = unit;
+          btn.textContent = unit + ' ▾';
+          if (el.value) el.value = el.value.replace(/\s+(بار|psi)\s*$/i, '');
+        }
+      }
       if (f.type === 'group') {
         const hidden = document.getElementById('modal_group');
         if (hidden) {
           const val = hidden.value;
           const grp = document.getElementById('group_modal_group');
-          if (grp) {
-            grp.querySelectorAll('.neon-radio').forEach(x => {
-              x.classList.toggle('selected', x.dataset.val === val);
-            });
-          }
+          if (grp) grp.querySelectorAll('.neon-radio').forEach(x => x.classList.toggle('selected', x.dataset.val === val));
         }
       }
     });
@@ -1550,11 +1508,14 @@ async function saveModal() {
   cat.fields.forEach(f => {
     const el = document.getElementById('modal_' + f.key);
     if (!el) return;
-    let v = el.value || '';
-    v = String(v).trim();
+    let v = String(el.value || '').trim();
     if (f.type === 'capacity' && v) {
       const unit = capacityUnitCache['modal_capacity'] || '';
       v = v + (unit ? ' ' + unit : '');
+    }
+    if (f.type === 'pressure' && v) {
+      const unit = pressureUnitCache['modal_pressure'] || 'بار';
+      v = v + ' ' + unit;
     }
     data[f.key] = v;
   });
@@ -1577,9 +1538,6 @@ async function saveModal() {
   btn.textContent = 'ذخیره';
 }
 
-// ============================================================
-// Undo
-// ============================================================
 function showUndo(text) {
   const bar = document.getElementById('undoBar');
   document.getElementById('undoText').textContent = text;
@@ -1597,9 +1555,6 @@ document.getElementById('undoBtn').onclick = async () => {
   document.getElementById('undoBar').classList.remove('show');
 };
 
-// ============================================================
-// کپی
-// ============================================================
 async function openCopyModal() {
   const listEl = document.getElementById('copyList');
   listEl.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -1640,6 +1595,23 @@ function copyItemToForm(row) {
         if (grp) grp.querySelectorAll('.neon-radio').forEach(x => x.classList.toggle('selected', x.dataset.val === item.data[f.key]));
         return;
       }
+      if (f.type === 'capacity' || f.type === 'pressure') {
+        const oldVal = String(item.data[f.key]).trim();
+        const m = oldVal.match(/^([\d./]+)\s+(.+)$/);
+        if (m) {
+          if (el) el.value = m[1];
+          if (f.type === 'capacity') {
+            capacityUnitCache['new_capacity'] = m[2];
+            const btn = document.getElementById('unitBtn_new_capacity');
+            if (btn) btn.textContent = m[2] + ' ▾';
+          } else {
+            pressureUnitCache['new_pressure'] = m[2];
+            const btn = document.getElementById('pressureUnitBtn_new_pressure');
+            if (btn) btn.textContent = m[2] + ' ▾';
+          }
+        } else if (el) el.value = oldVal;
+        return;
+      }
       if (el.tagName === 'SELECT') {
         const target = String(item.data[f.key]).trim();
         for (let i = 0; i < el.options.length; i++) {
@@ -1655,9 +1627,6 @@ function copyItemToForm(row) {
   }, 200);
 }
 
-// ============================================================
-// داشبورد
-// ============================================================
 async function loadDashboard() {
   const dash = document.getElementById('dashContent');
   dash.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -1669,21 +1638,18 @@ async function loadDashboard() {
       <div class="dash-card"><div class="num">${toFa(s.total)}</div><div class="lbl">کل سفارش‌ها</div></div>
       <div class="dash-card"><div class="num" style="color:var(--warning)">${toFa(s.pendingCount)}</div><div class="lbl">ناقص</div></div>
     </div>`;
-
     html += `<div class="dash-card wide" style="margin-bottom:12px;">
       <div style="font-weight:800;margin-bottom:10px;color:var(--accent);">دسته‌بندی</div>`;
     Object.keys(CAT_LABELS).forEach(c => {
       html += `<div class="stat-row"><span>${CAT_LABELS[c]}</span><span class="val">${toFa(s.byCategory[c] || 0)}</span></div>`;
     });
     html += `</div>`;
-
     html += `<div class="dash-card wide" style="margin-bottom:12px;">
       <div style="font-weight:800;margin-bottom:10px;color:var(--accent);">وضعیت‌ها</div>`;
     STATUS_LIST.forEach(st => {
       html += `<div class="stat-row"><span class="key"><span class="dot" style="background:${STATUS_COLORS[st]}"></span>${st}</span><span class="val">${toFa(s.byStatus[st] || 0)}</span></div>`;
     });
     html += `</div>`;
-
     html += `<div class="dash-card wide">
       <div style="font-weight:800;margin-bottom:10px;color:var(--accent);">شرکت بازرسی</div>`;
     const insp = s.byInspection || {};
@@ -1693,14 +1659,10 @@ async function loadDashboard() {
     });
     if (Object.keys(insp).length === 0) html += `<div class="stat-row"><span style="color:var(--text-dim)">موردی ثبت نشده</span></div>`;
     html += `</div>`;
-
     dash.innerHTML = html;
   } catch (e) { dash.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-// ============================================================
-// گزارش (میله‌ای + خطی)
-// ============================================================
 async function loadReport() {
   const rep = document.getElementById('reportContent');
   rep.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -1728,7 +1690,6 @@ async function loadReport() {
     }
     html += `</div>`;
 
-    // نمودار خطی 6 ماه اخیر
     if (rTrend.ok && rTrend.trend) {
       const trend = rTrend.trend;
       const maxT = Math.max(...trend.map(t => t.total), 1);
@@ -1759,7 +1720,6 @@ async function loadReport() {
       html += `<div class="line-labels">${trend.map(t => `<span class="line-label">${MONTH_NAMES[t.month-1].slice(0,3)}<br>${toFa(t.total)}</span>`).join('')}</div>`;
     }
 
-    // تفکیک دسته‌ها
     html += `<div style="margin-top:20px;font-weight:800;margin-bottom:8px;color:var(--accent);">تفکیک دسته‌ها</div>`;
     Object.keys(CAT_LABELS).forEach(c => {
       let sum = 0;
@@ -1771,9 +1731,6 @@ async function loadReport() {
   } catch (e) { rep.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-// ============================================================
-// Audit Log
-// ============================================================
 async function loadAudit() {
   const el = document.getElementById('auditContent');
   el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -1808,9 +1765,6 @@ async function loadAudit() {
   } catch (e) { el.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-// ============================================================
-// هشدارها
-// ============================================================
 async function openAlerts() {
   const el = document.getElementById('alertsList');
   el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -1831,11 +1785,7 @@ async function openAlerts() {
           <span style="color:var(--accent);font-weight:800;">${a.serial || '(بدون سریال)'}</span>
           <span style="color:var(--warning);font-weight:800;">${daysTxt}</span>
         </div>
-        <div class="body">
-          ${a.product || ''}<br>
-          مشتری: ${a.customer || '—'}<br>
-          تاریخ بارگیری: ${a.loadDate}
-        </div>`;
+        <div class="body">${a.product || ''}<br>مشتری: ${a.customer || '—'}<br>تاریخ بارگیری: ${a.loadDate}</div>`;
       el.appendChild(d);
     });
   } catch (e) { el.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
@@ -1857,9 +1807,6 @@ async function updateReminders() {
   } catch (e) {}
 }
 
-// ============================================================
-// خروجی CSV
-// ============================================================
 function exportCsv() {
   const items = getFilteredItems();
   if (items.length === 0) { showToast('چیزی برای خروجی نیست', 'err'); return; }
@@ -1879,17 +1826,12 @@ function exportCsv() {
   URL.revokeObjectURL(url);
 }
 
-// ============================================================
-// تنظیمات
-// ============================================================
 function openSettings() {
   document.getElementById('settingsUrl').value = localStorage.getItem(STORAGE_KEY) || '';
   document.getElementById('settingsUser').value = getUserName();
   document.getElementById('settingsMsg').className = 'msg';
-  // فونت فعال
   const font = localStorage.getItem(FONT_KEY) || 'medium';
   document.querySelectorAll('.font-btn').forEach(b => b.classList.toggle('active', b.dataset.size === font));
-  // وضعیت اعلان
   updateNotifStatus();
   document.getElementById('settingsBackdrop').classList.add('show');
 }
@@ -1916,14 +1858,11 @@ async function saveSettings() {
   const url = document.getElementById('settingsUrl').value.trim();
   const userName = document.getElementById('settingsUser').value.trim();
   const msg = document.getElementById('settingsMsg');
-
   if (!url) { msg.textContent = 'لطفاً لینک را وارد کنید'; msg.className = 'msg err'; return; }
   if (url.indexOf('https://script.google.com/') !== 0) { msg.textContent = 'لینک باید با https://script.google.com/ شروع شود'; msg.className = 'msg err'; return; }
   if (url.indexOf('/exec') === -1) { msg.textContent = 'لینک باید به /exec ختم شود'; msg.className = 'msg err'; return; }
-
   localStorage.setItem(STORAGE_KEY, url);
   if (userName) setUserName(userName);
-
   msg.textContent = 'در حال تست...'; msg.className = 'msg ok';
   try {
     const pingUrl = url + (url.indexOf('?') === -1 ? '?' : '&') + 'action=ping';
@@ -1943,7 +1882,6 @@ async function saveSettings() {
   } catch (e) { msg.textContent = 'اتصال برقرار نشد: ' + e.message; msg.className = 'msg err'; }
 }
 
-// Font size buttons
 document.querySelectorAll('.font-btn').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
@@ -1960,9 +1898,6 @@ function applyFontSize() {
   document.body.classList.add('font-' + font);
 }
 
-// ============================================================
-// رویدادها
-// ============================================================
 document.getElementById('newSubmitBtn').onclick = submitNewOrder;
 document.getElementById('copyPrevBtn').onclick = openCopyModal;
 document.getElementById('modalCloseBtn').onclick = closeModal;
@@ -2020,7 +1955,6 @@ document.addEventListener('input', e => {
   if (e.target && (e.target.id === 'new_count' || e.target.id === 'new_serial')) updateCountHint();
 });
 
-// Fullscreen
 (function(){
   function requestFS() {
     const el = document.documentElement;
@@ -2039,9 +1973,6 @@ document.addEventListener('input', e => {
   if (btn) btn.onclick = () => { if (document.fullscreenElement) exitFS(); else requestFS(); };
 })();
 
-// ============================================================
-// تشخیص دستگاه
-// ============================================================
 (function detectDevice() {
   const ua = navigator.userAgent || '';
   const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
@@ -2059,18 +1990,12 @@ document.addEventListener('input', e => {
   }
 })();
 
-// ============================================================
-// Service Worker
-// ============================================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('service-worker.js').catch(err => console.warn('SW fail', err));
   });
 }
 
-// ============================================================
-// رفرش خودکار 20 ثانیه
-// ============================================================
 function startAutoRefresh() {
   if (refreshTimer) clearInterval(refreshTimer);
   refreshTimer = setInterval(() => {
@@ -2083,13 +2008,9 @@ function startAutoRefresh() {
   }, REFRESH_MS);
 }
 
-// ============================================================
-// Init
-// ============================================================
 (function init() {
   if (localStorage.getItem(THEME_KEY) === 'light') document.body.classList.add('light');
   applyFontSize();
-
   updateClock();
   setInterval(updateClock, 30000);
 
@@ -2101,7 +2022,6 @@ function startAutoRefresh() {
   updateReminders();
   startAutoRefresh();
 
-  // اعلان مرورگر برای سفارش‌های نزدیک
   setInterval(async () => {
     if (!('Notification' in window)) return;
     if (Notification.permission !== 'granted') return;
