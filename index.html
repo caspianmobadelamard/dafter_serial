@@ -171,11 +171,6 @@
   .smart-reminder .rem-text{flex:1;color:var(--text);}
   .smart-reminder .rem-text strong{color:var(--warning);font-weight:800;}
 
-  .section-title{font-family:'JetBrains Mono',monospace;font-size:0.77em;color:var(--text-dim);
-    letter-spacing:2px;text-transform:uppercase;padding:4px 0 12px;
-    display:flex;align-items:center;gap:10px;margin-top:8px;font-weight:700;}
-  .section-title::before{content:'';width:4px;height:14px;background:var(--accent);border-radius:2px;}
-
   .card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow);}
 
   .year-row{display:flex;gap:6px;margin-bottom:12px;justify-content:center;flex-wrap:wrap;}
@@ -749,14 +744,14 @@ function customerColorIndex(customer) {
 }
 
 // ============================================================
-// ساختار دسته‌ها — دقیقاً مطابق شیت (v24)
+// هیچ فیلدی اجباری نیست — حتی سریال و محصول
 // ============================================================
 const CATEGORIES = {
   steam: {
     label: 'بخار',
     fields: [
-      { key: 'serial', label: 'شماره سریال', required: true },
-      { key: 'product', label: 'نام محصول', required: true },
+      { key: 'serial', label: 'شماره سریال' },
+      { key: 'product', label: 'نام محصول' },
       { key: 'notes', label: 'توضیحات' },
       { key: 'capacity', label: 'ظرفیت محصول', type: 'capacity' },
       { key: 'pressure', label: 'فشار کاری', type: 'pressure' },
@@ -766,15 +761,15 @@ const CATEGORIES = {
       { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
       { key: 'status', label: 'وضعیت', type: 'status' },
       { key: 'hydroDate', label: 'تاریخ تست هیدرو', type: 'jdate' },
-      { key: 'inspectionCode', label: 'کد بازرسی', required: true },
+      { key: 'inspectionCode', label: 'کد بازرسی' },
       { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' }
     ]
   },
   hotwater: {
     label: 'آبگرم',
     fields: [
-      { key: 'serial', label: 'شماره سریال', required: true },
-      { key: 'product', label: 'مدل محصول', required: true },
+      { key: 'serial', label: 'شماره سریال' },
+      { key: 'product', label: 'مدل محصول' },
       { key: 'pressure', label: 'فشار کاری', type: 'pressure' },
       { key: 'capacity', label: 'ظرفیت محصول', type: 'capacity' },
       { key: 'desc', label: 'توضیحات' },
@@ -784,15 +779,15 @@ const CATEGORIES = {
       { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
       { key: 'status', label: 'وضعیت', type: 'status' },
       { key: 'hydroDate', label: 'تاریخ تست هیدرو', type: 'jdate' },
-      { key: 'inspectionCode', label: 'کد بازرسی', required: true },
+      { key: 'inspectionCode', label: 'کد بازرسی' },
       { key: 'loadDate', label: 'تاریخ بارگیری', type: 'jdate' }
     ]
   },
   tanks: {
     label: 'مخازن',
     fields: [
-      { key: 'serial', label: 'شماره سریال', required: true },
-      { key: 'product', label: 'نام محصول', required: true },
+      { key: 'serial', label: 'شماره سریال' },
+      { key: 'product', label: 'نام محصول' },
       { key: 'pressure', label: 'فشار کاری', type: 'pressure' },
       { key: 'capacity', label: 'ظرفیت محصول', type: 'capacity' },
       { key: 'orderDate', label: 'تاریخ سفارش', type: 'jdate' },
@@ -817,7 +812,6 @@ let filterStatus = '';
 let filterInspection = '';
 let filterCustomer = '';
 let currentModalItem = null;
-let selectedRows = new Set();
 let pendingUndo = null;
 let capacityUnitCache = {};
 let pressureUnitCache = {};
@@ -925,7 +919,6 @@ function buildYearRow(containerId) {
       if (currentYear === y) return;
       currentYear = y;
       searchTerm = '';
-      selectedRows.clear();
       const inp = document.getElementById('searchInput');
       if (inp) inp.value = '';
       document.getElementById('searchClear').classList.remove('show');
@@ -958,10 +951,11 @@ function getCapacityUnits(product) {
 function fieldRowHTML(f, idPrefix) {
   const id = idPrefix + '_' + f.key;
   const isNew = idPrefix === 'new';
+  const isRequired = false; // هیچ فیلدی اجباری نیست
 
   if (f.key === 'serial' && isNew) {
     return `
-      <label${f.required ? ' class="req"' : ''} id="lbl_${id}">${f.label}</label>
+      <label id="lbl_${id}">${f.label}</label>
       <div class="date-row">
         <input type="text" id="${id}" placeholder="">
         <button type="button" class="today-btn" onclick="refreshSerial()" title="سریال بعدی">🔄</button>
@@ -970,18 +964,18 @@ function fieldRowHTML(f, idPrefix) {
   if (f.key === 'product' && isNew) {
     const opts = (PRODUCT_OPTIONS[currentCat] || []).map(o => `<option value="${o.replace(/"/g,'&quot;')}"></option>`).join('');
     return `
-      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <label>${f.label}</label>
       <input type="text" id="${id}" list="dl_${currentCat}_product" placeholder="انتخاب یا تایپ..." autocomplete="off" oninput="onProductChange('${id}')">
       <datalist id="dl_${currentCat}_product">${opts}</datalist>`;
   }
   if (f.key === 'customer' && isNew) {
     return `
-      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <label>${f.label}</label>
       <input type="text" id="${id}" inputmode="numeric" placeholder="کد مشتری..." autocomplete="off">`;
   }
   if (f.type === 'capacity') {
     return `
-      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <label>${f.label}</label>
       <div class="date-row">
         <input type="text" id="${id}" placeholder="مقدار..." inputmode="decimal">
         <button type="button" class="today-btn" id="unitBtn_${id}" onclick="pickUnit('${id}')">lit ▾</button>
@@ -989,7 +983,7 @@ function fieldRowHTML(f, idPrefix) {
   }
   if (f.type === 'pressure') {
     return `
-      <label${f.required ? ' class="req"' : ''}>${f.label}</label>
+      <label>${f.label}</label>
       <div class="date-row">
         <input type="text" id="${id}" placeholder="مقدار فشار..." inputmode="decimal">
         <button type="button" class="today-btn" id="pressureUnitBtn_${id}" onclick="pickPressureUnit('${id}')">بار ▾</button>
@@ -997,35 +991,35 @@ function fieldRowHTML(f, idPrefix) {
   }
   if (f.type === 'standard') {
     const opts = STANDARD_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
-    return `<label${f.required?'class="req"':''}>${f.label}</label>
+    return `<label>${f.label}</label>
       <div class="neon-select-wrap"><select id="${id}"><option value="">انتخاب...</option>${opts}</select></div>`;
   }
   if (f.type === 'inspection') {
     const opts = INSPECTION_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
-    return `<label${f.required?'class="req"':''}>${f.label}</label>
+    return `<label>${f.label}</label>
       <div class="neon-select-wrap"><select id="${id}"><option value="">انتخاب...</option>${opts}</select></div>`;
   }
   if (f.key === 'status') {
     const opts = STATUS_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
-    return `<label${f.required?'class="req"':''}>${f.label}</label>
+    return `<label>${f.label}</label>
       <div class="neon-select-wrap"><select id="${id}">${opts}</select></div>`;
   }
   if (f.type === 'group') {
     const opts = GROUP_OPTIONS_TANKS.map(s =>
       `<div class="neon-radio${s === 'مخازن' ? ' selected' : ''}" data-val="${s}" onclick="selectGroupRadio(this, '${id}')">${s}</div>`
     ).join('');
-    return `<label${f.required?'class="req"':''}>${f.label}</label>
+    return `<label>${f.label}</label>
       <div class="neon-radio-group" id="group_${id}">${opts}</div>
       <input type="hidden" id="${id}" value="مخازن">`;
   }
   if (f.type === 'jdate') {
-    return `<label${f.required?'class="req"':''}>${f.label}</label>
+    return `<label>${f.label}</label>
       <div class="date-row">
         <input type="text" id="${id}" placeholder="۱۴۰۵.۰۶.۲۰" dir="ltr" style="text-align:left;">
         <button type="button" class="today-btn" onclick="document.getElementById('${id}').value = todayJalaliStr()">امروز</button>
       </div>`;
   }
-  return `<label${f.required?'class="req"':''}>${f.label}</label>
+  return `<label>${f.label}</label>
     <input type="text" id="${id}" placeholder="">`;
 }
 
@@ -1175,19 +1169,17 @@ function updateCountHint() {
   hintEl.style.color = '';
 }
 
+// ============================================================
+// ثبت سفارش — فقط چک «حداقل یه فیلد پر باشه»
+// ============================================================
 async function submitNewOrder() {
   const cat = CATEGORIES[currentCat];
   const data = {};
-  let missing = null;
   cat.fields.forEach(f => {
     const el = document.getElementById('new_' + f.key);
     if (el && el.disabled) return;
     const val = el ? el.value.trim() : '';
     data[f.key] = val;
-    if (f.required && !val) {
-      if (f.key === 'serial' && isWaterHeater(data.product)) return;
-      missing = f.label;
-    }
   });
   if (data.capacity) {
     const unit = capacityUnitCache['new_capacity'] || '';
@@ -1197,8 +1189,18 @@ async function submitNewOrder() {
     const unit = pressureUnitCache['new_pressure'] || 'بار';
     data.pressure = data.pressure + ' ' + unit;
   }
-  if (missing) { showToast('لطفاً «' + missing + '» رو وارد کن', 'err'); return; }
 
+  // چک: حداقل یه فیلد باید پر باشه
+  const allEmpty = Object.keys(data).every(k => {
+    if (k === 'status') return true; // وضعیت پیش‌فرض داره
+    return !data[k] || String(data[k]).trim() === '';
+  });
+  if (allEmpty) {
+    showToast('حداقل یه فیلد رو پر کن', 'err');
+    return;
+  }
+
+  // چک سریال تکراری فقط اگه سریال پر باشه
   if (data.serial && !isWaterHeater(data.product)) {
     const dup = await checkDuplicate(data.serial);
     if (dup.exists) { showToast('⚠️ سریال «' + data.serial + '» قبلاً ثبت شده', 'err'); return; }
