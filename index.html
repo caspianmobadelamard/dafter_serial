@@ -129,7 +129,7 @@ body.light .neon-list{background:linear-gradient(180deg, #ffffff, #f5f7fa);}
 .smart-reminder .rem-text strong{color:var(--amber);font-weight:800;font-family:'JetBrains Mono',monospace;font-size:1.1em;}
 .card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow);}
 .year-row{display:flex;gap:6px;margin-bottom:12px;justify-content:center;flex-wrap:wrap;}
-.year-btn{padding:8px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-mid);font-size:0.83em;font-family:inherit;cursor:pointer;transition:all .15s;font-weight:700;font-family:'JetBrains Mono',monospace;font-size:1em;direction:ltr;}
+.year-btn{padding:8px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-mid);cursor:pointer;transition:all .15s;font-weight:700;font-family:'JetBrains Mono',monospace;font-size:1em;direction:ltr;}
 .year-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-color:var(--gold);color:#1a1205;box-shadow:0 0 14px var(--gold-glow);}
 .cat-row{display:flex;gap:8px;margin-bottom:18px;}
 .cat-btn{flex:1;padding:12px 6px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-mid);font-size:0.83em;font-family:inherit;text-align:center;cursor:pointer;transition:all .15s;font-weight:700;}
@@ -1088,7 +1088,6 @@ async function checkAuth() {
   updateUserBadge();
   applyAccessControl();
 }
-
 function updateUserBadge() {
   const badge = document.getElementById('userBadge');
   if (!badge) return;
@@ -1098,7 +1097,6 @@ function updateUserBadge() {
   const name = getDisplayName() || 'مهمان';
   badge.textContent = icon + ' ' + name;
 }
-
 function applyAccessControl() {
   const canEdit = hasLevel('operator');
   const isMaster = hasLevel('master');
@@ -1264,11 +1262,13 @@ function fieldRowHTML(f, idPrefix, currentData) {
   }
   if (f.key === 'weight') {
     return `
-      <label>${f.label}</label>
+      <label>${f.label} <span style="font-weight:400;color:var(--text-dim);font-size:0.85em;">(خودکار پیشنهاد می‌شود)</span></label>
       <div class="date-row">
         <input type="text" id="${id}" value="${escapeHtml(currentVal)}" placeholder="مثلاً: 1500" inputmode="decimal" dir="ltr" style="text-align:left;font-family:'JetBrains Mono',monospace;font-size:1.1em;">
+        <button type="button" class="today-btn" onclick="suggestWeightNow('${idPrefix}', true)" title="پیشنهاد از نمونه‌های قبلی">💡 پیشنهاد</button>
         <span style="display:flex;align-items:center;padding:0 12px;background:var(--bg-elevated);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text-dim);font-weight:700;font-size:0.87em;">kg</span>
-      </div>`;
+      </div>
+      <div class="hint-sm" id="weightHint_${id}"></div>`;
   }
   if (f.type === 'standard') {
     return `<label>${f.label}</label>${buildNeonSelector(id, 'standard', STANDARD_LIST, currentVal, 'انتخاب...', '')}`;
@@ -1405,6 +1405,9 @@ function onProductChange(fieldId) {
     }
   }
   debounceAnomaly(prefix);
+  if (prefix === 'new' || prefix === 'modal') {
+    debounceSuggestWeight(prefix);
+  }
 }
 function debounceAnomaly(prefix) {
   if (anomalyDebounceTimer) clearTimeout(anomalyDebounceTimer);
@@ -1445,6 +1448,60 @@ async function checkAnomalyNow(prefix) {
     } else { box.classList.remove('show'); }
   } catch (e) { box.classList.remove('show'); }
 }
+
+// ============================================================
+// پیشنهاد خودکار وزن
+// ============================================================
+let weightSuggestTimer = null;
+
+async function suggestWeightNow(prefix, force) {
+  const prodEl = document.getElementById(prefix + '_product');
+  const capEl = document.getElementById(prefix + '_capacity');
+  const weightEl = document.getElementById(prefix + '_weight');
+  const hintEl = document.getElementById('weightHint_' + prefix + '_weight');
+  if (!prodEl || !weightEl) return;
+
+  const product = prodEl.value.trim();
+  if (!product) { if (hintEl) hintEl.textContent = ''; return; }
+
+  const capacity = capEl ? capEl.value.trim() : '';
+  const alreadyFilled = weightEl.value.trim() !== '';
+  if (alreadyFilled && !force) return;
+
+  try {
+    const r = await callApi({
+      action: 'suggestWeight',
+      category: currentCat,
+      product: product,
+      capacity: capacity
+    });
+
+    if (r.ok && r.sampleSize > 0) {
+      if (hintEl) {
+        hintEl.innerHTML = '💡 از ' + toEn(r.sampleSize) + ' نمونه: ' +
+          'میانه <b style="color:var(--gold)">' + toEn(r.median) + '</b>، ' +
+          'میانگین ' + toEn(r.avg) + '، ' +
+          'بازه ' + toEn(r.min) + '–' + toEn(r.max) + ' kg';
+      }
+      if ((!alreadyFilled || force) && r.suggestion) {
+        weightEl.value = toEn(r.suggestion);
+        weightEl.style.borderColor = 'var(--mint)';
+        weightEl.style.boxShadow = '0 0 12px rgba(74,222,128,0.5)';
+        setTimeout(() => {
+          weightEl.style.borderColor = '';
+          weightEl.style.boxShadow = '';
+        }, 2500);
+      }
+    } else {
+      if (hintEl) hintEl.textContent = '';
+    }
+  } catch (e) {}
+}
+function debounceSuggestWeight(prefix) {
+  if (weightSuggestTimer) clearTimeout(weightSuggestTimer);
+  weightSuggestTimer = setTimeout(() => suggestWeightNow(prefix, false), 800);
+}
+
 function pickUnit(inputId) {
   const input = document.getElementById(inputId);
   const prefix = inputId.split('_')[0];
@@ -1522,6 +1579,7 @@ async function buildNewForm() {
   }
   const capEl = document.getElementById('new_capacity');
   if (capEl) capEl.addEventListener('blur', () => debounceAnomaly('new'));
+  if (capEl) capEl.addEventListener('blur', () => debounceSuggestWeight('new'));
 
   await Promise.all([autofillSerial(false), loadCustomers()]);
   updateCountHint();
@@ -1642,6 +1700,8 @@ function clearNewForm() {
   }
   const pHidden = document.getElementById('new_pressure');
   if (pHidden) pHidden.value = '';
+  const wHint = document.getElementById('weightHint_new_weight');
+  if (wHint) wHint.textContent = '';
   resetNewFormState();
   const serial = document.getElementById('new_serial');
   if (serial && !serial.disabled) {
@@ -1914,6 +1974,10 @@ async function openModal(row) {
         if (capEl && m) capEl.value = capEl.value.replace(/\s+[^\d]+$/, '');
       }
     });
+    const modalCap = document.getElementById('modal_capacity');
+    if (modalCap) {
+      modalCap.addEventListener('blur', () => debounceSuggestWeight('modal'));
+    }
   });
   document.getElementById('modalMsg').className = 'msg';
   document.getElementById('modalBackdrop').classList.add('show');
@@ -2002,7 +2066,6 @@ async function confirmDelete(row) {
     }
   } catch (e) { showToast('خطا: ' + e.message, 'err'); }
 }
-
 async function openRecycleBin() {
   if (!hasLevel('operator')) { showToast('دسترسی کافی نداری', 'err'); return; }
   const el = document.getElementById('recycleList');
@@ -2474,7 +2537,7 @@ async function loadAudit() {
 }
 
 // ============================================================
-// مدیریت کاربران (فقط master)
+// مدیریت کاربران
 // ============================================================
 async function loadUsers() {
   const el = document.getElementById('usersList');
@@ -2518,9 +2581,7 @@ function editUser(username) {
   if (!levelWrap.querySelector('.neon-selector')) {
     levelWrap.innerHTML = buildNeonSelector('editUserLevel', 'level', ['admin', 'operator', 'viewer'], 'operator', 'انتخاب سطح...', '');
   }
-  // پر کردن اطلاعات موجود
   if (username) {
-    // درخواست به سرور برای اطلاعات کاربر
     callApi({ action: 'listUsers' }).then(r => {
       if (r.ok) {
         const u = r.users.find(x => x.username === username);
@@ -2804,7 +2865,6 @@ async function saveSettings() {
         availableYears = data.years;
         try { localStorage.setItem(YEARS_CACHE_KEY, JSON.stringify(availableYears)); } catch (e) {}
       }
-      // whoami
       await checkAuth();
       msg.textContent = '✅ اتصال برقرار — ' + (LEVEL_LABELS[userLevel] || userLevel);
       msg.className = 'msg ok';
@@ -3156,7 +3216,6 @@ function stopAutoRefresh() { if (refreshTimer) clearInterval(refreshTimer); refr
   updateClock();
   setInterval(updateClock, 30000);
 
-  // بارگذاری سال‌ها از کش
   try {
     const cached = localStorage.getItem(YEARS_CACHE_KEY);
     if (cached) {
@@ -3165,7 +3224,6 @@ function stopAutoRefresh() { if (refreshTimer) clearInterval(refreshTimer); refr
     }
   } catch (e) {}
 
-  // سطح کاربر از کش
   userLevel = localStorage.getItem(LEVEL_KEY) || 'viewer';
   userDisplayName = localStorage.getItem(DISPLAY_KEY) || '';
   updateUserBadge();
@@ -3174,7 +3232,6 @@ function stopAutoRefresh() { if (refreshTimer) clearInterval(refreshTimer); refr
   updateConfigWarning();
   switchTab('new');
 
-  // پینگ یکباره در start — نه polling
   if (isUrlConfigured()) {
     try {
       const pingUrl = getScriptUrl() + (getScriptUrl().indexOf('?') === -1 ? '?' : '&') + 'action=ping';
