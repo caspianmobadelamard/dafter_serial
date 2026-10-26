@@ -10,8 +10,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="دفتر سریال">
-<link rel="apple-touch-icon" href="icon-ios.png">
-<link rel="icon" href="icon-android.png">
+
+<!-- ⬇️ لوگوی اختصاصی برنامه (Favicon & App Icon) به صورت Base64 ⬇️ -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmY2QzNGQiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNkOTc3MDYiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzM4YmRmOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAyODRjNyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik01MCAxMCBMNTUgMTUgTDYyIDEzIEw2NSAyMCBMNzIgMjIgTDcyIDMwIEw3OCAzNSBMNzYgNDIgTDgyIDQ4IEw3OCA1NSBMODAgNjIgTDc0IDY4IEw3NCA3NiBMNjcgNzggTDYyIDg0IEw1NSA4MiBMNDggODYgTDQyIDgxIEwzNSA4MyBMMzAgNzcgTDIzIDc1IEwyMiA2NyBMMTYgNjIgTDE4IDU1IEwxMiA0OCBMMTcgNDIgTDE1IDM1IEwyMSAyOSBMMjIgMjEgTDI5IDE5IEwzNSAxMyBMNDIgMTUgWiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2cpIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNNTAgMjUgQzUwIDI1LCA2NSA0NSwgNjUgNTUgQzY1IDYzLCA1OCA3MCwgNTAgNzAgQzQyIDcwLCAzNSA2MywgMzUgNTUgQzM1IDQ1LCA1MCAyNSwgNTAgMjUgWiIgZmlsbD0idXJsKCNjKSIgb3BhY2l0eT0iMC44Ii8+PHBhdGggZD0iTTUwIDM1IEw2MCA0MCBMNjAgNTUgQzYwIDYyLCA1MCA2OCwgNTAgNjggQzUwIDY4LCA0MCA2MiwgNDAgNTUgTDQwIDQwIFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjkiLz48cGF0aCBkPSJNNDUgNTIgTDQ4IDU2IEw1NSA0NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmY2QzNGQiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNkOTc3MDYiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzM4YmRmOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAyODRjNyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik01MCAxMCBMNTUgMTUgTDYyIDEzIEw2NSAyMCBMNzIgMjIgTDcyIDMwIEw3OCAzNSBMNzYgNDIgTDgyIDQ4IEw3OCA1NSBMODAgNjIgTDc0IDY4IEw3NCA3NiBMNjcgNzggTDYyIDg0IEw1NSA4MiBMNDggODYgTDQyIDgxIEwzNSA4MyBMMzAgNzcgTDIzIDc1IEwyMiA2NyBMMTYgNjIgTDE4IDU1IEwxMiA0OCBMMTcgNDIgTDE1IDM1IEwyMSAyOSBMMjIgMjEgTDI5IDE5IEwzNSAxMyBMNDIgMTUgWiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2cpIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNNTAgMjUgQzUwIDI1LCA2NSA0NSwgNjUgNTUgQzY1IDYzLCA1OCA3MCwgNTAgNzAgQzQyIDcwLCAzNSA2MywgMzUgNTUgQzM1IDQ1LCA1MCAyNSwgNTAgMjUgWiIgZmlsbD0idXJsKCNjKSIgb3BhY2l0eT0iMC44Ii8+PHBhdGggZD0iTTUwIDM1IEw2MCA0MCBMNjAgNTUgQzYwIDYyLCA1MCA2OCwgNTAgNjggQzUwIDY4LCA0MCA2MiwgNDAgNTUgTDQwIDQwIFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjkiLz48cGF0aCBkPSJNNDUgNTIgTDQ4IDU2IEw1NSA0NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
+
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -433,85 +436,30 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
    ═══════════════════════════════════════════════════════════ */
 @media (min-width: 900px) {
   body { font-size: 15px; }
-  .container {
-    max-width: 1400px;
-    padding: 24px 28px 0;
-  }
-  .topbar-inner {
-    max-width: 1400px;
-    padding: 16px 28px 0;
-  }
+  .container { max-width: 1400px; padding: 24px 28px 0; }
+  .topbar-inner { max-width: 1400px; padding: 16px 28px 0; }
   .brand-text h1 { font-size: 1.2em; }
   .brand-text .sub { font-size: 0.8em; }
-
-  .tabs {
-    grid-template-columns: repeat(6, 1fr);
-    margin-top: 14px;
-  }
-  .tab {
-    font-size: 0.9em;
-    padding: 14px 8px;
-    gap: 7px;
-  }
+  .tabs { grid-template-columns: repeat(6, 1fr); margin-top: 14px; }
+  .tab { font-size: 0.9em; padding: 14px 8px; gap: 7px; }
   .tab svg { width: 26px; height: 26px; }
   .tab .count { font-size: 0.7em; padding: 2px 7px; top: 6px; left: 10px; }
 
-  #newForm {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 28px;
-    row-gap: 18px;
-    align-items: start;
-  }
-  #newForm > .field-group {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-  #newForm > .field-group > label {
-    margin: 0 0 7px;
-  }
-  #newForm > .field-group > .hint-sm {
-    margin: 6px 0 0;
-  }
-  #newForm > .field-group > .manual-input-wrap {
-    margin-top: 8px;
-  }
-  #newForm > .field-group > input[type="hidden"] {
-    display: none;
-  }
-  .card > #newSubmitBtn,
-  .card > #assistantBtn,
-  .card > #copyPrevBtn {
-    display: inline-block;
-    width: auto;
-    min-width: 200px;
-    margin-left: 8px;
-  }
-  .card > #newMsg,
-  .card > #anomalyBox {
-    display: block;
-    width: 100%;
-    margin-top: 14px;
-  }
+  #newForm { display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; row-gap: 18px; align-items: start; }
+  #newForm > .field-group { display: flex; flex-direction: column; min-width: 0; }
+  #newForm > .field-group > label { margin: 0 0 7px; }
+  #newForm > .field-group > .hint-sm { margin: 6px 0 0; }
+  #newForm > .field-group > .manual-input-wrap { margin-top: 8px; }
+  #newForm > .field-group > input[type="hidden"] { display: none; }
+  .card > #newSubmitBtn, .card > #assistantBtn, .card > #copyPrevBtn { display: inline-block; width: auto; min-width: 200px; margin-left: 8px; }
+  .card > #newMsg, .card > #anomalyBox { display: block; width: 100%; margin-top: 14px; }
 
-  #pendingList {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 16px;
-  }
-  #pendingList > .order-card {
-    margin-bottom: 0;
-  }
-  #pendingList > .empty-state,
-  #pendingList > .spinner {
-    grid-column: 1 / -1;
-  }
+  #pendingList { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; }
+  #pendingList > .order-card { margin-bottom: 0; }
+  #pendingList > .empty-state, #pendingList > .spinner { grid-column: 1 / -1; }
   .order-card .info-item .val { max-width: 180px; }
 
-  .dash-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  .dash-grid { grid-template-columns: repeat(4, 1fr); }
   .dash-card.wide { grid-column: 1 / -1; }
   .dash-card .num { font-size: 2em; }
 
@@ -519,50 +467,21 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
   .compare-chart { height: 260px; }
   .line-chart-wrap { height: 220px; }
 
-  .modal-backdrop {
-    align-items: center;
-    padding: 24px;
-  }
-  .modal {
-    border-radius: 18px;
-    max-width: 900px;
-    max-height: 90vh;
-    padding: 24px 28px;
-    padding-bottom: 24px;
-  }
+  .modal-backdrop { align-items: center; padding: 24px; }
+  .modal { border-radius: 18px; max-width: 900px; max-height: 90vh; padding: 24px 28px; padding-bottom: 24px; }
   .modal h3 { font-size: 1.2em; }
-  #modalFields {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 24px;
-    row-gap: 14px;
-    align-items: start;
-  }
-  #modalFields > .field-group {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
+  #modalFields { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; row-gap: 14px; align-items: start; }
+  #modalFields > .field-group { display: flex; flex-direction: column; min-width: 0; }
   #modalFields > .field-group > label { margin: 0 0 7px; }
   #modalFields > .field-group > .hint-sm { margin: 6px 0 0; }
   #modalFields > .field-group > input[type="hidden"] { display: none; }
-  .modal #modalSaveBtn,
-  .modal #modalCloseBtn { max-width: 340px; margin-left: auto; margin-right: auto; }
+  .modal #modalSaveBtn, .modal #modalCloseBtn { max-width: 340px; margin-left: auto; margin-right: auto; }
 
   .report-filter { grid-template-columns: 1fr 1fr 1fr; }
 
-  .assistant-panel {
-    border-radius: 18px;
-    bottom: 20px;
-    left: 50%;
-    right: auto;
-    transform: translate(-50%, calc(100% + 20px));
-    max-height: 80vh;
-    width: 700px;
-  }
+  .assistant-panel { border-radius: 18px; bottom: 20px; left: 50%; right: auto; transform: translate(-50%, calc(100% + 20px)); max-height: 80vh; width: 700px; }
   .assistant-panel.show { transform: translate(-50%, 0); }
 }
-
 @media (min-width: 1400px) {
   .container { max-width: 1600px; }
   .topbar-inner { max-width: 1600px; }
@@ -589,7 +508,7 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
             <span class="sync-indicator online" id="syncIndicator" onclick="openSettings()" title="وضعیت همگام‌سازی — برای جزئیات کلیک کن">
               <span id="syncIndicatorText">🟢 آنلاین</span>
             </span>
-            <span class="user-badge viewer" id="userBadge" onclick="openSettings()">👁 مهمان</span>
+            <span class="user-badge master" id="userBadge" onclick="openSettings()">👑 ادمین</span>
           </div>
           <div class="date-row-inline">
             <svg class="cal-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -648,7 +567,7 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
         <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="11"/><polyline points="16 9 16 16 21 19"/></svg>
         <span>تاریخچه</span>
       </div>
-      <div class="tab" data-tab="users" id="usersTab" style="display:none;">
+      <div class="tab" data-tab="users" id="usersTab" style="display:flex;">
         <span class="count" id="tabCountUsers">0</span>
         <svg viewBox="0 0 32 32"><circle cx="12" cy="11" r="4"/><path d="M4 24c0-4 4-6 8-6s8 2 8 6"/><circle cx="22" cy="12" r="3"/><path d="M20 19c3 0 6 1.5 6 5"/></svg>
         <span>کاربران</span>
@@ -801,18 +720,9 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
 <div class="modal-backdrop" id="settingsBackdrop">
   <div class="modal">
     <h3>⚙️ تنظیمات</h3>
-    <label>نام کاربری</label>
-    <input type="text" id="settingsUser" placeholder="مثلاً: Alibi" dir="ltr" style="text-align:left;font-family:'JetBrains Mono',monospace;">
-    <div class="hint-sm">برای master حتماً <b>Alibi</b> وارد کن</div>
-
-    <label>رمز عبور</label>
-    <div class="pass-wrap">
-      <input type="password" id="settingsPass" placeholder="اگر داری..." dir="ltr" style="text-align:left;">
-      <button type="button" class="password-toggle" id="passToggle" title="نمایش/مخفی">👁</button>
+    <div class="hint-sm" style="margin-bottom:16px;color:var(--cyan);">
+      ℹ️ برنامه در حالت دسترسی کامل (Master) قرار دارد و نیازی به نام کاربری یا رمز عبور نیست.
     </div>
-    <div class="hint-sm" id="settingsAuthHint"></div>
-
-    <div id="settingsUserInfo" style="margin-top:14px;"></div>
 
     <label>لینک Web App</label>
     <input type="text" id="settingsUrl" placeholder="http://localhost:8080/api  یا  https://script.google.com/.../exec" dir="ltr" style="text-align:left;">
@@ -870,7 +780,6 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
 
     <button class="submit-btn" id="settingsSaveBtn">ذخیره و تست اتصال</button>
     <div class="msg" id="settingsMsg"></div>
-    <button class="secondary-btn danger-btn" id="logoutBtn" style="margin-top:8px;">🚪 خروج از حساب</button>
     <button class="close-modal" id="settingsCloseBtn">بستن</button>
   </div>
 </div>
@@ -1102,17 +1011,17 @@ let anomalyDebounceTimer = null;
 let serialValidationTimer = null;
 let recentlyAddedRows = new Set();
 let broadcastChannel = null;
-let userLevel = 'viewer';
-let userDisplayName = '';
+let userLevel = 'master'; // ⬅️ سطح دسترسی مستقیماً روی Master تنظیم شد
+let userDisplayName = 'مدیر سیستم'; // ⬅️ نام نمایشی پیش‌فرض
 let editingUserOriginalName = null;
 let syncCheckTimer = null;
 let lastSyncState = { online: false, pending: 0, lastSync: null, lastError: null };
 
-function getUserName() { return localStorage.getItem(USER_KEY) || ''; }
+function getUserName() { return localStorage.getItem(USER_KEY) || 'Admin'; }
 function setUserName(n) { localStorage.setItem(USER_KEY, n); }
 function getPassword() { return localStorage.getItem(PASS_KEY) || ''; }
 function setPassword(p) { localStorage.setItem(PASS_KEY, p); }
-function getDisplayName() { return localStorage.getItem(DISPLAY_KEY) || userDisplayName || getUserName() || 'مهمان'; }
+function getDisplayName() { return 'مدیر سیستم'; }
 function getScriptUrl() { return localStorage.getItem(STORAGE_KEY) || SCRIPT_URL_DEFAULT; }
 
 function isUrlConfigured() {
@@ -1134,7 +1043,7 @@ function updateConfigWarning() {
   w.style.display = isUrlConfigured() ? 'none' : 'block';
 }
 function hasLevel(required) {
-  return (LEVEL_ORDER[userLevel] || 0) >= (LEVEL_ORDER[required] || 0);
+  return true; // دسترسی همیشه کامل است
 }
 function toJalali(gy, gm, gd) {
   const g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
@@ -1429,8 +1338,10 @@ async function callApi(payload) {
   if (payload.newPassword !== undefined) params.append('newPassword', payload.newPassword);
   if (payload.rows)     params.append('rows', JSON.stringify(payload.rows));
   if (payload.data)     params.append('data', JSON.stringify(payload.data));
-  params.append('user', getUserName() || 'ناشناس');
-  params.append('password', getPassword());
+  // ⬇️ احراز هویت حذف شد (همیشه با نام کاربری پیش‌فرض ارسال می‌شود) ⬇️
+  params.append('user', 'Admin'); 
+  params.append('password', '');
+  
   const sep = url.indexOf('?') === -1 ? '?' : '&';
   const res = await fetch(url + sep + params.toString(), { method: 'GET', redirect: 'follow' });
   const text = await res.text();
@@ -1439,48 +1350,28 @@ async function callApi(payload) {
 }
 
 // ============================================================
-// Auth
+// Auth (Bypassed)
 // ============================================================
 async function checkAuth() {
-  if (!isUrlConfigured()) { updateUserBadge(); applyAccessControl(); return; }
-  try {
-    const r = await callApi({ action: 'whoami' });
-    if (r.ok) {
-      userLevel = r.level || 'viewer';
-      userDisplayName = r.displayName || '';
-      localStorage.setItem(LEVEL_KEY, userLevel);
-      localStorage.setItem(DISPLAY_KEY, userDisplayName);
-    } else {
-      userLevel = 'viewer';
-      userDisplayName = '';
-      if (r.error === 'رمز عبور اشتباه') showToast('⚠️ رمز عبور اشتباه — فقط مشاهده', 'warn');
-    }
-  } catch (e) {
-    userLevel = localStorage.getItem(LEVEL_KEY) || 'viewer';
-    userDisplayName = localStorage.getItem(DISPLAY_KEY) || '';
-  }
+  userLevel = 'master';
+  userDisplayName = 'مدیر سیستم';
   updateUserBadge();
   applyAccessControl();
 }
 function updateUserBadge() {
   const badge = document.getElementById('userBadge');
   if (!badge) return;
-  const lv = userLevel || 'viewer';
-  badge.className = 'user-badge ' + lv;
-  const icon = { master:'👑', admin:'🛡️', operator:'✏️', viewer:'👁' }[lv] || '👁';
-  const name = getDisplayName() || 'مهمان';
-  badge.textContent = icon + ' ' + name;
+  badge.className = 'user-badge master';
+  badge.textContent = '👑 مدیر سیستم';
 }
 function applyAccessControl() {
-  const canEdit = hasLevel('operator');
-  const isMaster = hasLevel('master');
   const usersTab = document.getElementById('usersTab');
-  if (usersTab) usersTab.style.display = isMaster ? '' : 'none';
-  document.querySelectorAll('.operator-only').forEach(el => el.style.display = canEdit ? '' : 'none');
+  if (usersTab) usersTab.style.display = 'flex';
+  document.querySelectorAll('.operator-only').forEach(el => el.style.display = '');
   const submitBtn = document.getElementById('newSubmitBtn');
   if (submitBtn) {
-    submitBtn.disabled = !canEdit;
-    submitBtn.title = canEdit ? '' : 'دسترسی کافی نداری';
+    submitBtn.disabled = false;
+    submitBtn.title = '';
   }
 }
 
@@ -2009,7 +1900,6 @@ function updateCountHint() {
 }
 
 async function submitNewOrder() {
-  if (!hasLevel('operator')) { showToast('دسترسی کافی نداری', 'err'); return; }
   const cat = CATEGORIES[currentCat];
   const data = {};
   cat.fields.forEach(f => {
@@ -2053,7 +1943,7 @@ async function submitNewOrder() {
       showToast('خطا: ' + (r.error || 'نامشخص'), 'err');
     }
   } catch (e) { showToast('خطا: ' + e.message, 'err'); }
-  btn.disabled = !hasLevel('operator');
+  btn.disabled = false;
   btn.textContent = 'ثبت سفارش';
 }
 function clearNewForm() {
@@ -2249,12 +2139,11 @@ function renderList() {
     if (d.loadDate) infoGrid.push(`<div class="info-item date"><span class="icon">🚚</span><span class="lbl">بارگیری</span><span class="val">${escapeHtml(toEn(d.loadDate))}</span></div>`);
     else if (d.group) infoGrid.push(`<div class="info-item"><span class="icon">📁</span><span class="lbl">گروه</span><span class="val">${escapeHtml(toEn(d.group))}</span></div>`);
 
-    const canEdit = hasLevel('operator');
     const actionsHtml = [];
     actionsHtml.push(`<button onclick="event.stopPropagation();openModal(${item.row})">✎ ویرایش</button>`);
     actionsHtml.push(`<button onclick="event.stopPropagation();copyItemToForm(${item.row})">📋 کپی</button>`);
     actionsHtml.push(`<button onclick="event.stopPropagation();showRecordHistory(${item.row})">📜 تاریخچه</button>`);
-    if (canEdit) actionsHtml.push(`<button class="danger" onclick="event.stopPropagation();confirmDelete(${item.row})">🗑 حذف</button>`);
+    actionsHtml.push(`<button class="danger" onclick="event.stopPropagation();confirmDelete(${item.row})">🗑 حذف</button>`);
 
     const card = document.createElement('div');
     card.className = 'order-card ' + cardClass + (isFresh ? ' fresh' : '');
@@ -2285,7 +2174,6 @@ function findItemByRow(row) {
 // مودال ویرایش
 // ============================================================
 async function openModal(row) {
-  if (!hasLevel('operator')) { showToast('دسترسی کافی نداری', 'err'); return; }
   const item = findItemByRow(row);
   if (!item) return;
   currentModalItem = item;
@@ -2412,7 +2300,6 @@ document.getElementById('undoBtn').onclick = async () => {
 // حذف و سبد بازیافت
 // ============================================================
 async function confirmDelete(row) {
-  if (!hasLevel('operator')) { showToast('دسترسی کافی نداری', 'err'); return; }
   const item = findItemByRow(row);
   if (!item) return;
   const serial = item.data.serial || '';
@@ -2429,7 +2316,6 @@ async function confirmDelete(row) {
   } catch (e) { showToast('خطا: ' + e.message, 'err'); }
 }
 async function openRecycleBin() {
-  if (!hasLevel('operator')) { showToast('دسترسی کافی نداری', 'err'); return; }
   const el = document.getElementById('recycleList');
   el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
   document.getElementById('recycleBackdrop').classList.add('show');
@@ -2534,7 +2420,6 @@ async function openCopyModal() {
 }
 function closeCopy() { document.getElementById('copyBackdrop').classList.remove('show'); }
 function copyItemToForm(row) {
-  if (!hasLevel('operator')) { showToast('دسترسی کافی نداری', 'err'); return; }
   const item = findItemByRow(row);
   if (!item) return;
   switchTab('new');
@@ -2903,7 +2788,6 @@ async function loadAudit() {
 // ============================================================
 async function loadUsers() {
   const el = document.getElementById('usersList');
-  if (!hasLevel('master')) { el.innerHTML = '<div class="empty-state">فقط مدیر اصلی دسترسی داره</div>'; return; }
   el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
   try {
     const r = await callApi({ action: 'listUsers' });
@@ -3076,10 +2960,7 @@ function exportCsv() {
 // ============================================================
 function openSettings() {
   document.getElementById('settingsUrl').value = localStorage.getItem(STORAGE_KEY) || '';
-  document.getElementById('settingsUser').value = getUserName();
-  document.getElementById('settingsPass').value = getPassword();
   document.getElementById('settingsMsg').className = 'msg';
-  updateSettingsAuthHint();
   const font = localStorage.getItem(FONT_KEY) || 'medium';
   document.querySelectorAll('.font-btn').forEach(b => b.classList.toggle('active', b.dataset.size === font));
   const brightness = localStorage.getItem(BRIGHTNESS_KEY) || '3';
@@ -3099,23 +2980,6 @@ function openSettings() {
   updateNotifStatus();
   updateSyncIndicator(lastSyncState);
   document.getElementById('settingsBackdrop').classList.add('show');
-}
-function updateSettingsAuthHint() {
-  const el = document.getElementById('settingsAuthHint');
-  const info = document.getElementById('settingsUserInfo');
-  const master = 'Alibi';
-  el.innerHTML = `💡 برای دسترسی کامل، نام کاربری <b style="color:var(--gold)">${master}</b> و رمز مخصوص رو وارد کن.`;
-  if (userLevel && userLevel !== 'viewer') {
-    info.innerHTML = `<div class="stat-row" style="border:none;padding:6px 0;">
-      <span class="key">سطح فعلی:</span>
-      <span class="val" style="color:var(--gold);font-size:1em;">${LEVEL_LABELS[userLevel] || userLevel}</span>
-    </div>`;
-  } else {
-    info.innerHTML = `<div class="stat-row" style="border:none;padding:6px 0;">
-      <span class="key">سطح فعلی:</span>
-      <span class="val" style="color:var(--text-dim);font-size:1em;">👁️ فقط مشاهده</span>
-    </div>`;
-  }
 }
 function closeSettings() { document.getElementById('settingsBackdrop').classList.remove('show'); }
 function updateRefreshStatus() {
@@ -3197,18 +3061,8 @@ function applyFontSize() {
   const font = localStorage.getItem(FONT_KEY) || 'medium';
   document.body.classList.add('font-' + font);
 }
-document.getElementById('passToggle').onclick = () => {
-  const el = document.getElementById('settingsPass');
-  el.type = el.type === 'password' ? 'text' : 'password';
-};
-document.getElementById('editPassToggle').onclick = () => {
-  const el = document.getElementById('editUserPass');
-  el.type = el.type === 'password' ? 'text' : 'password';
-};
 async function saveSettings() {
   const url = document.getElementById('settingsUrl').value.trim();
-  const userName = document.getElementById('settingsUser').value.trim();
-  const password = document.getElementById('settingsPass').value;
   const msg = document.getElementById('settingsMsg');
 
   if (!url) {
@@ -3241,8 +3095,6 @@ async function saveSettings() {
   }
 
   localStorage.setItem(STORAGE_KEY, url);
-  if (userName) setUserName(userName); else localStorage.removeItem(USER_KEY);
-  setPassword(password);
   msg.textContent = 'در حال تست...';
   msg.className = 'msg ok';
 
@@ -3262,7 +3114,7 @@ async function saveSettings() {
       }
       await checkAuth();
       const modeText = data.mode === 'local' ? '🏠 سرور محلی' : '☁️ Apps Script';
-      msg.textContent = '✅ اتصال برقرار (' + modeText + ') — ' + (LEVEL_LABELS[userLevel] || userLevel);
+      msg.textContent = '✅ اتصال برقرار (' + modeText + ')';
       msg.className = 'msg ok';
       updateConfigWarning();
       setTimeout(() => { closeSettings(); switchTab(currentTab); checkSyncStatus(); }, 900);
@@ -3275,19 +3127,6 @@ async function saveSettings() {
     msg.className = 'msg err';
   }
 }
-document.getElementById('logoutBtn').onclick = () => {
-  if (!confirm('از حساب خارج میشی؟')) return;
-  localStorage.removeItem(USER_KEY);
-  localStorage.removeItem(PASS_KEY);
-  localStorage.removeItem(LEVEL_KEY);
-  localStorage.removeItem(DISPLAY_KEY);
-  userLevel = 'viewer';
-  userDisplayName = '';
-  updateUserBadge();
-  applyAccessControl();
-  closeSettings();
-  showToast('🚪 خارج شدی — الان فقط مشاهده', 'info');
-};
 
 // ============================================================
 // جستجوی صوتی
@@ -3628,8 +3467,8 @@ function stopAutoRefresh() { if (refreshTimer) clearInterval(refreshTimer); refr
     }
   } catch (e) {}
 
-  userLevel = localStorage.getItem(LEVEL_KEY) || 'viewer';
-  userDisplayName = localStorage.getItem(DISPLAY_KEY) || '';
+  userLevel = 'master';
+  userDisplayName = 'مدیر سیستم';
   updateUserBadge();
   applyAccessControl();
 
