@@ -11,7 +11,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="دفتر سریال">
 
-<!-- ⬇️ لوگوی اختصاصی برنامه (Favicon & App Icon) به صورت Base64 ⬇️ -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmY2QzNGQiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNkOTc3MDYiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzM4YmRmOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAyODRjNyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik01MCAxMCBMNTUgMTUgTDYyIDEzIEw2NSAyMCBMNzIgMjIgTDcyIDMwIEw3OCAzNSBMNzYgNDIgTDgyIDQ4IEw3OCA1NSBMODAgNjIgTDc0IDY4IEw3NCA3NiBMNjcgNzggTDYyIDg0IEw1NSA4MiBMNDggODYgTDQyIDgxIEwzNSA4MyBMMzAgNzcgTDIzIDc1IEwyMiA2NyBMMTYgNjIgTDE4IDU1IEwxMiA0OCBMMTcgNDIgTDE1IDM1IEwyMSAyOSBMMjIgMjEgTDI5IDE5IEwzNSAxMyBMNDIgMTUgWiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2cpIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNNTAgMjUgQzUwIDI1LCA2NSA0NSwgNjUgNTUgQzY1IDYzLCA1OCA3MCwgNTAgNzAgQzQyIDcwLCAzNSA2MywgMzUgNTUgQzM1IDQ1LCA1MCAyNSwgNTAgMjUgWiIgZmlsbD0idXJsKCNjKSIgb3BhY2l0eT0iMC44Ii8+PHBhdGggZD0iTTUwIDM1IEw2MCA0MCBMNjAgNTUgQzYwIDYyLCA1MCA2OCwgNTAgNjggQzUwIDY4LCA0MCA2MiwgNDAgNTUgTDQwIDQwIFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjkiLz48cGF0aCBkPSJNNDUgNTIgTDQ4IDU2IEw1NSA0NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmY2QzNGQiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNkOTc3MDYiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iYyIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzM4YmRmOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAyODRjNyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik01MCAxMCBMNTUgMTUgTDYyIDEzIEw2NSAyMCBMNzIgMjIgTDcyIDMwIEw3OCAzNSBMNzYgNDIgTDgyIDQ4IEw3OCA1NSBMODAgNjIgTDc0IDY4IEw3NCA3NiBMNjcgNzggTDYyIDg0IEw1NSA4MiBMNDggODYgTDQyIDgxIEwzNSA4MyBMMzAgNzcgTDIzIDc1IEwyMiA2NyBMMTYgNjIgTDE4IDU1IEwxMiA0OCBMMTcgNDIgTDE1IDM1IEwyMSAyOSBMMjIgMjEgTDI5IDE5IEwzNSAxMyBMNDIgMTUgWiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI2cpIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNNTAgMjUgQzUwIDI1LCA2NSA0NSwgNjUgNTUgQzY1IDYzLCA1OCA3MCwgNTAgNzAgQzQyIDcwLCAzNSA2MywgMzUgNTUgQzM1IDQ1LCA1MCAyNSwgNTAgMjUgWiIgZmlsbD0idXJsKCNjKSIgb3BhY2l0eT0iMC44Ii8+PHBhdGggZD0iTTUwIDM1IEw2MCA0MCBMNjAgNTUgQzYwIDYyLCA1MCA2OCwgNTAgNjggQzUwIDY4LCA0MCA2MiwgNDAgNTUgTDQwIDQwIFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjkiLz48cGF0aCBkPSJNNDUgNTIgTDQ4IDU2IEw1NSA0NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+">
 
@@ -123,6 +122,13 @@ body.light .neon-list{background:linear-gradient(180deg, #ffffff, #f5f7fa);}
 .tool-btn:hover{color:var(--gold);border-color:var(--gold);background:var(--bg-input);}
 .tool-btn:active{transform:scale(0.92);}
 .tool-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* Mode Toggle Button Styles */
+.mode-toggle-btn{background:var(--bg-input);border:1px solid var(--border-strong);border-radius:20px;padding:0 12px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:0.2s;font-family:'Vazirmatn';font-weight:700;font-size:0.83em;gap:6px;}
+.mode-toggle-btn:hover{box-shadow:0 0 10px var(--border-strong);}
+.mode-toggle-btn.cloud{color:var(--cyan);border-color:var(--cyan);background:rgba(56,189,248,0.1);}
+.mode-toggle-btn.local{color:var(--mint);border-color:var(--mint);background:rgba(74,222,128,0.1);}
+
 .panel-link{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 12px;height:40px;border-radius:var(--radius-sm);background:rgba(251,191,36,0.10);border:1px solid rgba(251,191,36,0.4);color:var(--gold) !important;text-decoration:none !important;font-size:0.83em;font-weight:800;white-space:nowrap;transition:all 0.2s;cursor:pointer;}
 .panel-link:hover{background:rgba(251,191,36,0.22);border-color:var(--gold);box-shadow:0 0 12px var(--gold-glow);}
 .panel-link:active{transform:scale(0.95);}
@@ -414,6 +420,12 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
 .sync-status-box .row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;}
 .sync-status-box .k{color:var(--text-dim);}
 .sync-status-box .v{color:var(--text);font-weight:700;font-family:'JetBrains Mono',monospace;direction:ltr;}
+.connection-switch-box{margin-bottom:20px;padding:16px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);}
+.connection-switch-box .row{display:flex;gap:10px;}
+.conn-mode-btn{flex:1;padding:12px;border-radius:var(--radius-sm);border:2px solid var(--border);background:var(--bg-elevated);color:var(--text-mid);font-family:'Vazirmatn';font-weight:700;font-size:0.95em;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.conn-mode-btn:hover{border-color:var(--border-strong);}
+.conn-mode-btn.active.cloud{border-color:var(--cyan);background:rgba(56,189,248,0.1);color:var(--cyan);box-shadow:0 0 12px var(--cyan-glow);}
+.conn-mode-btn.active.local{border-color:var(--mint);background:rgba(74,222,128,0.1);color:var(--mint);box-shadow:0 0 12px rgba(74,222,128,0.3);}
 @media (max-width:480px){
   .brand-text h1{font-size:0.93em;}
   .date-row-inline{padding:4px 9px;font-size:0.77em;}
@@ -429,11 +441,9 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
   .sync-indicator{font-size:0.8em;padding:1px 6px;}
   .panel-link .link-text{display:none;}
   .panel-link{padding:0 10px;}
+  .mode-toggle-btn .mode-text{display:none;}
+  .mode-toggle-btn{padding:0 10px;}
 }
-
-/* ═══════════════════════════════════════════════════════════
-   DESKTOP LAYOUT (≥ 900px)
-   ═══════════════════════════════════════════════════════════ */
 @media (min-width: 900px) {
   body { font-size: 15px; }
   .container { max-width: 1400px; padding: 24px 28px 0; }
@@ -444,7 +454,6 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
   .tab { font-size: 0.9em; padding: 14px 8px; gap: 7px; }
   .tab svg { width: 26px; height: 26px; }
   .tab .count { font-size: 0.7em; padding: 2px 7px; top: 6px; left: 10px; }
-
   #newForm { display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; row-gap: 18px; align-items: start; }
   #newForm > .field-group { display: flex; flex-direction: column; min-width: 0; }
   #newForm > .field-group > label { margin: 0 0 7px; }
@@ -453,20 +462,16 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
   #newForm > .field-group > input[type="hidden"] { display: none; }
   .card > #newSubmitBtn, .card > #assistantBtn, .card > #copyPrevBtn { display: inline-block; width: auto; min-width: 200px; margin-left: 8px; }
   .card > #newMsg, .card > #anomalyBox { display: block; width: 100%; margin-top: 14px; }
-
   #pendingList { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; }
   #pendingList > .order-card { margin-bottom: 0; }
   #pendingList > .empty-state, #pendingList > .spinner { grid-column: 1 / -1; }
   .order-card .info-item .val { max-width: 180px; }
-
   .dash-grid { grid-template-columns: repeat(4, 1fr); }
   .dash-card.wide { grid-column: 1 / -1; }
   .dash-card .num { font-size: 2em; }
-
   .bar-chart { height: 240px; }
   .compare-chart { height: 260px; }
   .line-chart-wrap { height: 220px; }
-
   .modal-backdrop { align-items: center; padding: 24px; }
   .modal { border-radius: 18px; max-width: 900px; max-height: 90vh; padding: 24px 28px; padding-bottom: 24px; }
   .modal h3 { font-size: 1.2em; }
@@ -476,9 +481,7 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
   #modalFields > .field-group > .hint-sm { margin: 6px 0 0; }
   #modalFields > .field-group > input[type="hidden"] { display: none; }
   .modal #modalSaveBtn, .modal #modalCloseBtn { max-width: 340px; margin-left: auto; margin-right: auto; }
-
   .report-filter { grid-template-columns: 1fr 1fr 1fr; }
-
   .assistant-panel { border-radius: 18px; bottom: 20px; left: 50%; right: auto; transform: translate(-50%, calc(100% + 20px)); max-height: 80vh; width: 700px; }
   .assistant-panel.show { transform: translate(-50%, 0); }
 }
@@ -508,7 +511,7 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
             <span class="sync-indicator online" id="syncIndicator" onclick="openSettings()" title="وضعیت همگام‌سازی — برای جزئیات کلیک کن">
               <span id="syncIndicatorText">🟢 آنلاین</span>
             </span>
-            <span class="user-badge master" id="userBadge" onclick="openSettings()">👑 ادمین</span>
+            <span class="user-badge master" id="userBadge" onclick="openSettings()">👑 مدیر</span>
           </div>
           <div class="date-row-inline">
             <svg class="cal-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -529,6 +532,11 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
         <a href="#" data-panel-link class="panel-link" title="بازگشت به پنل مرکزی">
           <span>🏠</span><span class="link-text">پنل</span>
         </a>
+        <!-- Mode Toggle Button -->
+        <button class="mode-toggle-btn cloud" id="modeToggleBtn" onclick="toggleMode()" title="تغییر حالت اتصال (ابر / محلی)">
+          <span id="modeIcon">☁️</span>
+          <span class="mode-text" id="modeText">ابر</span>
+        </button>
         <button class="tool-btn" id="themeBtn" title="حالت روز/شب">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.2" y1="4.2" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.8" y2="19.8"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.2" y1="19.8" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.8" y2="4.2"/></svg>
         </button>
@@ -720,18 +728,35 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
 <div class="modal-backdrop" id="settingsBackdrop">
   <div class="modal">
     <h3>⚙️ تنظیمات</h3>
+    
+    <!-- Connection Switch UI -->
+    <div class="connection-switch-box">
+      <label style="margin-top:0;margin-bottom:10px;color:var(--gold);font-size:1em;">🌐 انتخاب حالت اتصال</label>
+      <div class="row">
+        <button class="conn-mode-btn cloud" id="btnModeCloud" onclick="setMode('cloud')">
+          <span>☁️</span> ابر (Google)
+        </button>
+        <button class="conn-mode-btn local" id="btnModeLocal" onclick="setMode('local')">
+          <span>🏠</span> محلی (Offline)
+        </button>
+      </div>
+    </div>
+
     <div class="hint-sm" style="margin-bottom:16px;color:var(--cyan);">
       ℹ️ برنامه در حالت دسترسی کامل قرار دارد. فقط نام خود را وارد کنید تا در تاریخچه ثبت شود.
     </div>
 
     <label>نام شما (برای ثبت در تاریخچه)</label>
     <input type="text" id="settingsUser" placeholder="مثلاً: علی" dir="rtl">
-    <div class="hint-sm">این نام در شیت «تاریخچه» ثبت می‌شود تا مشخص باشد چه کسی ثبت یا ویرایش کرده است.</div>
+    <div class="hint-sm">این نام در شیت «تاریخچه» ثبت می‌شود.</div>
 
-    <label style="margin-top:18px;">لینک Web App</label>
+    <label style="margin-top:18px;">☁️ آدرس ابری (Apps Script)</label>
     <input type="text" id="settingsUrl" placeholder="https://script.google.com/.../exec" dir="ltr" style="text-align:left;">
+    
+    <label style="margin-top:14px;">🏠 آدرس سرور محلی (Tailscale / Localhost)</label>
+    <input type="text" id="settingsLocalUrl" placeholder="http://100.x.x.x:8080/api  یا  http://localhost:8080/api" dir="ltr" style="text-align:left;border-color:var(--mint);">
     <div class="hint-sm" style="margin-top:6px;">
-      💡 Apps Script: <code>https://script.google.com/macros/s/.../exec</code>
+      💡 این آدرس باید به `/api` ختم شود. برای اتصال از موبایل، IP تیل‌اسکیل کامپیوتر را وارد کنید.
     </div>
 
     <label style="margin-top:18px;">🔄 همگام‌سازی</label>
@@ -865,8 +890,10 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
 // ============================================================
 // ثابت‌ها
 // ============================================================
-const SCRIPT_URL_DEFAULT = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
-const STORAGE_KEY = "caspian_script_url";
+const CLOUD_URL_DEFAULT = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+const STORAGE_KEY = "caspian_script_url"; // Cloud URL
+const LOCAL_URL_KEY = "caspian_local_url"; // Local URL
+const MODE_KEY = "caspian_mode"; // 'cloud' or 'local'
 const USER_KEY = "caspian_user_name";
 const DISPLAY_KEY = "caspian_user_display";
 const FONT_KEY = "caspian_font_size";
@@ -1021,7 +1048,27 @@ let lastSyncState = { online: false, pending: 0, lastSync: null, lastError: null
 function getUserName() { return localStorage.getItem(USER_KEY) || 'مدیر سیستم'; }
 function setUserName(n) { localStorage.setItem(USER_KEY, n); }
 function getDisplayName() { return 'مدیر سیستم'; }
-function getScriptUrl() { return localStorage.getItem(STORAGE_KEY) || SCRIPT_URL_DEFAULT; }
+
+function getCurrentMode() {
+  return localStorage.getItem(MODE_KEY) || 'cloud';
+}
+
+function getCloudUrl() {
+  return localStorage.getItem(STORAGE_KEY) || CLOUD_URL_DEFAULT;
+}
+
+function getLocalUrl() {
+  return localStorage.getItem(LOCAL_URL_KEY) || '';
+}
+
+function getScriptUrl() {
+  if (getCurrentMode() === 'local') {
+    const local = getLocalUrl();
+    if (local) return local;
+    return getCloudUrl(); // fallback
+  }
+  return getCloudUrl();
+}
 
 function isUrlConfigured() {
   const u = getScriptUrl();
@@ -1031,12 +1078,60 @@ function isUrlConfigured() {
          u.indexOf('http://127.0.0.1:') === 0 ||
          /^http:\/\/\d+\.\d+\.\d+\.\d+:/.test(u);
 }
+
 function isLocalServer() {
-  const u = getScriptUrl();
-  return u.indexOf('http://localhost:') === 0 ||
-         u.indexOf('http://127.0.0.1:') === 0 ||
-         /^http:\/\/\d+\.\d+\.\d+\.\d+:/.test(u);
+  return getCurrentMode() === 'local';
 }
+
+function updateModeUI() {
+  const mode = getCurrentMode();
+  const btn = document.getElementById('modeToggleBtn');
+  const icon = document.getElementById('modeIcon');
+  const text = document.getElementById('modeText');
+  
+  if (mode === 'local') {
+    btn.className = 'mode-toggle-btn local';
+    icon.textContent = '🏠';
+    text.textContent = 'محلی';
+  } else {
+    btn.className = 'mode-toggle-btn cloud';
+    icon.textContent = '☁️';
+    text.textContent = 'ابر';
+  }
+
+  // Update settings buttons
+  const btnCloud = document.getElementById('btnModeCloud');
+  const btnLocal = document.getElementById('btnModeLocal');
+  if (btnCloud && btnLocal) {
+    btnCloud.classList.toggle('active', mode === 'cloud');
+    btnLocal.classList.toggle('active', mode === 'local');
+  }
+}
+
+function toggleMode() {
+  const current = getCurrentMode();
+  const next = current === 'cloud' ? 'local' : 'cloud';
+  setMode(next);
+}
+
+function setMode(mode) {
+  if (mode === 'local' && !getLocalUrl()) {
+    showToast('ابتدا آدرس سرور محلی را در تنظیمات وارد کنید', 'warn');
+    openSettings();
+    return;
+  }
+  
+  localStorage.setItem(MODE_KEY, mode);
+  updateModeUI();
+  updateConfigWarning();
+  
+  // Reload data
+  switchTab(currentTab);
+  checkSyncStatus();
+  
+  showToast(mode === 'local' ? '🏠 حالت محلی فعال شد' : '☁️ حالت ابری فعال شد', 'info');
+}
+
 function updateConfigWarning() {
   const w = document.getElementById('configWarning');
   w.style.display = isUrlConfigured() ? 'none' : 'block';
@@ -1108,7 +1203,8 @@ document.querySelectorAll('[data-panel-link]').forEach(function(a){
     h === '127.0.0.1' ||
     /^192\.168\./.test(h) ||
     /^10\./.test(h) ||
-    /^172\.(1[6-9]|2\d|3[01])\./.test(h);
+    /^172\.(1[6-9]|2\d|3[01])\./.test(h) ||
+    /^100\./.test(h); // Added Tailscale IP range
   if (!isLocal) {
     a.style.display = 'none';
     return;
@@ -1164,11 +1260,11 @@ function updateSyncIndicator(state) {
   if (online && pending === 0) {
     indicator.classList.add('online');
     if (dot) { dot.classList.remove('offline', 'pending'); }
-    text.innerHTML = '🟢 آنلاین';
+    text.innerHTML = mode === 'local' ? '🏠 محلی' : '🟢 آنلاین';
   } else if (online && pending > 0) {
     indicator.classList.add('pending');
     if (dot) { dot.classList.remove('offline'); dot.classList.add('pending'); }
-    text.innerHTML = '⚡ آنلاین · <span class="n">' + toEn(pending) + '</span> در انتظار';
+    text.innerHTML = (mode === 'local' ? '🏠 محلی' : '⚡ آنلاین') + ' · <span class="n">' + toEn(pending) + '</span> در انتظار';
   } else if (!online && pending > 0) {
     indicator.classList.add('pending');
     if (dot) { dot.classList.remove('offline'); dot.classList.add('pending'); }
@@ -1208,7 +1304,7 @@ function updateSyncIndicator(state) {
 
 async function checkSyncStatus() {
   if (!isUrlConfigured()) {
-    updateSyncIndicator({ online: false, pending: 0, mode: 'local' });
+    updateSyncIndicator({ online: false, pending: 0, mode: getCurrentMode() });
     return;
   }
   try {
@@ -1219,12 +1315,12 @@ async function checkSyncStatus() {
         pending: (r.sync.outbox && r.sync.outbox.pending) || 0,
         lastSync: r.sync.lastSync || null,
         lastError: r.sync.lastError || null,
-        mode: isLocalServer() ? 'local' : 'cloud'
+        mode: getCurrentMode() // Use current mode, not checking string
       };
       updateSyncIndicator(lastSyncState);
     }
   } catch (e) {
-    lastSyncState = { online: false, pending: lastSyncState.pending || 0, mode: isLocalServer() ? 'local' : 'cloud' };
+    lastSyncState = { online: false, pending: lastSyncState.pending || 0, mode: getCurrentMode() };
     updateSyncIndicator(lastSyncState);
   }
 }
@@ -2888,9 +2984,12 @@ function exportCsv() {
 }
 
 function openSettings() {
-  document.getElementById('settingsUrl').value = localStorage.getItem(STORAGE_KEY) || '';
+  document.getElementById('settingsUrl').value = getCloudUrl();
+  document.getElementById('settingsLocalUrl').value = getLocalUrl();
   document.getElementById('settingsUser').value = getUserName();
   document.getElementById('settingsMsg').className = 'msg';
+  updateModeUI();
+  
   const font = localStorage.getItem(FONT_KEY) || 'medium';
   document.querySelectorAll('.font-btn').forEach(b => b.classList.toggle('active', b.dataset.size === font));
   const brightness = localStorage.getItem(BRIGHTNESS_KEY) || '3';
@@ -2992,12 +3091,13 @@ function applyFontSize() {
   document.body.classList.add('font-' + font);
 }
 async function saveSettings() {
-  const url = document.getElementById('settingsUrl').value.trim();
+  const cloudUrl = document.getElementById('settingsUrl').value.trim();
+  const localUrl = document.getElementById('settingsLocalUrl').value.trim();
   const user = document.getElementById('settingsUser').value.trim();
   const msg = document.getElementById('settingsMsg');
 
-  if (!url) {
-    msg.textContent = 'لطفاً لینک را وارد کنید';
+  if (!cloudUrl && !localUrl) {
+    msg.textContent = 'حداقل یکی از آدرس‌ها (ابر یا محلی) باید وارد شود';
     msg.className = 'msg err';
     return;
   }
@@ -3007,62 +3107,63 @@ async function saveSettings() {
     return;
   }
 
-  const isAppsScript = url.indexOf('https://script.google.com/') === 0;
-  const isLocal = url.indexOf('http://localhost:') === 0
-              || url.indexOf('http://127.0.0.1:') === 0
-              || /^http:\/\/\d+\.\d+\.\d+\.\d+:/.test(url);
-
-  if (!isAppsScript && !isLocal) {
-    msg.textContent = 'لینک باید با https://script.google.com/ یا http://localhost: یا http://IP: شروع شود';
+  if (cloudUrl && cloudUrl.indexOf('https://script.google.com/') !== 0) {
+    msg.textContent = 'آدرس ابری باید با https://script.google.com/ شروع شود';
+    msg.className = 'msg err';
+    return;
+  }
+  if (cloudUrl && cloudUrl.indexOf('/exec') === -1) {
+    msg.textContent = 'آدرس ابری باید به /exec ختم شود';
+    msg.className = 'msg err';
+    return;
+  }
+  if (localUrl && !/^http:\/\/(\d+\.\d+\.\d+\.\d+|localhost)(:\d+)?\/api/.test(localUrl)) {
+    msg.textContent = 'آدرس محلی باید شبیه http://IP:PORT/api باشد';
     msg.className = 'msg err';
     return;
   }
 
-  if (isAppsScript && url.indexOf('/exec') === -1) {
-    msg.textContent = 'لینک Apps Script باید به /exec ختم شود';
-    msg.className = 'msg err';
-    return;
-  }
-
-  if (isLocal && url.indexOf('/api') === -1) {
-    msg.textContent = 'لینک سرور محلی باید شامل /api باشد (مثال: http://localhost:8080/api)';
-    msg.className = 'msg err';
-    return;
-  }
-
-  localStorage.setItem(STORAGE_KEY, url);
+  if (cloudUrl) localStorage.setItem(STORAGE_KEY, cloudUrl);
+  if (localUrl) localStorage.setItem(LOCAL_URL_KEY, localUrl);
   setUserName(user);
   
-  msg.textContent = 'در حال تست...';
-  msg.className = 'msg ok';
+  // تست اتصال بر اساس حالت فعلی
+  const testUrl = getScriptUrl();
+  if (testUrl) {
+    msg.textContent = 'در حال تست اتصال (' + (getCurrentMode() === 'local' ? 'محلی' : 'ابر') + ')...';
+    msg.className = 'msg ok';
+    try {
+      const sep = testUrl.indexOf('?') === -1 ? '?' : '&';
+      const pingUrl = testUrl + sep + 'action=ping';
+      const res = await fetch(pingUrl, { method: 'GET' });
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); }
+      catch (_) { msg.textContent = 'پاسخ JSON نبود'; msg.className = 'msg err'; return; }
 
-  try {
-    const sep = url.indexOf('?') === -1 ? '?' : '&';
-    const pingUrl = url + sep + 'action=ping';
-    const res = await fetch(pingUrl, { method: 'GET' });
-    const text = await res.text();
-    let data;
-    try { data = JSON.parse(text); }
-    catch (_) { msg.textContent = 'پاسخ JSON نبود'; msg.className = 'msg err'; return; }
-
-    if (data.ok) {
-      if (data.years && data.years.length > 0) {
-        availableYears = data.years;
-        try { localStorage.setItem(YEARS_CACHE_KEY, JSON.stringify(availableYears)); } catch (e) {}
+      if (data.ok) {
+        if (data.years && data.years.length > 0) {
+          availableYears = data.years;
+          try { localStorage.setItem(YEARS_CACHE_KEY, JSON.stringify(availableYears)); } catch (e) {}
+        }
+        await checkAuth();
+        const modeText = getCurrentMode() === 'local' ? '🏠 سرور محلی' : '☁️ Apps Script';
+        msg.textContent = '✅ اتصال برقرار (' + modeText + ')';
+        msg.className = 'msg ok';
+        updateConfigWarning();
+        setTimeout(() => { closeSettings(); switchTab(currentTab); checkSyncStatus(); }, 900);
+      } else {
+        msg.textContent = 'خطا: ' + (data.error || 'نامشخص');
+        msg.className = 'msg err';
       }
-      await checkAuth();
-      const modeText = data.mode === 'local' ? '🏠 سرور محلی' : '☁️ Apps Script';
-      msg.textContent = '✅ اتصال برقرار (' + modeText + ')';
-      msg.className = 'msg ok';
-      updateConfigWarning();
-      setTimeout(() => { closeSettings(); switchTab(currentTab); checkSyncStatus(); }, 900);
-    } else {
-      msg.textContent = 'خطا: ' + (data.error || 'نامشخص');
+    } catch (e) {
+      msg.textContent = 'اتصال برقرار نشد: ' + e.message;
       msg.className = 'msg err';
     }
-  } catch (e) {
-    msg.textContent = 'اتصال برقرار نشد: ' + e.message;
-    msg.className = 'msg err';
+  } else {
+    msg.textContent = '✅ ذخیره شد، ولی آدرس فعالی برای تست وجود ندارد';
+    msg.className = 'msg ok';
+    setTimeout(() => closeSettings(), 1500);
   }
 }
 
@@ -3395,6 +3496,7 @@ function stopAutoRefresh() { if (refreshTimer) clearInterval(refreshTimer); refr
   updateUserBadge();
   applyAccessControl();
 
+  updateModeUI();
   updateConfigWarning();
   updateSyncIndicator({ online: false, pending: 0 });
 
