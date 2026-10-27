@@ -567,7 +567,7 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
         <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="11"/><polyline points="16 9 16 16 21 19"/></svg>
         <span>تاریخچه</span>
       </div>
-      <div class="tab" data-tab="users" id="usersTab" style="display:flex;">
+      <div class="tab" data-tab="users" id="usersTab" style="display:none;">
         <span class="count" id="tabCountUsers">0</span>
         <svg viewBox="0 0 32 32"><circle cx="12" cy="11" r="4"/><path d="M4 24c0-4 4-6 8-6s8 2 8 6"/><circle cx="22" cy="12" r="3"/><path d="M20 19c3 0 6 1.5 6 5"/></svg>
         <span>کاربران</span>
@@ -721,13 +721,16 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
   <div class="modal">
     <h3>⚙️ تنظیمات</h3>
     <div class="hint-sm" style="margin-bottom:16px;color:var(--cyan);">
-      ℹ️ برنامه در حالت دسترسی کامل (Master) قرار دارد و نیازی به نام کاربری یا رمز عبور نیست.
+      ℹ️ برنامه در حالت دسترسی کامل قرار دارد. فقط نام خود را وارد کنید تا در تاریخچه ثبت شود.
     </div>
 
-    <label>لینک Web App</label>
-    <input type="text" id="settingsUrl" placeholder="http://localhost:8080/api  یا  https://script.google.com/.../exec" dir="ltr" style="text-align:left;">
+    <label>نام شما (برای ثبت در تاریخچه)</label>
+    <input type="text" id="settingsUser" placeholder="مثلاً: علی" dir="rtl">
+    <div class="hint-sm">این نام در شیت «تاریخچه» ثبت می‌شود تا مشخص باشد چه کسی ثبت یا ویرایش کرده است.</div>
+
+    <label style="margin-top:18px;">لینک Web App</label>
+    <input type="text" id="settingsUrl" placeholder="https://script.google.com/.../exec" dir="ltr" style="text-align:left;">
     <div class="hint-sm" style="margin-top:6px;">
-      💡 سرور محلی: <code>http://localhost:8080/api</code><br>
       💡 Apps Script: <code>https://script.google.com/macros/s/.../exec</code>
     </div>
 
@@ -865,8 +868,6 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
 const SCRIPT_URL_DEFAULT = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 const STORAGE_KEY = "caspian_script_url";
 const USER_KEY = "caspian_user_name";
-const PASS_KEY = "caspian_user_pass";
-const LEVEL_KEY = "caspian_user_level";
 const DISPLAY_KEY = "caspian_user_display";
 const FONT_KEY = "caspian_font_size";
 const THEME_KEY = "caspian_theme";
@@ -1011,16 +1012,14 @@ let anomalyDebounceTimer = null;
 let serialValidationTimer = null;
 let recentlyAddedRows = new Set();
 let broadcastChannel = null;
-let userLevel = 'master'; // ⬅️ سطح دسترسی مستقیماً روی Master تنظیم شد
-let userDisplayName = 'مدیر سیستم'; // ⬅️ نام نمایشی پیش‌فرض
+let userLevel = 'master';
+let userDisplayName = 'مدیر سیستم';
 let editingUserOriginalName = null;
 let syncCheckTimer = null;
 let lastSyncState = { online: false, pending: 0, lastSync: null, lastError: null };
 
-function getUserName() { return localStorage.getItem(USER_KEY) || 'Admin'; }
+function getUserName() { return localStorage.getItem(USER_KEY) || 'مدیر سیستم'; }
 function setUserName(n) { localStorage.setItem(USER_KEY, n); }
-function getPassword() { return localStorage.getItem(PASS_KEY) || ''; }
-function setPassword(p) { localStorage.setItem(PASS_KEY, p); }
 function getDisplayName() { return 'مدیر سیستم'; }
 function getScriptUrl() { return localStorage.getItem(STORAGE_KEY) || SCRIPT_URL_DEFAULT; }
 
@@ -1043,7 +1042,7 @@ function updateConfigWarning() {
   w.style.display = isUrlConfigured() ? 'none' : 'block';
 }
 function hasLevel(required) {
-  return true; // دسترسی همیشه کامل است
+  return true;
 }
 function toJalali(gy, gm, gd) {
   const g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
@@ -1102,9 +1101,6 @@ function normalizeDigits(s) {
     .replace(/[٠-٩]/g, d => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
 }
 
-// ============================================================
-// 🏠 Panel Back Link (فقط در شبکه محلی — نسخه آنلاین مخفی می‌شود)
-// ============================================================
 document.querySelectorAll('[data-panel-link]').forEach(function(a){
   var h = window.location.hostname || 'localhost';
   var isLocal =
@@ -1120,13 +1116,9 @@ document.querySelectorAll('[data-panel-link]').forEach(function(a){
   a.href = 'http://' + h + ':8080/dashboard';
 });
 
-// ============================================================
-// 🔧 Desktop: wrap form fields into groups
-// ============================================================
 function isDesktop() {
   return window.innerWidth >= 900;
 }
-
 function wrapFormFieldsDesktop(container) {
   if (!container) return;
   if (container.querySelector('.field-group')) return;
@@ -1150,9 +1142,6 @@ function wrapFormFieldsDesktop(container) {
   groups.forEach(g => container.appendChild(g));
 }
 
-// ============================================================
-// Sync Status Indicator
-// ============================================================
 function updateSyncIndicator(state) {
   const dot = document.getElementById('connDot');
   const indicator = document.getElementById('syncIndicator');
@@ -1277,9 +1266,6 @@ async function forceSyncNow() {
   btn.textContent = '⚡ Sync فوری با گوگل شیت';
 }
 
-// ============================================================
-// BroadcastChannel
-// ============================================================
 function initBroadcast() {
   if ('BroadcastChannel' in window) {
     try {
@@ -1307,9 +1293,6 @@ function broadcastNewOrder(serial, user) {
   try { localStorage.setItem('caspian_last_order', JSON.stringify({ serial, user, time: Date.now() })); } catch (e) {}
 }
 
-// ============================================================
-// API
-// ============================================================
 async function callApi(payload) {
   const url = getScriptUrl();
   if (!isUrlConfigured()) { openSettings(); throw new Error('لینک تنظیم نشده'); }
@@ -1338,9 +1321,9 @@ async function callApi(payload) {
   if (payload.newPassword !== undefined) params.append('newPassword', payload.newPassword);
   if (payload.rows)     params.append('rows', JSON.stringify(payload.rows));
   if (payload.data)     params.append('data', JSON.stringify(payload.data));
-  // ⬇️ احراز هویت حذف شد (همیشه با نام کاربری پیش‌فرض ارسال می‌شود) ⬇️
-  params.append('user', 'Admin'); 
-  params.append('password', '');
+  
+  // ارسال نام کاربری به بک‌اند (بدون رمز)
+  params.append('user', getUserName()); 
   
   const sep = url.indexOf('?') === -1 ? '?' : '&';
   const res = await fetch(url + sep + params.toString(), { method: 'GET', redirect: 'follow' });
@@ -1349,9 +1332,6 @@ async function callApi(payload) {
   catch (_) { throw new Error('پاسخ JSON نبود: ' + text.slice(0, 150)); }
 }
 
-// ============================================================
-// Auth (Bypassed)
-// ============================================================
 async function checkAuth() {
   userLevel = 'master';
   userDisplayName = 'مدیر سیستم';
@@ -1366,7 +1346,7 @@ function updateUserBadge() {
 }
 function applyAccessControl() {
   const usersTab = document.getElementById('usersTab');
-  if (usersTab) usersTab.style.display = 'flex';
+  if (usersTab) usersTab.style.display = 'none'; 
   document.querySelectorAll('.operator-only').forEach(el => el.style.display = '');
   const submitBtn = document.getElementById('newSubmitBtn');
   if (submitBtn) {
@@ -1375,9 +1355,6 @@ function applyAccessControl() {
   }
 }
 
-// ============================================================
-// نئون سلکتور
-// ============================================================
 function closeAllNeonLists() {
   document.querySelectorAll('.neon-list').forEach(l => l.classList.remove('show'));
   document.querySelectorAll('.neon-trigger').forEach(t => t.classList.remove('active'));
@@ -1714,9 +1691,6 @@ async function checkAnomalyNow(prefix) {
   } catch (e) { box.classList.remove('show'); }
 }
 
-// ============================================================
-// پیشنهاد خودکار وزن
-// ============================================================
 let weightSuggestTimer = null;
 
 async function suggestWeightNow(prefix, force) {
@@ -1807,9 +1781,6 @@ function closePicker() { document.getElementById('pickerOverlay').classList.remo
 document.getElementById('pickerCloseBtn').onclick = closePicker;
 document.getElementById('pickerOverlay').onclick = e => { if (e.target.id === 'pickerOverlay') closePicker(); };
 
-// ============================================================
-// فرم جدید
-// ============================================================
 async function buildNewForm() {
   const form = document.getElementById('newForm');
   const cat = CATEGORIES[currentCat];
@@ -1989,9 +1960,6 @@ async function loadCustomers() {
   } catch (e) {}
 }
 
-// ============================================================
-// تب‌ها
-// ============================================================
 document.querySelectorAll('.tab').forEach(tab => {
   tab.onclick = () => switchTab(tab.dataset.tab);
 });
@@ -2042,9 +2010,6 @@ function buildCatRow(containerId) {
   });
 }
 
-// ============================================================
-// لیست مدیریت
-// ============================================================
 async function loadItems(silent) {
   const listEl = document.getElementById('pendingList');
   if (!isUrlConfigured()) { listEl.innerHTML = '<div class="empty-state">لینک اتصال تنظیم نشده</div>'; return; }
@@ -2170,9 +2135,6 @@ function findItemByRow(row) {
   return allItems.find(it => it.row === row);
 }
 
-// ============================================================
-// مودال ویرایش
-// ============================================================
 async function openModal(row) {
   const item = findItemByRow(row);
   if (!item) return;
@@ -2296,9 +2258,6 @@ document.getElementById('undoBtn').onclick = async () => {
   document.getElementById('undoBar').classList.remove('show');
 };
 
-// ============================================================
-// حذف و سبد بازیافت
-// ============================================================
 async function confirmDelete(row) {
   const item = findItemByRow(row);
   if (!item) return;
@@ -2359,9 +2318,6 @@ async function restoreRecycle(recycleRow) {
   } catch (e) { showToast('خطا: ' + e.message, 'err'); }
 }
 
-// ============================================================
-// تاریخچه رکورد
-// ============================================================
 async function showRecordHistory(row) {
   const item = findItemByRow(row);
   if (!item) return;
@@ -2394,9 +2350,6 @@ async function showRecordHistory(row) {
   } catch (e) { listEl.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-// ============================================================
-// کپی
-// ============================================================
 async function openCopyModal() {
   const listEl = document.getElementById('copyList');
   listEl.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -2483,9 +2436,6 @@ async function openCustomerOrders() {
   } catch (e) { listEl.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-// ============================================================
-// داشبورد
-// ============================================================
 async function loadDashboard() {
   const dash = document.getElementById('dashContent');
   dash.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -2572,9 +2522,6 @@ async function loadDashboard() {
   } catch (e) { dash.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-// ============================================================
-// گزارش
-// ============================================================
 async function loadReport() {
   const rep = document.getElementById('reportContent');
   rep.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -2661,9 +2608,6 @@ async function loadReport() {
   } catch (e) { rep.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-// ============================================================
-// گزارش وزنی
-// ============================================================
 function initWeightReport() {
   const fromEl = document.getElementById('weightFromDate');
   const toEl = document.getElementById('weightToDate');
@@ -2748,9 +2692,6 @@ async function calculateWeightReport() {
   } catch (e) { resultEl.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-// ============================================================
-// تاریخچه (Audit Log)
-// ============================================================
 async function loadAudit() {
   const el = document.getElementById('auditContent');
   el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -2783,9 +2724,6 @@ async function loadAudit() {
   } catch (e) { el.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-// ============================================================
-// مدیریت کاربران
-// ============================================================
 async function loadUsers() {
   const el = document.getElementById('usersList');
   el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -2890,9 +2828,6 @@ async function confirmDeleteUser(username) {
   } catch (e) { showToast('خطا: ' + e.message, 'err'); }
 }
 
-// ============================================================
-// هشدارها
-// ============================================================
 async function openAlerts() {
   const el = document.getElementById('alertsList');
   el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
@@ -2933,9 +2868,6 @@ async function updateReminders() {
   } catch (e) {}
 }
 
-// ============================================================
-// CSV
-// ============================================================
 function exportCsv() {
   const items = getFilteredItems();
   if (items.length === 0) { showToast('چیزی برای خروجی نیست', 'err'); return; }
@@ -2955,11 +2887,9 @@ function exportCsv() {
   URL.revokeObjectURL(url);
 }
 
-// ============================================================
-// تنظیمات
-// ============================================================
 function openSettings() {
   document.getElementById('settingsUrl').value = localStorage.getItem(STORAGE_KEY) || '';
+  document.getElementById('settingsUser').value = getUserName();
   document.getElementById('settingsMsg').className = 'msg';
   const font = localStorage.getItem(FONT_KEY) || 'medium';
   document.querySelectorAll('.font-btn').forEach(b => b.classList.toggle('active', b.dataset.size === font));
@@ -3063,10 +2993,16 @@ function applyFontSize() {
 }
 async function saveSettings() {
   const url = document.getElementById('settingsUrl').value.trim();
+  const user = document.getElementById('settingsUser').value.trim();
   const msg = document.getElementById('settingsMsg');
 
   if (!url) {
     msg.textContent = 'لطفاً لینک را وارد کنید';
+    msg.className = 'msg err';
+    return;
+  }
+  if (!user) {
+    msg.textContent = 'لطفاً نام خود را وارد کنید';
     msg.className = 'msg err';
     return;
   }
@@ -3095,6 +3031,8 @@ async function saveSettings() {
   }
 
   localStorage.setItem(STORAGE_KEY, url);
+  setUserName(user);
+  
   msg.textContent = 'در حال تست...';
   msg.className = 'msg ok';
 
@@ -3128,9 +3066,6 @@ async function saveSettings() {
   }
 }
 
-// ============================================================
-// جستجوی صوتی
-// ============================================================
 function initVoiceSearch() {
   const btn = document.getElementById('voiceBtn');
   if (!btn) return;
@@ -3159,9 +3094,6 @@ function initVoiceSearch() {
   };
 }
 
-// ============================================================
-// دستیار هوشمند
-// ============================================================
 const ASSISTANT_STEPS = [
   { key: 'product',  question: 'چه محصولی می‌خوای؟', type: 'product' },
   { key: 'capacity', question: 'ظرفیتش چقدره؟ (فقط عدد + واحد)', type: 'text' },
@@ -3298,9 +3230,6 @@ function applyAssistantData() {
   }, 200);
 }
 
-// ============================================================
-// رویدادها
-// ============================================================
 document.getElementById('newSubmitBtn').onclick = submitNewOrder;
 document.getElementById('copyPrevBtn').onclick = openCopyModal;
 document.getElementById('modalCloseBtn').onclick = closeModal;
@@ -3422,9 +3351,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// ============================================================
-// رفرش خودکار
-// ============================================================
 function applyRefreshInterval() {
   if (refreshTimer) clearInterval(refreshTimer);
   const m = localStorage.getItem(REFRESH_KEY);
@@ -3448,9 +3374,6 @@ function applyRefreshInterval() {
 }
 function stopAutoRefresh() { if (refreshTimer) clearInterval(refreshTimer); refreshTimer = null; }
 
-// ============================================================
-// Init
-// ============================================================
 (async function init() {
   if (localStorage.getItem(THEME_KEY) === 'light') document.body.classList.add('light');
   const b = localStorage.getItem(BRIGHTNESS_KEY) || '2';
