@@ -1,5 +1,6 @@
 /************************************************************
- * دفتر سریال کاسپین — Service Worker v16
+ * دفتر سریال کاسپین — Service Worker
+ * نسخه cache: caspian-serial-v16
  ************************************************************/
 
 const CACHE_NAME = 'caspian-serial-v16';
@@ -37,10 +38,17 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const url = event.request.url;
 
-  if (url.indexOf('script.google.com') !== -1) {
+  // ⬇️ هر درخواستی که به API، لوکال‌هاست، تیل‌اسکیل یا گوگل بره، مستقیم به شبکه فرستاده میشه (نه کش) ⬇️
+  if (url.indexOf('/api') !== -1 || 
+      url.indexOf('script.google.com') !== -1 ||
+      url.indexOf('127.0.0.1') !== -1 || 
+      url.indexOf('localhost') !== -1 ||
+      /^http:\/\/\d+\.\d+\.\d+\.\d+:/.test(url)) {
     event.respondWith(fetch(event.request));
     return;
   }
+
+  // فونت‌های گوگل
   if (url.indexOf('fonts.googleapis.com') !== -1 || url.indexOf('fonts.gstatic.com') !== -1) {
     event.respondWith(
       caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
@@ -51,6 +59,8 @@ self.addEventListener('fetch', event => {
     );
     return;
   }
+
+  // فایل‌های HTML
   if (event.request.destination === 'document' || url.endsWith('/index.html') || url.endsWith('/')) {
     event.respondWith(
       fetch(event.request).then(response => {
@@ -61,6 +71,8 @@ self.addEventListener('fetch', event => {
     );
     return;
   }
+
+  // بقیه فایل‌ها (آیکن و ...)
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
