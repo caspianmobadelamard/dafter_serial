@@ -744,10 +744,10 @@ label{display:block;font-size:0.87em;color:var(--text-mid);margin:14px 0 7px;fon
     <label style="margin-top:18px;">☁️ آدرس ابری (Apps Script)</label>
     <input type="text" id="settingsUrl" placeholder="https://script.google.com/.../exec" dir="ltr" style="text-align:left;">
     
-    <label style="margin-top:14px;">🏠 آدرس سرور محلی (Tailscale / Localhost)</label>
-    <input type="text" id="settingsLocalUrl" placeholder="http://100.x.x.x:8002/api  یا  http://localhost:8002/api" dir="ltr" style="text-align:left;border-color:var(--mint);">
+    <label style="margin-top:14px;">🏠 آدرس سرور محلی (شبکه مشترک / Tailscale)</label>
+    <input type="text" id="settingsLocalUrl" placeholder="http://192.168.8.169:8002/api" dir="ltr" style="text-align:left;border-color:var(--mint);">
     <div class="hint-sm" style="margin-top:6px;">
-      💡 این آدرس باید به `/api` ختم شود. برای اتصال از موبایل، IP تیل‌اسکیل کامپیوتر را وارد کنید.
+      💡 شبکه مشترک: <b>http://192.168.8.169:8002/api</b> · اینترنت مجزا (Tailscale): <b>http://100.101.222.73:8002/api</b>
     </div>
 
     <label style="margin-top:18px;">🔄 همگام‌سازی</label>
@@ -885,6 +885,9 @@ const CLOUD_URL_DEFAULT = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 const STORAGE_KEY = "caspian_script_url"; // Cloud URL
 const LOCAL_URL_KEY = "caspian_local_url"; // Local URL
 const MODE_KEY = "caspian_mode"; // 'cloud' or 'local'
+// آدرس سرور داخلی: شبکه مشترک → LAN IP، اینترنت مجزا → Tailscale IP
+const LOCAL_URL_DEFAULT = "http://192.168.8.169:8002/api";
+const TAILSCALE_URL_DEFAULT = "http://100.101.222.73:8002/api";
 const USER_KEY = "caspian_user_name";
 const DISPLAY_KEY = "caspian_user_display";
 const FONT_KEY = "caspian_font_size";
@@ -1041,7 +1044,7 @@ function setUserName(n) { localStorage.setItem(USER_KEY, n); }
 function getDisplayName() { return 'مدیر سیستم'; }
 
 function getCurrentMode() {
-  return localStorage.getItem(MODE_KEY) || 'cloud';
+  return localStorage.getItem(MODE_KEY) || 'local';
 }
 
 function getCloudUrl() {
@@ -1049,14 +1052,37 @@ function getCloudUrl() {
 }
 
 function getLocalUrl() {
-  return localStorage.getItem(LOCAL_URL_KEY) || '';
+  const saved = localStorage.getItem(LOCAL_URL_KEY);
+  if (saved) return saved;
+  // پیش‌فرض هوشمند: همان سروری که این صفحه را سرو کرده (پورت 8002)
+  try {
+    if (window.location.origin && window.location.origin.indexOf('http') === 0) {
+      return window.location.origin + '/api';
+    }
+  } catch (e) {}
+  return LOCAL_URL_DEFAULT;
+}
+
+function getTailscaleUrl() {
+  return TAILSCALE_URL_DEFAULT;
 }
 
 function getScriptUrl() {
   if (getCurrentMode() === 'local') {
-    const local = getLocalUrl();
-    if (local) return local;
-    return getCloudUrl(); // fallback
+    return getLocalUrl();
+  }
+  const cloud = getCloudUrl();
+  // اگر آدرس ابری تنظیم نشده (پیش‌فرض خالی)، خودکار به سرور محلی برگرد
+  if (!cloud || cloud.indexOf('PASTE_YOUR') === 0) {
+    return getLocalUrl();
+  }
+  return cloud;
+}
+
+// آدرس هوشمند: ابتدا سرور محلی (LAN)، اگر نشد Tailscale
+function getSmartUrl() {
+  if (getCurrentMode() === 'local') {
+    return getLocalUrl();
   }
   return getCloudUrl();
 }
@@ -2157,7 +2183,12 @@ function getFilteredItems() {
   q = normalizeText(normalizeDigits(q));
   let items = allItems.slice();
   if (onlyPending) items = items.filter(it => (it.emptyKeys || []).length > 0);
-  if (filterStatus) items = items.filter(it => String(it.data.status || '').trim() === filterStatus);
+  if (filterStatus) {
+    items = items.filter(it => String(it.data.status || '').trim() === filterStatus);
+  } else {
+    // پیش‌فرض: دستگاه‌های «ساخته شده» در لیست اصلی و جستجو نیایند (دسته‌ی جدا)
+    items = items.filter(it => String(it.data.status || '').trim() !== 'ساخته شده');
+  }
   if (filterInspection) items = items.filter(it => String(it.data.inspectionCo || '').trim().toUpperCase() === filterInspection);
   if (filterCustomer) items = items.filter(it => String(it.data.customer || '').trim() === filterCustomer);
   if (q) {
