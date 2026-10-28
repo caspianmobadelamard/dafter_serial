@@ -1,9 +1,9 @@
 /************************************************************
- * دفتر سریال کاسپین — Service Worker
- * نسخه cache: caspian-serial-v16
+ * دفتر سریال کاسپین — Service Worker v17
+ * (با اصلاح کامل مشکلات کش و پشتیبانی از سرور محلی/تیل‌اسکیل)
  ************************************************************/
 
-const CACHE_NAME = 'caspian-serial-v16';
+const CACHE_NAME = 'caspian-serial-v17';
 const ASSETS = [
   './',
   './index.html',
@@ -14,65 +14,85 @@ const ASSETS = [
   './icon-android.png'
 ];
 
+// نصب: کش کردن فایل‌های ثابت
 self.addEventListener('install', event => {
-  self.skipWaiting();
+  self.skipWaiting(); // اجبار به فعال‌سازی نسخه جدید
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return Promise.all(
-        ASSETS.map(url => cache.add(url).catch(err => console.warn('cache miss:', url, err)))
+        ASSETS.map(url => cache.add(url).catch(err => console.warn('Cache miss:', url, err)))
       );
     })
   );
 });
 
+// فعال‌سازی: پاک کردن کش‌های قدیمی
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-    ))
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+      );
+    })
   );
-  self.clients.claim();
+  self.clients.claim(); // کنترل فوری تمام تب‌های باز
 });
 
+// Fetch: استراتژی هوشمند
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const url = event.request.url;
 
-  // ⬇️ هر درخواستی که به API، لوکال‌هاست، تیل‌اسکیل یا گوگل بره، مستقیم به شبکه فرستاده میشه (نه کش) ⬇️
-  if (url.indexOf('/api') !== -1 || 
-      url.indexOf('script.google.com') !== -1 ||
-      url.indexOf('127.0.0.1') !== -1 || 
-      url.indexOf('localhost') !== -1 ||
-      /^http:\/\/\d+\.\d+\.\d+\.\d+:/.test(url)) {
-    event.respondWith(fetch(event.request));
-    return;
-  }
-
-  // فونت‌های گوگل
-  if (url.indexOf('fonts.googleapis.com') !== -1 || url.indexOf('fonts.gstatic.com') !== -1) {
+  // ۱. درخواست‌های مربوط به سرور محلی (پایتون، لوکال‌هاست، تیل‌اسکیل) یا گوگل شیت
+  // این درخواست‌ها هرگز کش نمی‌شن و مستقیم به شبکه میرن
+  if (
+    url.includes('/api') || 
+    url.includes('script.google.com') || 
+    url.includes('127.0.0.1') || 
+    url.includes('localhost') || 
+    /^http:\/\/(\d{1,3}\.){3}\d{1,3}:/.test(url) || // هر IP معتبری مثل 192.168.x.x یا 100.x.x.x
+    url.includes('eitaayar.ir')
+  ) {
     event.respondWith(
-      caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        return response;
-      }).catch(() => new Response('', { status: 404 })))
+      fetch(event.request).catch(() => {
+        return new Response(
+          JSON.stringify({ ok: false, error: 'ارتباط با سرور برقرار نشد (آفلاین)' }),
+          { status: 503, headers: { 'Content-Type': 'application/json' } }
+        );
+      })
     );
     return;
   }
 
-  // فایل‌های HTML
+  // ۲. فونت‌های گوگل: اول از کش، بعد از شبکه
+  if (url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        return cached || fetch(event.request).then(response => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          return response;
+        }).catch(() => new Response('', { status: 404 }));
+      })
+    );
+    return;
+  }
+
+  // ۳. فایل اصلی HTML و درخواست‌های Document: استراتژی Network-First
   if (event.request.destination === 'document' || url.endsWith('/index.html') || url.endsWith('/')) {
     event.respondWith(
       fetch(event.request).then(response => {
         const clone = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         return response;
-      }).catch(() => caches.match('./index.html'))
+      }).catch(() => {
+        return caches.match('./index.html');
+      })
     );
     return;
   }
 
-  // بقیه فایل‌ها (آیکن و ...)
+  // ۴. سایر فایل‌های ثابت (آیکون‌ها): استراتژی Cache-First
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
@@ -85,6 +105,9 @@ self.addEventListener('fetch', event => {
   );
 });
 
+// پیام از سمت کلاینت برای آپدیت دستی
 self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
