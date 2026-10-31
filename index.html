@@ -2586,9 +2586,9 @@ async function openCustomerOrders() {
   } catch (e) { listEl.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-async function loadDashboard() {
+async function loadDashboard(silent = false) {
   const dash = document.getElementById('dashContent');
-  dash.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
+  if (!silent) dash.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
   try {
     const [rStats, rRank, rProd] = await Promise.all([
       callApi({ action: 'getStats' }),
@@ -2672,15 +2672,15 @@ async function loadDashboard() {
   } catch (e) { dash.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-async function loadReport() {
+async function loadReport(silent = false) {
   const rep = document.getElementById('reportContent');
-  rep.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
+  if (!silent) rep.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
   try {
     const [rMonthly, rTrend] = await Promise.all([
       callApi({ action: 'getMonthlyReport', category: currentCat }),
       callApi({ action: 'getTrend6Months' })
     ]);
-    if (!rMonthly.ok) { rep.innerHTML = '<div class="empty-state">خطا: ' + rMonthly.error + '</div>'; return; }
+    if (!rMonthly.ok) { if (!silent) rep.innerHTML = '<div class="empty-state">خطا: ' + rMonthly.error + '</div>'; return; }
     const months = rMonthly.months || {};
     let maxV = 0;
     for (let i = 1; i <= 12; i++) if ((months[i] || {}).total > maxV) maxV = months[i].total;
@@ -2842,9 +2842,9 @@ async function calculateWeightReport() {
   } catch (e) { resultEl.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-async function loadAudit() {
+async function loadAudit(silent = false) {
   const el = document.getElementById('auditContent');
-  el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
+  if (!silent) el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
   try {
     const r = await callApi({ action: 'getAuditLog', limit: 200 });
     if (!r.ok) { el.innerHTML = '<div class="empty-state">خطا: ' + r.error + '</div>'; return; }
@@ -2874,9 +2874,9 @@ async function loadAudit() {
   } catch (e) { el.innerHTML = '<div class="empty-state">خطا: ' + e.message + '</div>'; }
 }
 
-async function loadUsers() {
+async function loadUsers(silent = false) {
   const el = document.getElementById('usersList');
-  el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
+  if (!silent) el.innerHTML = '<div class="spinner">در حال بارگذاری...</div>';
   try {
     const r = await callApi({ action: 'listUsers' });
     if (!r.ok) { el.innerHTML = '<div class="empty-state">خطا: ' + r.error + '</div>'; return; }
@@ -3525,10 +3525,10 @@ function applyRefreshInterval() {
     refreshTimer = setInterval(() => {
       if (!isUrlConfigured()) return;
       if (currentTab === 'pending') loadItems(true);
-      else if (currentTab === 'dashboard') loadDashboard();
-      else if (currentTab === 'report') loadReport();
-      else if (currentTab === 'audit') loadAudit();
-      else if (currentTab === 'users') loadUsers();
+      else if (currentTab === 'dashboard') loadDashboard(true);
+      else if (currentTab === 'report') loadReport(true);
+      else if (currentTab === 'audit') loadAudit(true);
+      else if (currentTab === 'users') loadUsers(true);
       updateReminders();
       checkSyncStatus();
     }, seconds * 1000);
